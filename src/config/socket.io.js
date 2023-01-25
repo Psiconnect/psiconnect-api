@@ -1,11 +1,13 @@
 import { Server as SocketServer } from "socket.io";
-import httpServer from "./http.js";
 
-const io = new SocketServer(httpServer);
-
-io.on("connection", (socket) => {
-    console.log(socket.id);
-    socket.on("message", (body) => {
-     console.log(body);
-    });
+const socket = (httpServer) => {
+  const io = new SocketServer(httpServer, {
+    cors: "*",
   });
+
+  io.on("connection", (socket) => {
+    console.log(socket.id);
+  });
+};
+
+export default socket;
