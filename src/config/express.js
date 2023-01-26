@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import userRoutes from "../routes/user.routes.js";
 
 const expressApp = express();
 
@@ -24,6 +25,7 @@ expressApp.use((req, res, next) => {
 });
 
 // Routes
+expressApp.use('/user', userRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {
