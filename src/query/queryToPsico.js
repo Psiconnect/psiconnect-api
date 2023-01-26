@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import PROFESIONAL from "../models/PROFESIONAL";
+import PROFESIONAL from "../models/PROFESIONAL.js";
 
 export async function findAllProfesional() {
   const data = await PROFESIONAL.findAll();

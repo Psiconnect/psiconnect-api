@@ -1,6 +1,5 @@
 import {
   emailDTOSchema,
-  dniDTOSchema,
   nameDTOSchema,
   surnameDTOSchema,
   passwordDTOSchema,
@@ -14,9 +13,8 @@ import addFormats from "ajv-formats";
 const RegisterDTOSchema = Type.Object(
   {
     email: emailDTOSchema,
-    DNI: dniDTOSchema,
     name: nameDTOSchema,
-    surname: surnameDTOSchema,
+    lastName: surnameDTOSchema,
     password: passwordDTOSchema,
   },
   {
@@ -32,7 +30,6 @@ const ajv = new Ajv({ allErrors: true })
   .addKeyword("modifier");
 
 ajv.addFormat("password", /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/);
-ajv.addFormat("DNI", /^[0-9]{8}$/);
 
 addFormats(ajv, ["email"]);
 addErrors(ajv);
@@ -53,6 +50,5 @@ const userRegisterDTO = (req, res, next) => {
     return res.status(error.status).json(error.message);
   }
 };
-
 
 export default userRegisterDTO;

@@ -11,8 +11,6 @@ const CONSULT = sequelize.define(
     },
     price: {
       type: DataTypes.STRING,
-      primaryKey: true,
-      autoIncrement: true,
     },
     date: {
       type: DataTypes.DATE,

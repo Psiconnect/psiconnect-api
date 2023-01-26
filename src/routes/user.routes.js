@@ -1,5 +1,8 @@
+import { compare } from "bcrypt";
 import { Router } from "express";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
+import { generatorTKN } from "../helpers/generatorTKN.js";
+import { getProfesionalByEmail } from "../query/queryToPsico.js";
 import {
   createUser,
   findAllUser,
@@ -27,6 +30,40 @@ userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   }
 });
 
+userRoutes.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const userLogin = await getUserByEmail(email);
+    const checkPassword = await compare(password, userLogin?.password);
+
+    if (!userLogin || !checkPassword)
+      return res.status(400).json("credenciales incorrectas");
+    const token = await generatorTKN({ id: userLogin.id });
+    return res.status(201).json(token);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+// HACER RUTA BASE
+userRoutes.post("/profesional/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const profesionalLogin = await getProfesionalByEmail(email);
+    const checkPassword = await compare(password, profesionalLogin?.password);
+
+    if (!profesionalLogin || !checkPassword)
+      return res.status(400).json("credenciales incorrectas");
+    const token = await generatorTKN({ id: profesionalLogin.id });
+    return res.status(201).json(token);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+
+
 userRoutes.get("/id/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -40,16 +77,16 @@ userRoutes.get("/id/:id", async (req, res) => {
   }
 });
 
-userRoutes.get("/",async(req, res)=>{
+userRoutes.get("/", async (req, res) => {
   try {
-    const data =await findAllUser()
+    const data = await findAllUser();
     if (!data) return res.status(400).json("Base de datos vacia");
     return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
-})
+});
 
-userRoutes
+userRoutes;
 
 export default userRoutes;
