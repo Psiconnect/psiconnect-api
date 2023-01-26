@@ -1,12 +1,17 @@
 import { Router } from "express";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
-import { createUser, getUserByEmail } from "../query/queryToUser.js";
+import {
+  createUser,
+  findAllUser,
+  getUserByEmail,
+  getUserById,
+} from "../query/queryToUser.js";
 
 const userRoutes = Router();
 //ruta post
-userRoutes.post("/register",userRegisterDTO, async (req, res) => {
+userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   try {
-  const { email } = req.body;
+    const { email } = req.body;
     // se buscar en la query getUserbyEmail si ya existe un usuario con ese email
     const exitingEmail = await getUserByEmail(email);
     // si existe retornamos un error
@@ -18,9 +23,33 @@ userRoutes.post("/register",userRegisterDTO, async (req, res) => {
     // anotacion: genera token
     return res.status(201).json(newUser);
   } catch (error) {
-    return res.status(500).json({data: error.message})
+    return res.status(500).json({ data: error.message });
   }
 });
 
+userRoutes.get("/id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    // se buscar en la query getUserbyEmail si ya existe un usuario con ese email
+    const data = await getUserById(email);
+    // si existe retornamos un error
+    if (!data) return res.status(400).json("Id no registrado");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+userRoutes.get("/",async(req, res)=>{
+  try {
+    const data =await findAllUser()
+    if (!data) return res.status(400).json("Base de datos vacia");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+})
+
+userRoutes
 
 export default userRoutes;

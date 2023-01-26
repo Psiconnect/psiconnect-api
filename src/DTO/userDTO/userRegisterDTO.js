@@ -50,8 +50,9 @@ const userRegisterDTO = (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(error.status).json(error.message)
+    return res.status(error.status).json(error.message);
   }
 };
+
 
 export default userRegisterDTO;
