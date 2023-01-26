@@ -1,3 +1,4 @@
+import { hash } from "bcrypt";
 import USER from "../models/USERS.js";
 
 const user = [
@@ -21,7 +22,9 @@ const user = [
   },
 ];
 
-
-export async function mapUserTesting (){
-    user.map(async u=> await USER.create(u))
+export async function mapUserTesting() {
+  user.map(async (u) => {
+    const password =await hash(u.password, 10)
+    await USER.create({ ...u, password });
+  });
 }
