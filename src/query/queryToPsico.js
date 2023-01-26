@@ -11,6 +11,11 @@ export async function getProfesionalByEmail(email) {
   return data;
 }
 
+export async function getProfesionalByDNI(DNI) {
+    const data = await PROFESIONAL.findOne({ where: { DNI } });
+    return data;
+  }
+
 export async function createProfesionalUser(body) {
   const hashedPassword = await hash(body.password, 10);
   const date = await PROFESIONAL.create({ ...body, password: hashedPassword });

@@ -11,6 +11,7 @@ import {
 } from "../query/queryToUser.js";
 
 const userRoutes = Router();
+
 //ruta post
 userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   try {

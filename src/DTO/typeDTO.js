@@ -3,7 +3,7 @@ import { Type } from '@sinclair/typebox';
 
 export const dniDTOSchema = Type.String({
     minLength: 8,
-    maxLength: 8,
+    maxLength: 10,
     errorMessage: {
         minLength: 'DNI no valido',
         maxLength: 'DNI no valido',
@@ -37,6 +37,8 @@ export const emailDTOSchema = Type.String({
         format: 'El formato del email no es válido, debe cumplir el RFC 5322',
     },
 });
+
+
 
 export const passwordDTOSchema = Type.String({
     format: 'password',

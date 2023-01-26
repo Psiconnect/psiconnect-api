@@ -9,6 +9,7 @@ dotenv.config();
 
 async function bootstrap() {
   await sequelize.sync({ force: true });
+  await mapUserTesting()
   socket(httpServer)
   await mapUserTesting()
   httpServer.listen(process.env.PORT, () => {
