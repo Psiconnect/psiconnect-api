@@ -2,7 +2,6 @@ import { compare } from "bcrypt";
 import { Router } from "express";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import { getProfesionalByEmail } from "../query/queryToPsico.js";
 import {
   createUser,
   findAllUser,
@@ -11,6 +10,7 @@ import {
 } from "../query/queryToUser.js";
 
 const userRoutes = Router();
+
 //ruta post
 userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   try {
@@ -45,22 +45,7 @@ userRoutes.post("/login", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
-// HACER RUTA BASE
-userRoutes.post("/profesional/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
-    const profesionalLogin = await getProfesionalByEmail(email);
-    const checkPassword = await compare(password, profesionalLogin?.password);
-
-    if (!profesionalLogin || !checkPassword)
-      return res.status(400).json("credenciales incorrectas");
-    const token = await generatorTKN({ id: profesionalLogin.id });
-    return res.status(201).json(token);
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
 
 
 
