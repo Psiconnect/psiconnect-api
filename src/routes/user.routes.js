@@ -12,8 +12,6 @@ userRoutes.post("/register",userRegisterDTO, async (req, res) => {
     // si existe retornamos un error
     if (exitingEmail) return res.status(400).json("email ya registrado");
     //de igual forma para el nombre de usuario
-    // const exitingName = await getUserByEmail(name);
-    // // if (exitingName) return res.status(400).json("bla bla bla");
     //si pasan estos dos validadores pasamos los datos a la query de crear usuario
     const newUser = await createUser(req.body);
     // respondemos con el estado correspondiente y devolvemos el nuevo usuario
