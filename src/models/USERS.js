@@ -21,7 +21,6 @@ const USER = sequelize.define(
       },
       email:{
         type: DataTypes.STRING,
-        unique: true
       },
       avatar:{
         type: DataTypes.STRING(300),
