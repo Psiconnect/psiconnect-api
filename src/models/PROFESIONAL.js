@@ -1,5 +1,9 @@
 import { DataTypes } from "sequelize";
+import REVIEW from "./REVIEW.js";
 import sequelize from "../config/db.js";
+import CONSULT from "./CONSULTA.js";
+import ESPECIALIDAD from "./ESPECIALIDAD.js";
+
 
 const PROFESIONAL = sequelize.define(
   "profesional",
@@ -55,11 +59,11 @@ REVIEW.belongsTo(PROFESIONAL);
 PROFESIONAL.hasMany(CONSULT);
 CONSULT.belongsTo(PROFESIONAL);
 
-PROFESIONAL.belongsToMany(ESPECILIDAD, {
+PROFESIONAL.belongsToMany(ESPECIALIDAD, {
   through: "PROFESIONAL_ESPECIALDAD",
   timestamps: false,
 });
-ESPECILIDAD.belongsToMany(PROFESIONAL, {
+ESPECIALIDAD.belongsToMany(PROFESIONAL, {
   through: "PROFESIONAL_ESPECIALDAD",
   timestamps: false,
 });
