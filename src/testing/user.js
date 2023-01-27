@@ -24,7 +24,7 @@ const user = [
 
 export async function mapUserTesting() {
   user.map(async (u) => {
-    const password =await hash(u.password, 10)
-    await USER.create({ ...u, password });
+    const hashedPassword = await hash(u.password, 10);
+    await USER.create({ ...u, password:hashedPassword });
   });
 }

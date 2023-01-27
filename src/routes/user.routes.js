@@ -62,15 +62,17 @@ userRoutes.get("/", async (req, res) => {
   }
 });
 userRoutes.put("/password", userJWTDTO, async (req, res) => {
-  const {newPassword, oldPassword} = req.body;
-  const user = await getUserById(req.id);
-  const checkPassword = await compare(password, user?.password);
-  if(!checkPassword) return res.status(400).json('contraseña incorrecta')
+  const { newPassword, oldPassword } = req.body;
   try {
+    const user = await getUserById(req.id);
+    const checkPassword = await compare(oldPassword, user?.password);
+    if (!checkPassword) return res.status(400).json("contraseña incorrecta");
+    user.password = newPassword;
+    user.save();
+    return res.status(203).json("nice");
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
 });
-
 
 export default userRoutes;
