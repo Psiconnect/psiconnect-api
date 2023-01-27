@@ -1,6 +1,7 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
 import profesionalRegisterDTO from "../DTO/profesionalDTO/profesionalRegisterDTO.js";
+import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
     createProfesionalUser,
@@ -76,6 +77,20 @@ profesionalRoutes.get(
 
       }catch(err){
         return res.status(500).json({ data: err.message });
+      }
+    });
+
+    profesionalRoutes.put("/password", userJWTDTO, async (req, res) => {
+      const { newPassword, oldPassword } = req.body;
+      try {
+        const profesional = await getUserById(req.id);
+        const checkPassword = await compare(oldPassword, profesional?.password);
+        if (!checkPassword) return res.status(400).json("contraseña incorrecta");
+        profesional.password = newPassword;
+        profesional.save();
+        return res.status(202).json("nice");
+      } catch (error) {
+        return res.status(500).json({ data: error.message });
       }
     });
 
