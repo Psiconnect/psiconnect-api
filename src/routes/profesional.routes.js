@@ -1,12 +1,14 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
 import profesionalRegisterDTO from "../DTO/profesionalDTO/profesionalRegisterDTO.js";
+import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
     createProfesionalUser,
     findAllProfesional,
     getProfesionalByDNI,
     getProfesionalByEmail,
+    getProfesionalById
 } from "../query/queryToPsico.js";
 
 const profesionalRoutes = Router();
@@ -61,5 +63,35 @@ profesionalRoutes.post(
   }
 );
 
+profesionalRoutes.get(
+  '/:professionalId',
+    async (req, res) => {
+      try{
+        const { professionalId } = req.params;
+
+        const professional = await getProfesionalById(professionalId)
+
+        if(!professional) return res.status(404).json('Professional not found')
+
+        return res.status(200).json(professional)
+
+      }catch(err){
+        return res.status(500).json({ data: err.message });
+      }
+    });
+
+    profesionalRoutes.put("/password", userJWTDTO, async (req, res) => {
+      const { newPassword, oldPassword } = req.body;
+      try {
+        const profesional = await getUserById(req.id);
+        const checkPassword = await compare(oldPassword, profesional?.password);
+        if (!checkPassword) return res.status(400).json("contraseña incorrecta");
+        profesional.password = newPassword;
+        profesional.save();
+        return res.status(202).json("nice");
+      } catch (error) {
+        return res.status(500).json({ data: error.message });
+      }
+    });
 
 export default profesionalRoutes;

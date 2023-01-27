@@ -23,11 +23,9 @@ const user = [
 ];
 
 export async function mapUserTesting() {
-  for (let index = 0; index < user.length; index++) {
-  const u=user[index]
-    const password =await hash(u.password, 10)
-    await USER.create({ ...u, password });
-    
-  }
 
+  user.map(async (u) => {
+    const hashedPassword = await hash(u.password, 10);
+    await USER.create({ ...u, password:hashedPassword });
+  });
 }

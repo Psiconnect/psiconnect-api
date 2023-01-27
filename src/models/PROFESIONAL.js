@@ -9,9 +9,11 @@ const PROFESIONAL = sequelize.define(
   "profesional",
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      unique:true
     },
     DNI: {
       type: DataTypes.STRING,
@@ -29,13 +31,13 @@ const PROFESIONAL = sequelize.define(
     avatar: {
       type: DataTypes.STRING(300),
     },
-    description: {
+    description: { // hacer otra tabla
       type: DataTypes.STRING(500),
     },
-    abilities: {
-      type: DataTypes.STRING(400), // hacer otra tabla
+    abilities: { // hacer otra tabla
+      type: DataTypes.STRING(400),
     },
-    linkedin: {
+    linkedin: { // hacer otra tabla
       type: DataTypes.STRING(200),
     },
     password: {
