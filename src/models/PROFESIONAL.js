@@ -5,9 +5,11 @@ const PROFESIONAL = sequelize.define(
   "profesional",
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+      unique:true
     },
     DNI: {
       type: DataTypes.STRING,

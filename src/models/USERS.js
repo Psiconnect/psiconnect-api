@@ -9,9 +9,11 @@ const USER = sequelize.define(
     "user",
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        unique:true
       },
       lastName:{
         type: DataTypes.STRING

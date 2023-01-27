@@ -5,9 +5,11 @@ const REVIEW = sequelize.define(
     "review",
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        unique:true
       },
       score:{
         type: DataTypes.INTEGER,
