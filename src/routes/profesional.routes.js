@@ -7,6 +7,7 @@ import {
     findAllProfesional,
     getProfesionalByDNI,
     getProfesionalByEmail,
+    getProfesionalById
 } from "../query/queryToPsico.js";
 
 const profesionalRoutes = Router();
@@ -61,5 +62,21 @@ profesionalRoutes.post(
   }
 );
 
+profesionalRoutes.get(
+  '/:professionalId',
+    async (req, res) => {
+      try{
+        const { professionalId } = req.params;
+
+        const professional = await getProfesionalById(professionalId)
+
+        if(!professional) return res.status(404).json('Professional not found')
+
+        return res.status(200).json(professional)
+
+      }catch(err){
+        return res.status(500).json({ data: err.message });
+      }
+    });
 
 export default profesionalRoutes;
