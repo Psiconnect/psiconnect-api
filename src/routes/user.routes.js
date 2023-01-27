@@ -40,6 +40,7 @@ userRoutes.post("/login", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
 userRoutes.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
