@@ -23,8 +23,11 @@ const user = [
 ];
 
 export async function mapUserTesting() {
-  user.map(async (u) => {
+  for (let index = 0; index < user.length; index++) {
+  const u=user[index]
     const password =await hash(u.password, 10)
     await USER.create({ ...u, password });
-  });
+    
+  }
+
 }
