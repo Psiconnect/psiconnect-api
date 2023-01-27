@@ -6,9 +6,11 @@ const ESPECIALIDAD = sequelize.define(
     "especialidad",
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        unique:true
       },
       name:{
         type: DataTypes.STRING
