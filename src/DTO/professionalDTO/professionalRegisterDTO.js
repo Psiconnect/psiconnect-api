@@ -39,7 +39,7 @@ addErrors(ajv);
 
 const validateSchema = ajv.compile(RegisterProfessionalDTOSchema);
 
-const profesionalRegisterDTO = (req, res, next) => {
+const professionalRegisterDTO = (req, res, next) => {
   try {
     const isDTOValid = validateSchema(req.body);
 
@@ -55,4 +55,4 @@ const profesionalRegisterDTO = (req, res, next) => {
 };
 
 
-export default profesionalRegisterDTO;
+export default professionalRegisterDTO;

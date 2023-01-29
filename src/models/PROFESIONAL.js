@@ -5,8 +5,8 @@ import CONSULT from "./CONSULTA.js";
 import ESPECIALIDAD from "./ESPECIALIDAD.js";
 
 
-const PROFESIONAL = sequelize.define(
-  "profesional",
+const PROFESSIONAL = sequelize.define(
+  "professional",
   {
     id: {
       type: DataTypes.UUID,
@@ -53,19 +53,19 @@ const PROFESIONAL = sequelize.define(
   }
 );
 
-PROFESIONAL.hasMany(REVIEW);
-REVIEW.belongsTo(PROFESIONAL);
+PROFESSIONAL.hasMany(REVIEW);
+REVIEW.belongsTo(PROFESSIONAL);
 
-PROFESIONAL.hasMany(CONSULT);
-CONSULT.belongsTo(PROFESIONAL);
+PROFESSIONAL.hasMany(CONSULT);
+CONSULT.belongsTo(PROFESSIONAL);
 
-PROFESIONAL.belongsToMany(ESPECIALIDAD, {
-  through: "PROFESIONAL_ESPECIALDAD",
+PROFESSIONAL.belongsToMany(ESPECIALIDAD, {
+  through: "PROFESSIONAL_ESPECIALDAD",
   timestamps: false,
 });
-ESPECIALIDAD.belongsToMany(PROFESIONAL, {
-  through: "PROFESIONAL_ESPECIALDAD",
+ESPECIALIDAD.belongsToMany(PROFESSIONAL, {
+  through: "PROFESSIONAL_ESPECIALDAD",
   timestamps: false,
 });
 
-export default PROFESIONAL;
+export default PROFESSIONAL;

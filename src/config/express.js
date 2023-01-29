@@ -4,7 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import userRoutes from "../routes/user.routes.js";
-import profesionalRoutes from "../routes/profesional.routes.js";
+import professionalRoutes from "../routes/professional.routes.js";
 
 const expressApp = express();
 
@@ -27,7 +27,7 @@ expressApp.use((req, res, next) => {
 
 // Routes
 expressApp.use('/user', userRoutes)
-expressApp.use('/profesional', profesionalRoutes)
+expressApp.use('/professional', professionalRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {
