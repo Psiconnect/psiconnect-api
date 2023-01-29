@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import REVIEW from "./REVIEW.js";
 import sequelize from "../config/db.js";
-import CONSULT from "./CONSULTA.js";
-import ESPECIALIDAD from "./ESPECIALIDAD.js";
+import CONSULT from "./CONSULT.js";
+import SPECIALTY from "./SPECIALTY.js";
 
 
 const PROFESSIONAL = sequelize.define(
@@ -34,7 +34,7 @@ const PROFESSIONAL = sequelize.define(
     description: { // hacer otra tabla
       type: DataTypes.STRING(500),
     },
-    abilities: { // hacer otra tabla
+    skills: { // hacer otra tabla
       type: DataTypes.STRING(400),
     },
     linkedin: { // hacer otra tabla
@@ -59,12 +59,12 @@ REVIEW.belongsTo(PROFESSIONAL);
 PROFESSIONAL.hasMany(CONSULT);
 CONSULT.belongsTo(PROFESSIONAL);
 
-PROFESSIONAL.belongsToMany(ESPECIALIDAD, {
-  through: "PROFESSIONAL_ESPECIALDAD",
+PROFESSIONAL.belongsToMany(SPECIALTY, {
+  through: "PROFESSIONAL_SPECIALTY",
   timestamps: false,
 });
-ESPECIALIDAD.belongsToMany(PROFESSIONAL, {
-  through: "PROFESSIONAL_ESPECIALDAD",
+SPECIALTY.belongsToMany(PROFESSIONAL, {
+  through: "PROFESSIONAL_SPECIALTY",
   timestamps: false,
 });
 
