@@ -11,7 +11,7 @@ import Ajv from "ajv";
 import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 
-const RegisterPofesionalDTOSchema = Type.Object(
+const RegisterProfessionalDTOSchema = Type.Object(
   {
     email: emailDTOSchema,
     DNI: dniDTOSchema,
@@ -37,7 +37,7 @@ ajv.addFormat("DNI", /^[0-9]{8}$/);
 addFormats(ajv, ["email"]);
 addErrors(ajv);
 
-const validateSchema = ajv.compile(RegisterPofesionalDTOSchema);
+const validateSchema = ajv.compile(RegisterProfessionalDTOSchema);
 
 const profesionalRegisterDTO = (req, res, next) => {
   try {
