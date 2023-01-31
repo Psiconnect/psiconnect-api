@@ -37,6 +37,7 @@ export const skillDTOSchema =Type.String({
     errorMessage: {
       minLength: "Skill debe tener al menos 20 caracteres de longitud",
       maxLength: "Skill debe tener como máximo 200 caracteres de longitud",
+      format: "Value no apropiado"
     },
 }
 )
