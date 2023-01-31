@@ -24,5 +24,7 @@ areaRoutes.get('/professional/:area', async (req, res) => {
     }
   })
 
+  
+
 
 export default areaRoutes;

@@ -1,5 +1,6 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
+import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
@@ -64,7 +65,7 @@ professionalRoutes.post(
 );
 
 professionalRoutes.get(
-  '/:professionalId',
+  '/:profesionalId',
     async (req, res) => {
       try{
         const { professionalId } = req.params;
@@ -80,7 +81,16 @@ professionalRoutes.get(
       }
     });
 
-    professionalRoutes.put("/descriptionProfesional",)
+    professionalRoutes.put("/descriptionProfesional/:id", professionalPostRegisterDTO, async(req,res)=>{
+      const {professionalId}= req.params;
+      const professional=  await getProfessionalById(professionalId)
+      
+      try {
+        
+      } catch (error) {
+        
+      }
+    })
 
     professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
       const { newPassword, oldPassword } = req.body;
