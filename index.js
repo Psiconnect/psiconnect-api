@@ -10,12 +10,15 @@ import { mapAreaTesting } from "./src/testing/areas.js";
 dotenv.config();
 
 ///hice unos cambios
-
+const hola =()=>{
+  console.log('dsad');
+}
 async function bootstrap() {
   await sequelize.sync({ force: true });
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
+  hola();
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);
