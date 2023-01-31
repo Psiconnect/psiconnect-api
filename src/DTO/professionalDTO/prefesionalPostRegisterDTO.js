@@ -1,5 +1,5 @@
 import { descriptionDTOSchema, linkedinDTOSchema, skillDTOSchema } from "../typeDTO.js";
-
+import addErrors from "ajv-errors";
 import { Type } from "@sinclair/typebox";
 import Ajv from "ajv";
 
@@ -23,7 +23,7 @@ const ajv = new Ajv({ allErrors: true })
   .addKeyword("kind")
   .addKeyword("modifier");
 
-  ajv.addFormat('skills',/(AMABLE|EMPATICO|SIMPATICO|MOTIVADOR|ENERGICO|CONSERVADOR|LOGICO|PERSUASIVO|ORGANIZADO|ANALITICO|PROGRESISTA)\b/)
+  ajv.addFormat('skill',/(AMABLE|EMPATICO|SIMPATICO|MOTIVADOR|ENERGICO|CONSERVADOR|LOGICO|PERSUASIVO|ORGANIZADO|ANALITICO|PROGRESISTA)\b/)
 
   addErrors(ajv);
 
