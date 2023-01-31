@@ -1,6 +1,10 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 const AREA = sequelize.define(
   "area",
   {
@@ -11,17 +15,31 @@ const AREA = sequelize.define(
       allowNull: false,
       unique: true,
     },
+<<<<<<< HEAD
     season: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+=======
+    area: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING(300)
+    },
+>>>>>>> main
   },
   {
     timestamps: false,
   }
 );
 
+<<<<<<< HEAD
 AREA.hasMany(PROFESIONAL);
 PROFESIONAL.belongsTo(AREA);
+=======
+
+>>>>>>> main
 
 export default AREA;

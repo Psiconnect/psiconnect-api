@@ -4,6 +4,7 @@ import {
   nameDTOSchema,
   surnameDTOSchema,
   passwordDTOSchema,
+  
 } from "../typeDTO.js";
 
 import { Type } from "@sinclair/typebox";
@@ -12,7 +13,7 @@ import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 
 const RegisterProfessionalDTOSchema = Type.Object(
-  {
+  { 
     email: emailDTOSchema,
     DNI: dniDTOSchema,
     name: nameDTOSchema,
@@ -20,7 +21,7 @@ const RegisterProfessionalDTOSchema = Type.Object(
     password: passwordDTOSchema,
   },
   {
-    additionalProperties: false,
+    additionalProperties: true,
     errorMessage: {
       additionalProperties: "El formato del register no es válido-en este",
     },
