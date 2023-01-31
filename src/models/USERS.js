@@ -1,6 +1,6 @@
 import { DataTypes} from "sequelize";
 import sequelize from "../config/db.js";
-import CONSULT from "./CONSULTA.js";
+import CONSULT from "./CONSULT.js";
 import REVIEW from "./REVIEW.js";
 
 

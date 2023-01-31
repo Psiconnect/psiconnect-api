@@ -1,21 +1,21 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
-import profesionalRegisterDTO from "../DTO/profesionalDTO/profesionalRegisterDTO.js";
+import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
-    createProfesionalUser,
-    findAllProfesional,
-    getProfesionalByDNI,
-    getProfesionalByEmail,
-    getProfesionalById
+    createProfessionalUser,
+    findAllProfessional,
+    getProfessionalByDNI,
+    getProfessionalByEmail,
+    getProfessionalById
 } from "../query/queryToPsico.js";
 
-const profesionalRoutes = Router();
+const professionalRoutes = Router();
 
-profesionalRoutes.get("/", async (req, res) => {
+professionalRoutes.get("/", async (req, res) => {
     try {
-      const data = await findAllProfesional();
+      const data = await findAllProfessional();
       if (!data) return res.status(400).json("Base de datos vacia");
       return res.status(200).json(data);
     } catch (error) {
@@ -23,53 +23,53 @@ profesionalRoutes.get("/", async (req, res) => {
     }
   });
   
-profesionalRoutes.post("/login", async (req, res) => {
+professionalRoutes.post("/login", async (req, res) => {
     try {
     const { email, password } = req.body;
 
-    const profesionalLogin = await getProfesionalByEmail(email);
-    const checkPassword = await compare(password, profesionalLogin?.password);
+    const professionalLogin = await getProfessionalByEmail(email);
+    const checkPassword = await compare(password, professionalLogin?.password);
 
-    if (!profesionalLogin || !checkPassword)
+    if (!professionalLogin || !checkPassword)
       return res.status(400).json("credenciales incorrectas");
-    const token = await generatorTKN({ id: profesionalLogin.id });
+    const token = await generatorTKN({ id: professionalLogin.id });
     return res.status(201).json(token);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
 });
 
-profesionalRoutes.post(
+professionalRoutes.post(
   "/register",
-  profesionalRegisterDTO,
+  professionalRegisterDTO,
   async (req, res) => {
     try {
       const { email, DNI } = req.body;
 
-      const existingEmail = await getProfesionalByEmail(email);
-      const existingDNI = await getProfesionalByDNI(DNI);
+      const existingEmail = await getProfessionalByEmail(email);
+      const existingDNI = await getProfessionalByDNI(DNI);
 
       if (existingEmail || existingDNI)
         return res
           .status(400)
           .json("Usuario ya registrado con dichas crendenciales");
 
-      const newProfesional = await createProfesionalUser(req.body);
+      const newProfessional = await createProfessionalUser(req.body);
 
-      return res.status(201).json(newProfesional);
+      return res.status(201).json(newProfessional);
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
   }
 );
 
-profesionalRoutes.get(
+professionalRoutes.get(
   '/:professionalId',
     async (req, res) => {
       try{
         const { professionalId } = req.params;
 
-        const professional = await getProfesionalById(professionalId)
+        const professional = await getProfessionalById(professionalId)
 
         if(!professional) return res.status(404).json('Professional not found')
 
@@ -80,18 +80,18 @@ profesionalRoutes.get(
       }
     });
 
-    profesionalRoutes.put("/password", userJWTDTO, async (req, res) => {
+    professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
       const { newPassword, oldPassword } = req.body;
       try {
-        const profesional = await getUserById(req.id);
-        const checkPassword = await compare(oldPassword, profesional?.password);
+        const professional = await getUserById(req.id);
+        const checkPassword = await compare(oldPassword, professional?.password);
         if (!checkPassword) return res.status(400).json("contraseña incorrecta");
-        profesional.password = newPassword;
-        profesional.save();
+        professional.password = newPassword;
+        professional.save();
         return res.status(202).json("nice");
       } catch (error) {
         return res.status(500).json({ data: error.message });
       }
     });
 
-export default profesionalRoutes;
+export default professionalRoutes;

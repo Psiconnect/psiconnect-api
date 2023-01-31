@@ -2,8 +2,8 @@ import { DataTypes} from "sequelize";
 import sequelize from "../config/db.js";
 
 
-const ESPECIALIDAD = sequelize.define(
-    "especialidad",
+const SPECIALTY = sequelize.define(
+    "specialty",
     {
       id: {
         type: DataTypes.UUID,
@@ -25,4 +25,4 @@ const ESPECIALIDAD = sequelize.define(
   );
 
 
-export default ESPECIALIDAD;
+export default SPECIALTY;
