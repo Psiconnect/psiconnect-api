@@ -1,5 +1,7 @@
 import { hash } from "bcrypt";
+import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import SPECIALTY from "../models/SPECIALTY.js";
 
 export async function findAllProfessional() {
   const data = await PROFESSIONAL.findAll();
@@ -24,5 +26,23 @@ export async function createProfessionalUser(body) {
 
 export async function getProfessionalById(id) {
   const data = await PROFESSIONAL.findOne({ where: { id } });
+  return data;
+}
+
+export async function setProfessionalDescription(body) {
+  const data = await PROFESSIONAL.findOne({ where: { id:body.id } });
+
+  data.description = body.description ? body.description: data.description;
+  data.skill = body.skill  ? body.skill: data.skill;
+  data.linkedin = body.linkedin ? body.linkedin: data.linkedin;
+  
+  await data.area.map( async a =>{
+    const area = await AREA.findOne({where:{area:a}});
+    data.addArea(area);
+  });
+  await data.specialty.map( async a =>{
+    const specialty = await SPECIALTY.findOne({where:{name:a}});
+    data.addArea(specialty);
+  });
   return data;
 }
