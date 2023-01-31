@@ -30,6 +30,9 @@ const USER = sequelize.define(
       password:{
         type: DataTypes.STRING
       },
+      resetToken:{
+        type: DataTypes.STRING
+      },
       state:{
         type: DataTypes.BOOLEAN,
         defaultValue:true
