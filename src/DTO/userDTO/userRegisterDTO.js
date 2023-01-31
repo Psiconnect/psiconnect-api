@@ -18,7 +18,7 @@ const RegisterDTOSchema = Type.Object(
     password: passwordDTOSchema,
   },
   {
-    additionalProperties: false,
+    additionalProperties: true,
     errorMessage: {
       additionalProperties: "El formato del register no es válido",
     },

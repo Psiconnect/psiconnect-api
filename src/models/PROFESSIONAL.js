@@ -4,7 +4,6 @@ import sequelize from "../config/db.js";
 import CONSULT from "./CONSULT.js";
 import SPECIALTY from "./SPECIALTY.js";
 
-
 const PROFESSIONAL = sequelize.define(
   "professional",
   {
@@ -13,7 +12,7 @@ const PROFESSIONAL = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      unique:true
+      unique: true,
     },
     DNI: {
       type: DataTypes.STRING,
@@ -31,13 +30,29 @@ const PROFESSIONAL = sequelize.define(
     avatar: {
       type: DataTypes.STRING(300),
     },
-    description: { // hacer otra tabla
+    description: {
+      // hacer otra tabla
       type: DataTypes.STRING(500),
     },
-    skills: { // hacer otra tabla
-      type: DataTypes.STRING(400),
+    skills: {
+      
+      type: DataTypes.ENUM(
+        "AMABLE",
+        "EMPATICO",
+        "SIMPATICO",
+        "MOTIVADOR",
+        "ENERGICO",
+        "CONSERVADOR",
+        "LOGICO",
+        "PERSUASIVO",
+        "ORGANIZADO",
+        "ADAPTABLE",
+        "ANALITICO",
+        "PROGRESISTA"
+      ),
     },
-    linkedin: { // hacer otra tabla
+    linkedin: {
+      
       type: DataTypes.STRING(200),
     },
     password: {
