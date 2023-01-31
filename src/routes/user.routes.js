@@ -1,5 +1,5 @@
 import { compare } from "bcrypt";
-import  Jwt  from "jsonwebtoken";
+import Jwt from "jsonwebtoken";
 import { Router } from "express";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
@@ -11,6 +11,7 @@ import {
   findAllUser,
   getUserByEmail,
   getUserById,
+  getUserByResetToken,
 } from "../query/queryToUser.js";
 import { config } from "dotenv";
 
@@ -49,7 +50,7 @@ userRoutes.get("/:id", async (req, res) => {
   try {
     if (id) {
       let userById = await USER.findAll({
-        where: { id }
+        where: { id },
       });
       return res.status(200).send(userById);
     } else {
@@ -84,19 +85,35 @@ userRoutes.put("/newPassword", userJWTDTO, async (req, res) => {
   }
 });
 
-userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
-  const { email} = req.body;
-  if(!email) res.status(400).json({message:'Email is required'})
-  try {
-    const user = await getUserByEmail(email);
-    const token = Jwt.sign({userId:user.id,userName: user.name}, )
-    if (!checkPassword) return res.status(400).json("contraseña incorrecta");
-    user.password = newPassword;
-    user.save();
-    return res.status(202).json("nice");
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
+// userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
+//   const { email } = req.body;
+//   let verificationLink;
+//   if (!email) res.status(400).json({ message: "Email is required" });
+//   try {
+//     const user = await getUserByEmail(email);
+//     const token = generatorTKN({ id: userLogin.id });
+//     verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
+//   } catch (error) {
+//     return res.status(500).json({ data: error.message });
+//   }
+// });
+
+// userRoutes.put("/newPasswordForget", async (req, res) => {
+//   const { newPassword } = req.body;
+//   const resetToken = req.headers.reset;
+//   if (!(resetToken && newPassword)) {
+//     res.status(400).json({ message: "All the credentials it required" });
+//   }
+//   try {
+//     user= await getUserByResetToken(resetToken)
+//   } catch (error) {
+//     return res.status(500).json({ data: error.message });
+//   }
+//   try {
+//     user=
+//   } catch (error) {
+//     return res.status(500).json({ message: 'Someting goes Wrog!' });
+//   }
+// });
 
 export default userRoutes;
