@@ -28,4 +28,5 @@ export async function mapUserTesting() {
     const hashedPassword = await hash(u.password, 10);
     await USER.create({ ...u, password:hashedPassword });
   });
-}
+
+  }

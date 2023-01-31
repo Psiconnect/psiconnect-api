@@ -11,7 +11,7 @@ const AREA = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    season: {
+    area: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },

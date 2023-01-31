@@ -80,6 +80,8 @@ professionalRoutes.get(
       }
     });
 
+    professionalRoutes.put("/descriptionProfesional",)
+
     professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
       const { newPassword, oldPassword } = req.body;
       try {
