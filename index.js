@@ -9,6 +9,8 @@ import { mapAreaTesting } from "./src/testing/areas.js";
 
 dotenv.config();
 
+///hice unos cambios
+
 async function bootstrap() {
   await sequelize.sync({ force: true });
   await mapUserTesting()
