@@ -1,8 +1,8 @@
 import AREA from "../models/AREAS.js";
 
-const user = ["depresion","ansiedad", "autoestima", "familia", "genero"];
+const user = ["Depresion","Ansiedad", "Autoestima", "Familia", "Genero"];
 
-export async function mapUserTesting() {
+export async function mapAreaTesting() {
 
   user.map(async (u) => {
     await AREA.create({area: u });

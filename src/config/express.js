@@ -29,7 +29,7 @@ expressApp.use((req, res, next) => {
 // Routes
 expressApp.use('/user', userRoutes)
 expressApp.use('/professional', professionalRoutes)
-expressApp.use('/area', areaRoutes)
+expressApp.use('/areas', areaRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {

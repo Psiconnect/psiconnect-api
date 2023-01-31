@@ -3,6 +3,7 @@ import REVIEW from "./REVIEW.js";
 import sequelize from "../config/db.js";
 import CONSULT from "./CONSULT.js";
 import SPECIALTY from "./SPECIALTY.js";
+import AREA from "./AREAS.js";
 
 const PROFESSIONAL = sequelize.define(
   "professional",
@@ -80,6 +81,14 @@ PROFESSIONAL.belongsToMany(SPECIALTY, {
 });
 SPECIALTY.belongsToMany(PROFESSIONAL, {
   through: "PROFESSIONAL_SPECIALTY",
+  timestamps: false,
+});
+PROFESSIONAL.belongsToMany(AREA, {
+  through: "PROFESSIONAL_AREA",
+  timestamps: false,
+});
+AREA.belongsToMany(PROFESSIONAL, {
+  through: "PROFESSIONAL_AREA",
   timestamps: false,
 });
 

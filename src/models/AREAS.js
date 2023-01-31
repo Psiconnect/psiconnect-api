@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import PROFESSIONAL from "./PROFESSIONAL.js";
+
 
 const AREA = sequelize.define(
   "area",
@@ -16,19 +16,15 @@ const AREA = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING(300)
+    },
   },
   {
     timestamps: false,
   }
 );
 
-PROFESSIONAL.belongsToMany(AREA, {
-  through: "PROFESSIONAL_AREA",
-  timestamps: false,
-});
-AREA.belongsToMany(PROFESSIONAL, {
-  through: "PROFESSIONAL_AREA",
-  timestamps: false,
-});
+
 
 export default AREA;
