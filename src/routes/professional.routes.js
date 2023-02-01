@@ -63,15 +63,13 @@ professionalRoutes.post(
     }
   }
 );
-
+// corregi un error by:dani
 professionalRoutes.get(
-  '/:profesionalId',
+  '/:professionalId',
     async (req, res) => {
+      const { professionalId } = req.params;
       try{
-        const { professionalId } = req.params;
-
         const professional = await getProfessionalById(professionalId)
-
         if(!professional) return res.status(404).json('Professional not found')
 
         return res.status(200).json(professional)
