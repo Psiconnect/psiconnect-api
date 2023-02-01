@@ -13,6 +13,22 @@ const user = [
     area:'Depresion'
   },
   {
+    email: "valdez1@asd.com",
+    name: "doctorchapatin",
+    lastName: "Valdez",
+    password: "Test1234",
+    DNI:"12345670",
+    area:'Ansiedad'
+  },
+  {
+    email: "valdez21@asd.com",
+    name: "doctorchapatin",
+    lastName: "Vavilonia",
+    password: "Test1234",
+    DNI:"12331670",
+    area:'Ansiedad'
+  },
+  {
     email: "docOrejas@asd.com",
     name: "elGato",
     lastName: "vila",

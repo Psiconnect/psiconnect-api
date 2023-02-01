@@ -9,14 +9,18 @@ import {
     findAllProfessional,
     getProfessionalByDNI,
     getProfessionalByEmail,
-    getProfessionalById
+    getProfessionalById,
+    findAllProfessionalByNames
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
 
 professionalRoutes.get("/", async (req, res) => {
+  const { name, lastName } = req.query;
     try {
-      const data = await findAllProfessional();
+      let data;
+      if(!name && !lastName) data = await findAllProfessional();
+      else data = await findAllProfessionalByNames(name,lastName);
       if (!data) return res.status(400).json("Base de datos vacia");
       return res.status(200).json(data);
     } catch (error) {

@@ -2,6 +2,41 @@ import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import SPECIALTY from "../models/SPECIALTY.js";
+import { Op } from "sequelize";
+
+
+
+const opIlikeProfessional = (text) => {
+  return{
+      name:{
+        [Op.iLike]:`%${text}%`
+      }, 
+      lastName:{
+        [Op.iLike]:`%${text}%`
+      } 
+    }
+};
+
+export async function findAllProfessionalByNames(name, lastName){
+  let data;
+  if(name && lastName){
+    data = await PROFESSIONAL.findAll({
+    where:{
+    [Op.and]:{
+      [Op.or]:opIlikeProfessional(name),
+      [Op.or]:opIlikeProfessional(lastName)
+      }
+    }
+  })
+  }else if(name){
+    data = await PROFESSIONAL.findAll({
+      where:{
+        [Op.or]:opIlikeProfessional(name),
+      }
+    })
+  }
+return data;
+}
 
 export async function findAllProfessional() {
   const data = await PROFESSIONAL.findAll();
