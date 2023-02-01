@@ -23,7 +23,7 @@ export async function getUserById(id) {
 }
 
 export async function getUserByResetToken(resetToken) {
-  const data = await USER.findOneOrFail({ where: { resetToken } });
+  const data = await USER.findOne({ where: { resetToken } });
   return data;
 }
 
