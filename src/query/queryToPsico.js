@@ -1,28 +1,48 @@
 import { hash } from "bcrypt";
-import PROFESIONAL from "../models/PROFESIONAL.js";
+import AREA from "../models/AREAS.js";
+import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import SPECIALTY from "../models/SPECIALTY.js";
 
-export async function findAllProfesional() {
-  const data = await PROFESIONAL.findAll();
+export async function findAllProfessional() {
+  const data = await PROFESSIONAL.findAll();
   return data;
 }
 
-export async function getProfesionalByEmail(email) {
-  const data = await PROFESIONAL.findOne({ where: { email } });
+export async function getProfessionalByEmail(email) {
+  const data = await PROFESSIONAL.findOne({ where: { email } });
   return data;
 }
 
-export async function getProfesionalByDNI(DNI) {
-    const data = await PROFESIONAL.findOne({ where: { DNI } });
+export async function getProfessionalByDNI(DNI) {
+    const data = await PROFESSIONAL.findOne({ where: { DNI } });
     return data;
   }
 
-export async function createProfesionalUser(body) {
+export async function createProfessionalUser(body) {
   const hashedPassword = await hash(body.password, 10);
-  const date = await PROFESIONAL.create({ ...body, password: hashedPassword });
+  const date = await PROFESSIONAL.create({ ...body, password: hashedPassword });
   return date;
 }
 
-export async function getProfesionalById(id) {
-  const data = await PROFESIONAL.findOne({ where: { id } });
+export async function getProfessionalById(id) {
+  const data = await PROFESSIONAL.findOne({ where: { id } });
+  return data;
+}
+
+export async function setProfessionalDescription(body) {
+  const data = await PROFESSIONAL.findOne({ where: { id:body.id } });
+
+  data.description = body.description ? body.description: data.description;
+  data.skill = body.skill  ? body.skill: data.skill;
+  data.linkedin = body.linkedin ? body.linkedin: data.linkedin;
+  
+  await data.area.map( async a =>{
+    const area = await AREA.findOne({where:{area:a}});
+    data.addArea(area);
+  });
+  await data.specialty.map( async a =>{
+    const specialty = await SPECIALTY.findOne({where:{name:a}});
+    data.addArea(specialty);
+  });
   return data;
 }

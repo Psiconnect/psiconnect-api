@@ -1,6 +1,5 @@
 import {
   emailDTOSchema,
-  dniDTOSchema,
   nameDTOSchema,
   surnameDTOSchema,
   passwordDTOSchema,
@@ -11,10 +10,9 @@ import Ajv from "ajv";
 import addErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 
-const RegisterPofesionalDTOSchema = Type.Object(
+const RegisterDTOSchema = Type.Object(
   {
     email: emailDTOSchema,
-    DNI: dniDTOSchema,
     name: nameDTOSchema,
     lastName: surnameDTOSchema,
     password: passwordDTOSchema,
@@ -22,7 +20,7 @@ const RegisterPofesionalDTOSchema = Type.Object(
   {
     additionalProperties: false,
     errorMessage: {
-      additionalProperties: "El formato del register no es válido-en este",
+      additionalProperties: "El formato del register no es válido",
     },
   }
 );
@@ -32,14 +30,13 @@ const ajv = new Ajv({ allErrors: true })
   .addKeyword("modifier");
 
 ajv.addFormat("password", /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/);
-ajv.addFormat("DNI", /^[0-9]{8}$/);
 
 addFormats(ajv, ["email"]);
 addErrors(ajv);
 
-const validateSchema = ajv.compile(RegisterPofesionalDTOSchema);
+const validateSchema = ajv.compile(RegisterDTOSchema);
 
-const profesionalRegisterDTO = (req, res, next) => {
+const userRegisterDTO = (req, res, next) => {
   try {
     const isDTOValid = validateSchema(req.body);
 
@@ -54,5 +51,4 @@ const profesionalRegisterDTO = (req, res, next) => {
   }
 };
 
-
-export default profesionalRegisterDTO;
+export default userRegisterDTO;

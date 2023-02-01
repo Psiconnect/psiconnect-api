@@ -18,7 +18,7 @@ const REVIEW = sequelize.define(
             max: 10
         }
       },
-      coments:{
+      comments:{
         type: DataTypes.INTEGER,
         validate:{
             min: 0,
