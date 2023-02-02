@@ -6,11 +6,12 @@ import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
     createProfessionalUser,
+    findAllProfessionalWithArea,
     findAllProfessional,
     getProfessionalByDNI,
     getProfessionalByEmail,
     getProfessionalById,
-    findAllProfessionalByNames
+    findAllProfessionalByAreaAndNames
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
@@ -20,7 +21,21 @@ professionalRoutes.get("/", async (req, res) => {
     try {
       let data;
       if(!name && !lastName) data = await findAllProfessional();
-      else data = await findAllProfessionalByNames(name,lastName);
+      else data=await findAllProfessionalByAreaAndNames(null,name,lastName);  
+      if (!data) return res.status(400).json("Base de datos vacia");
+      return res.status(200).json(data);
+    } catch (error) {
+      return res.status(500).json({ data: error.message });
+    }
+  });
+
+professionalRoutes.get("/:area", async (req, res) => {
+  const { name, lastName } = req.query;
+  const {area} = req.params;
+    try {
+      let data;
+     if(!name && !lastName) data= await findAllProfessionalWithArea(area)
+      else data=await findAllProfessionalByAreaAndNames(area,name,lastName);     
       if (!data) return res.status(400).json("Base de datos vacia");
       return res.status(200).json(data);
     } catch (error) {
