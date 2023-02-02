@@ -5,7 +5,6 @@ import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import USER from "../models/USERS.js";
 import {
   createUser,
   findAllUser,
@@ -49,19 +48,13 @@ userRoutes.post("/login", async (req, res) => {
 });
 
 userRoutes.get("/id", userJWTDTO,async (req, res) => {
-  const { id } = req.id;
-  console.log(id);
+  const  id  = req.id;
   try {
-    if (id) {
-      let userById = await USER.findAll({
-        where: { id },
-      });
-      return res.status(200).send(userById);
-    } else {
-      return res.status(400).send({ error: "No se encontro la id" });
-    }
+   const user = await getUserById(id);
+   if(!user) return res.status(404).json('no se encontro datos')
+   return res.status(200).json(user)
   } catch (error) {
-    res.status(400).send({ error: error });
+    return res.status(400).send({ data: error.message });
   }
 });
 
