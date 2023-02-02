@@ -35,18 +35,22 @@ userRoutes.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const userLogin = await getUserByEmail(email);
+    if (!userLogin)
+    return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
-    if (!userLogin || !checkPassword)
+    if (!checkPassword)
       return res.status(400).json("credenciales incorrectas");
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(201).json(token);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });
 
-userRoutes.get("/:id", async (req, res) => {
-  const { id } = req.params;
+userRoutes.get("/id", userJWTDTO,async (req, res) => {
+  const { id } = req.id;
+  console.log(id);
   try {
     if (id) {
       let userById = await USER.findAll({
