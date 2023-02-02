@@ -14,7 +14,6 @@ const userJWTDTO = async (req, res, next) => {
 
   try {
     const payload = verify(jwt, process.env.JWT_PRIVATE_KEY);
-
     req.id = payload.id;
     next();
   } catch (error) {

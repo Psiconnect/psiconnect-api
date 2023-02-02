@@ -5,7 +5,6 @@ import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import USER from "../models/USERS.js";
 import {
   createUser,
   findAllUser,
@@ -35,29 +34,27 @@ userRoutes.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const userLogin = await getUserByEmail(email);
+    if (!userLogin)
+    return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
-    if (!userLogin || !checkPassword)
+    if (!checkPassword)
       return res.status(400).json("credenciales incorrectas");
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(201).json(token);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });
 
-userRoutes.get("/:id", async (req, res) => {
-  const { id } = req.params;
+userRoutes.get("/id", userJWTDTO,async (req, res) => {
+  const  id  = req.id;
   try {
-    if (id) {
-      let userById = await USER.findAll({
-        where: { id },
-      });
-      return res.status(200).send(userById);
-    } else {
-      return res.status(400).send({ error: "No se encontro la id" });
-    }
+   const user = await getUserById(id);
+   if(!user) return res.status(404).json('no se encontro datos')
+   return res.status(200).json(user)
   } catch (error) {
-    res.status(400).send({ error: error });
+    return res.status(400).send({ data: error.message });
   }
 });
 
@@ -85,35 +82,38 @@ userRoutes.put("/newPassword", userJWTDTO, async (req, res) => {
   }
 });
 
-// userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
-//   const { email } = req.body;
-//   let verificationLink;
-//   if (!email) res.status(400).json({ message: "Email is required" });
-//   try {
-//     const user = await getUserByEmail(email);
-//     const token = generatorTKN({ id: userLogin.id });
-//     verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
-//   } catch (error) {
-//     return res.status(500).json({ data: error.message });
-//   }
-// });
+userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
+  const { email } = req.body;
 
-// userRoutes.put("/newPasswordForget", async (req, res) => {
-//   const { newPassword } = req.body;
-//   const resetToken = req.headers.reset;
-//   if (!(resetToken && newPassword)) {
-//     res.status(400).json({ message: "All the credentials it required" });
-//   }
-//   try {
-//     user= await getUserByResetToken(resetToken)
-//   } catch (error) {
-//     return res.status(500).json({ data: error.message });
-//   }
-//   try {
-//     user=
-//   } catch (error) {
-//     return res.status(500).json({ message: 'Someting goes Wrog!' });
-//   }
-// });
+  if (!email) res.status(400).json({ message: "Email is required" });
+  try {
+    const user = await getUserByEmail(email);
+    const token = generatorTKN({ id: userLogin.id });
+    user.resetToken = token;
+    user.save();
+    let verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
+    //emalaitor mail
+    return res.status(200).json('Verificacion enviada al mail')
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+userRoutes.put("/newPasswordForget", async (req, res) => {
+  const { newPassword } = req.body;
+  const resetToken = req.headers.reset;
+  if (!(resetToken && newPassword)) {
+    res.status(400).json({ message: "All the credentials it required" });
+  }
+  try {
+    const user = await getUserByResetToken(resetToken);
+    user.password = newPassword;
+    user.resetToken = "";
+    user.save();
+    return res.status(202).json({ message: "Someting goes Wrog!" });
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
 export default userRoutes;

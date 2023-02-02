@@ -3,7 +3,7 @@ import PROFESSIONAL from "../models/PROFESSIONAL.js";
 
 export async function findAllArea() {
     const data = await AREA.findAll({
-      include:[PROFESSIONAL]
+      //include:[PROFESSIONAL]
     });
     return data;
   }
