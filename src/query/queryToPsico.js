@@ -111,30 +111,17 @@ export async function getProfessionalById(id) {
   return data;
 }
 
-export async function setProfessionalDescription(body) {
-  const data = await PROFESSIONAL.findOne({
-     where:{ 
-      id: body.id 
-    },
-    include:{
-      model: AREA,
-    }   
-    });
-  console.log(data)
+export async function setProfessionalDescription(params,body) {
+  const data = await PROFESSIONAL.findOne({ where: { id: params} });
 
+  if(!data){
+    return null
+  }
   data.description = body.description ? body.description : data.description;
-  data.skill = body.skill ? body.skill : data.skill;
+  data.skills = body.skills ? body.skills : data.skills;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
 
-    const area = await AREA.findOne({ where: { area: body.area } });
-    data.addArea(area);
 
-  // await data.specialty.map(async (a) => {
-  //   const specialty = await SPECIALTY.findOne({ where: { name: a } });
-  //   data.addArea(specialty);
-  // });
-
-  await data.save();
-
+  await data.save()
   return data;
 }
