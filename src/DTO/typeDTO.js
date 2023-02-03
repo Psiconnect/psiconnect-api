@@ -55,7 +55,7 @@ export const descriptionDTOSchema = Type.String({
     minLength: 20,
     maxLength: 200,
     errorMessage: {
-      minLength: "la descripcion debe tener al menos 29 caracteres de longitud",
+      minLength: "la descripcion debe tener al menos 20 caracteres de longitud",
       maxLength: "la descripcion debe tener como máximo 200 caracteres de longitud",
     },
   });
