@@ -84,8 +84,7 @@ export async function mapProfesionalTesting() {
     const hashedPassword = await hash(u.password, 10);
      const pro = await PROFESSIONAL.create({ ...u, password:hashedPassword });
      const a = await AREA.findOne({where:{area:u.area}})
-    // console.log(a);
-    //  console.log(pro);
-    await pro.addArea(a)
+     await pro.addArea(a)
+  
   });
 }
