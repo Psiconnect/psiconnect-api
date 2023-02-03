@@ -6,36 +6,17 @@ import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
     createProfessionalUser,
-    findAllProfessionalWithArea,
     findAllProfessional,
     getProfessionalByDNI,
     getProfessionalByEmail,
-    getProfessionalById,
-    findAllProfessionalByAreaAndNames
+    getProfessionalById
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
 
 professionalRoutes.get("/", async (req, res) => {
-  const { name, lastName } = req.query;
     try {
-      let data;
-      if(!name && !lastName) data = await findAllProfessional();
-      else data=await findAllProfessionalByAreaAndNames(null,name,lastName);  
-      if (!data) return res.status(400).json("Base de datos vacia");
-      return res.status(200).json(data);
-    } catch (error) {
-      return res.status(500).json({ data: error.message });
-    }
-  });
-
-professionalRoutes.get("/:area", async (req, res) => {
-  const { name, lastName } = req.query;
-  const {area} = req.params;
-    try {
-      let data;
-     if(!name && !lastName) data= await findAllProfessionalWithArea(area)
-      else data=await findAllProfessionalByAreaAndNames(area,name,lastName);     
+      const data = await findAllProfessional();
       if (!data) return res.status(400).json("Base de datos vacia");
       return res.status(200).json(data);
     } catch (error) {
@@ -98,16 +79,26 @@ professionalRoutes.get(
       }
     });
 
-    professionalRoutes.put("/descriptionProfesional/:id", professionalPostRegisterDTO, async(req,res)=>{
-      const {professionalId}= req.params;
-      const professional=  await getProfessionalById(professionalId)
-      
-      try {
-        
-      } catch (error) {
-        
+    professionalRoutes.put(
+      "/descriptionProfesional/:professionalId",
+      professionalPostRegisterDTO,
+      async (req, res) => {
+        const { professionalId } = req.params;
+        try {
+          const professional = await getProfessionalById(professionalId);
+          if (!professional) return res.status(404).json("Professional not found");
+          if (req.body) {
+            professional.description = req.body.description;
+            professional.skills = req.body.skills;
+            professional.linkedin = req.body.linkedin;
+            professional.save();
+            return res.status(201).json("change do it");
+          }
+        } catch (error) {
+          return res.status(500).json({ data: error.message });
+        }
       }
-    })
+    );
 
     professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
       const { newPassword, oldPassword } = req.body;
