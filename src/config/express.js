@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "../routes/user.routes.js";
 import areaRoutes from "../routes/ares.routes.js";
 import professionalRoutes from "../routes/professional.routes.js";
+import skillsRoutes from '../routes/skilss.routes.js';
 
 const expressApp = express();
 
@@ -30,6 +31,7 @@ expressApp.use((req, res, next) => {
 expressApp.use('/user', userRoutes)
 expressApp.use('/professional', professionalRoutes)
 expressApp.use('/areas', areaRoutes)
+expressApp.use('/skills', skillsRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {

@@ -4,6 +4,7 @@ import sequelize from "../config/db.js";
 import CONSULT from "./CONSULT.js";
 import SPECIALTY from "./SPECIALTY.js";
 import AREA from "./AREAS.js";
+import SKILLS from "./SKILLS.js";
 
 const PROFESSIONAL = sequelize.define(
   "professional",
@@ -33,23 +34,6 @@ const PROFESSIONAL = sequelize.define(
     description: {
       // hacer otra tabla
       type: DataTypes.STRING(500),
-    },
-    skills: {
-      
-      type: DataTypes.ENUM(
-        "AMABLE",
-        "EMPATICO",
-        "SIMPATICO",
-        "MOTIVADOR",
-        "ENERGICO",
-        "CONSERVADOR",
-        "LOGICO",
-        "PERSUASIVO",
-        "ORGANIZADO",
-        "ADAPTABLE",
-        "ANALITICO",
-        "PROGRESISTA"
-      ),
     },
     linkedin: {
       
@@ -88,6 +72,14 @@ PROFESSIONAL.belongsToMany(AREA, {
 });
 AREA.belongsToMany(PROFESSIONAL, {
   through: "PROFESSIONAL_AREA",
+  timestamps: false,
+});
+PROFESSIONAL.belongsToMany(SKILLS, {
+  through: "PROFESSIONAL_SKILLS",
+  timestamps: false,
+})
+SKILLS.belongsToMany(PROFESSIONAL, {
+  through: "PROFESSIONAL_SKILLS",
   timestamps: false,
 });
 
