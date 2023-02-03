@@ -11,7 +11,8 @@ import {
     getProfessionalByDNI,
     getProfessionalByEmail,
     getProfessionalById,
-    findAllProfessionalByAreaAndNames
+    findAllProfessionalByAreaAndNames,
+    setProfessionalDescription
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
@@ -89,7 +90,7 @@ professionalRoutes.get(
       const { professionalId } = req.params;
       try{
         const professional = await getProfessionalById(professionalId)
-        if(!professional) return res.status(404).json('Professional not found')
+        if(!professional) return res.status(404).json('Profesional no encontrado')
 
         return res.status(200).json(professional)
 
@@ -98,16 +99,21 @@ professionalRoutes.get(
       }
     });
 
-    professionalRoutes.put("/descriptionProfesional/:id", professionalPostRegisterDTO, async(req,res)=>{
-      const {professionalId}= req.params;
-      const professional=  await getProfessionalById(professionalId)
-      
-      try {
-        
-      } catch (error) {
-        
+    professionalRoutes.put(
+      "/descriptionProfessional/:professionalId", 
+      professionalPostRegisterDTO, 
+      async(req, res)=>{
+        const { professionalId }= req.params;
+        try {
+          const professional = await getProfessionalById(professionalId)
+          if(!professional) return res.status(404).json('Profesional no encontrado')
+          setProfessionalDescription({...req.body, id:professionalId})
+
+          res.status(200).json('La informacion fue añadida con exito')
+        }catch(error) {
+          res.status(500).json({data: err.message })
       }
-    })
+    });
 
     professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
       const { newPassword, oldPassword } = req.body;

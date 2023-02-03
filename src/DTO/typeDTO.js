@@ -52,10 +52,10 @@ export const descriptionDTOSchema = Type.String({
   });
 
   export const linkedinDTOSchema = Type.String({
-    minLength: 50,
+    minLength: 29,
     maxLength: 200,
     errorMessage: {
-      minLength: "la descripcion debe tener al menos 40 caracteres de longitud",
+      minLength: "la descripcion debe tener al menos 29 caracteres de longitud",
       maxLength: "la descripcion debe tener como máximo 200 caracteres de longitud",
     },
   });
