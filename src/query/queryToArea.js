@@ -15,7 +15,6 @@ export async function findAllProfessionalWithArea(area) {
       },
       include:[PROFESSIONAL]
     });
-    console.log(data);
     return data.professionals;
   }
   
