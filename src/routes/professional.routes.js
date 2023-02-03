@@ -4,28 +4,14 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import {
-<<<<<<< HEAD
-    createProfessionalUser,
-    findAllProfessional,
-    getProfessionalByDNI,
-    getProfessionalByEmail,
-<<<<<<< HEAD
-    getProfessionalById,
-    findAllProfessionalByAreaAndNames,
-    setProfessionalDescription
-=======
-    getProfessionalById
->>>>>>> 3b587139da276c924678ee0cac63ca4a5322fe8a
-=======
+import {  
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
-  setProfessionalDescription,
->>>>>>> bbb942001540ed5ab5c97424035b0f82a0f35631
+  setProfessionalDescription
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
@@ -97,21 +83,11 @@ professionalRoutes.post(
   }
 );
 // corregi un error by:dani
-<<<<<<< HEAD
-professionalRoutes.get(
-  '/:professionalId',
-    async (req, res) => {
-      const { professionalId } = req.params;
-      try{
-        const professional = await getProfessionalById(professionalId)
-        if(!professional) return res.status(404).json('Profesional no encontrado')
-=======
 professionalRoutes.get("/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
     const professional = await getProfessionalById(professionalId);
-    if (!professional) return res.status(404).json("Professional not found");
->>>>>>> bbb942001540ed5ab5c97424035b0f82a0f35631
+    if (!professional) return res.status(404).json("Profesional no encontrado");
 
     return res.status(200).json(professional);
   } catch (err) {
@@ -131,52 +107,12 @@ professionalRoutes.put(
       );
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
-<<<<<<< HEAD
-    professionalRoutes.put(
-<<<<<<< HEAD
-      "/descriptionProfessional/:professionalId", 
-      professionalPostRegisterDTO, 
-      async(req, res)=>{
-        const { professionalId }= req.params;
-        try {
-          const professional = await getProfessionalById(professionalId)
-          if(!professional) return res.status(404).json('Profesional no encontrado')
-          setProfessionalDescription({...req.body, id:professionalId})
-
-          res.status(200).json('La informacion fue añadida con exito')
-        }catch(error) {
-          res.status(500).json({data: err.message })
-      }
-    });
-=======
-      "/descriptionProfesional/:professionalId",
-      professionalPostRegisterDTO,
-      async (req, res) => {
-        const { professionalId } = req.params;
-        try {
-          const professional = await getProfessionalById(professionalId);
-          if (!professional) return res.status(404).json("Professional not found");
-          if (req.body) {
-            professional.description = req.body.description;
-            professional.skills = req.body.skills;
-            professional.linkedin = req.body.linkedin;
-            professional.save();
-            return res.status(201).json("change do it");
-          }
-        } catch (error) {
-          return res.status(500).json({ data: error.message });
-        }
-      }
-    );
->>>>>>> 3b587139da276c924678ee0cac63ca4a5322fe8a
-=======
       return res.status(201).json("Cambios generados");
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
   }
 );
->>>>>>> bbb942001540ed5ab5c97424035b0f82a0f35631
 
 professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
