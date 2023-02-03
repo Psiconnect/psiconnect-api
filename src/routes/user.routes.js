@@ -23,7 +23,8 @@ userRoutes.post("/register", userRegisterDTO, async (req, res) => {
     const exitingEmail = await getUserByEmail(email);
     if (exitingEmail) return res.status(400).json("email ya registrado");
     const newUser = await createUser(req.body);
-    return res.status(201).json(newUser);
+    const token = await generatorTKN({ id: newUser.id });
+    return res.status(201).json(token);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -40,7 +41,7 @@ userRoutes.post("/login", async (req, res) => {
     if (!checkPassword)
       return res.status(400).json("credenciales incorrectas");
     const token = await generatorTKN({ id: userLogin.id });
-    return res.status(201).json(token);
+    return res.status(200).json(token);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ data: error.message });

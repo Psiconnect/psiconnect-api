@@ -8,7 +8,7 @@ import { mapProfesionalTesting } from "./src/testing/profesional.js";
 import { mapAreaTesting } from "./src/testing/areas.js";
 
 dotenv.config();
-
+//hola
 
 async function bootstrap() {
   await sequelize.sync({ force: true });
