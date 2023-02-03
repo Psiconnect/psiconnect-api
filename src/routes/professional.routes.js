@@ -8,6 +8,7 @@ import {
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
+  findAllProfessionalWithArea,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
