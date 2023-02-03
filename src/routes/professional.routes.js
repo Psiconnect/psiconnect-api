@@ -4,14 +4,14 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import {
+import {  
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
-  setProfessionalDescription,
+  setProfessionalDescription
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
@@ -87,7 +87,7 @@ professionalRoutes.get("/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
     const professional = await getProfessionalById(professionalId);
-    if (!professional) return res.status(404).json("Professional not found");
+    if (!professional) return res.status(404).json("Profesional no encontrado");
 
     return res.status(200).json(professional);
   } catch (err) {
