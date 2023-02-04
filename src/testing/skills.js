@@ -4,8 +4,6 @@
 import SKILLS from "../models/SKILLS.js";
 
 
-import SKILLS from "../models/SKILLS.js";
-
 const skills = [
   {
     skill: "AMABLE",
