@@ -4,6 +4,8 @@
 import SKILLS from "../models/SKILLS.js";
 
 
+import SKILLS from "../models/SKILLS.js";
+
 const skills = [
   {
     skill: "AMABLE",
@@ -45,11 +47,10 @@ const skills = [
 
 
 
-
 export async function mapSkillsTesting() {
 
-  skills.map(async (u) => {
-     
-      await SKILLS.create({ ...u});
+    skills.map(async (u) => {
+      await SKILLS.create(u);
     });
-}
+  }
+  
