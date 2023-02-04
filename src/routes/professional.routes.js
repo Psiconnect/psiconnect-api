@@ -85,7 +85,7 @@ professionalRoutes.post(
   }
 );
 // corregi un error by:dani
-professionalRoutes.get("/:professionalId", async (req, res) => {
+professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
     const professional = await getProfessionalById(professionalId);
