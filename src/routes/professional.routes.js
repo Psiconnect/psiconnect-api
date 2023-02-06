@@ -8,6 +8,7 @@ import {
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
+  findAllProfessionalWithArea,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
@@ -47,7 +48,8 @@ professionalRoutes.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const professionalLogin = await getProfessionalByEmail(email);
+    const professionalLogin = await getProfessionalByEmail
+    (email);
     const checkPassword = await compare(password, professionalLogin?.password);
 
     if (!professionalLogin || !checkPassword)
@@ -83,7 +85,7 @@ professionalRoutes.post(
   }
 );
 // corregi un error by:dani
-professionalRoutes.get("/:professionalId", async (req, res) => {
+professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
     const professional = await getProfessionalById(professionalId);
