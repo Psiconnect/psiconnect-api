@@ -4,7 +4,7 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import {  
+import {
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
@@ -12,44 +12,43 @@ import {
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
-  setProfessionalDescription
+  setProfessionalDescription,
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
 
 professionalRoutes.get("/", async (req, res) => {
   const { name, lastName } = req.query;
-    try {
-      let data;
-      if(!name && !lastName) data = await findAllProfessional();
-      else data=await findAllProfessionalByAreaAndNames(null,name,lastName);
-      if (!data) return res.status(400).json("Base de datos vacia");
-      return res.status(200).json(data);
-    } catch (error) {
-      return res.status(500).json({ data: error.message });
-    }
-  });
+  try {
+    let data;
+    if (!name && !lastName) data = await findAllProfessional();
+    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
+    if (!data) return res.status(400).json("Base de datos vacia");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
 professionalRoutes.get("/:area", async (req, res) => {
   const { name, lastName } = req.query;
-  const {area} = req.params;
-    try {
-      let data;
-     if(!name && !lastName) data= await findAllProfessionalWithArea(area)
-      else data=await findAllProfessionalByAreaAndNames(area,name,lastName);
-      if (!data) return res.status(400).json("Base de datos vacia");
-      return res.status(200).json(data);
-    } catch (error) {
-      return res.status(500).json({ data: error.message });
-    }
-  });
+  const { area } = req.params;
+  try {
+    let data;
+    if (!name && !lastName) data = await findAllProfessionalWithArea(area);
+    else data = await findAllProfessionalByAreaAndNames(area, name, lastName);
+    if (!data) return res.status(400).json("Base de datos vacia");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
 professionalRoutes.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const professionalLogin = await getProfessionalByEmail
-    (email);
+    const professionalLogin = await getProfessionalByEmail(email);
     const checkPassword = await compare(password, professionalLogin?.password);
 
     if (!professionalLogin || !checkPassword)
@@ -103,13 +102,16 @@ professionalRoutes.put(
   async (req, res) => {
     const { professionalId } = req.params;
     try {
-      const profesionalUpdate = setProfessionalDescription(
+      const validador = await getProfessionalById(professionalId);
+      if (!validador) return res.status(401).json("No se encontro profesional");
+      const profesionalUpdate = await setProfessionalDescription(
         professionalId,
         req.body
       );
-      if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
-
+      if (!profesionalUpdate)return res.status(500).json("No se modifico correctamente");
+      
       return res.status(201).json("Cambios generados");
+      
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }

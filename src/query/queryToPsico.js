@@ -18,7 +18,7 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   let data;
-  if (area  && name && lastName) {
+  if (area && name && lastName) {
     data = await PROFESSIONAL.findAll({
       where: {
         [Op.and]: {
@@ -84,9 +84,9 @@ export async function findAllProfessionalWithArea(area) {
 
 export async function findAllProfessional() {
   const data = await PROFESSIONAL.findAll({
-    include:{
-      model:AREA
-    }
+    include: {
+      model: AREA,
+    },
   });
   return data;
 }
@@ -108,33 +108,41 @@ export async function createProfessionalUser(body) {
 }
 
 export async function getProfessionalById(id) {
-  const data = await PROFESSIONAL.findOne({ where: { id } ,
-    include:[
-      {model:AREA},{model:SKILLS},
-    ],
-    
+  const data = await PROFESSIONAL.findOne({
+    where: { id },
+    include: [{ model: AREA }, { model: SKILLS }],
   });
   return data;
 }
+export async function setModificationProfesional(params, body) {
+  const data = await PROFESSIONAL.findOne({ where: { id:params } });
+  if(!data)return null 
+  data.description = body.description ? body.description : data.description;
+  data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
+  data.areas= body.areas ? body.areas : data.areas
+  data.skills= body.skills ? body.skills : data.skills
+  await data.save()
+  return data;
+}
 
-export async function setProfessionalDescription(params,body) {
-  const data = await PROFESSIONAL.findOne({ where: { id: params} });
+export async function setProfessionalDescription(params, body) {
+  const data = await PROFESSIONAL.findOne({ where: { id: params } });
 
-  if(!data){
-    return null
+  if (!data) {
+    return null;
   }
   data.description = body.description ? body.description : data.description;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
 
-  await body.areas.map(async a=> {
-    const area=await AREA.findOne({where:{area:a}})
-    data.addArea(area)
-  })
+  await body.areas.map(async (a) => {
+    const area = await AREA.findOne({ where: { area: a } });
+    data.addArea(area);
+  });
 
-  await body.skills.map(async a=> {
-    const skill=await SKILLS.findOne({where:{skill:a}})
-    data.addSkills(skill)
-  })
-  await data.save()
+  await body.skills.map(async (a) => {
+    const skill = await SKILLS.findOne({ where: { skill: a } });
+    data.addSkills(skill);
+  });
+  await data.save();
   return data;
 }

@@ -41,6 +41,18 @@ export const skillDTOSchema =Type.Array({
     },
 }
 )
+export const areasDTOSchema =Type.Array({
+
+    
+    minLength: 5,
+    maxLength: 100,
+    errorMessage: {
+      minLength: "Area debe tener al menos 5 caracteres de longitud",
+      maxLength: "Area debe tener como máximo 100 caracteres de longitud",
+      format: "Value no apropiado"
+    },
+}
+)
 
 export const descriptionDTOSchema = Type.String({
     minLength: 10,
