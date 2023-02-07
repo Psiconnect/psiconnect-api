@@ -23,7 +23,7 @@ const ajv = new Ajv({ allErrors: true })
   .addKeyword("kind")
   .addKeyword("modifier");
 
-  ajv.addFormat('skill',/(AMABLE|EMPATICO|SIMPATICO|MOTIVADOR|ENERGICO|CONSERVADOR|LOGICO|PERSUASIVO|ORGANIZADO|ANALITICO|PROGRESISTA)\b/)
+ 
 
   addErrors(ajv);
 

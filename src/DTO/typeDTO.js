@@ -29,8 +29,8 @@ export const surnameDTOSchema = Type.String({
 
 
 
-export const skillDTOSchema =Type.String({
-    format:'skill',
+export const skillDTOSchema =Type.Array({
+
     
     minLength: 5,
     maxLength: 100,

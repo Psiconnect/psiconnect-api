@@ -2,7 +2,8 @@ import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import SPECIALTY from "../models/SPECIALTY.js";
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
+import SKILLS from "../models/SKILLS.js";
 
 const opIlikeProfessional = (text) => {
   return {
@@ -107,7 +108,12 @@ export async function createProfessionalUser(body) {
 }
 
 export async function getProfessionalById(id) {
-  const data = await PROFESSIONAL.findOne({ where: { id } });
+  const data = await PROFESSIONAL.findOne({ where: { id } ,
+    include:[
+      {model:AREA},{model:SKILLS},
+    ],
+    
+  });
   return data;
 }
 
@@ -118,10 +124,17 @@ export async function setProfessionalDescription(params,body) {
     return null
   }
   data.description = body.description ? body.description : data.description;
-  data.skills = body.skills ? body.skills : data.skills;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
 
+  await body.areas.map(async a=> {
+    const area=await AREA.findOne({where:{area:a}})
+    data.addArea(area)
+  })
 
+  await body.skills.map(async a=> {
+    const skill=await SKILLS.findOne({where:{skill:a}})
+    data.addSkills(skill)
+  })
   await data.save()
   return data;
 }
