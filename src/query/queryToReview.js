@@ -1,6 +1,6 @@
-import REVIEW from "../models/REVIEW";
-import USERS from "../models/USERS"
-import PROFESSIONAL from "../models/PROFESSIONAL";
+import REVIEW from "../models/REVIEW.js";
+import USERS from "../models/USERS.js"
+
 
 
 export async function getProfessionalReview (){
