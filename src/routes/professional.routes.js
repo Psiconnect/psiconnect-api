@@ -1,5 +1,6 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
+import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
@@ -68,17 +69,44 @@ professionalRoutes.post(
   async (req, res) => {
     try {
       const { email, DNI } = req.body;
-
       const existingEmail = await getProfessionalByEmail(email);
       const existingDNI = await getProfessionalByDNI(DNI);
 
-      if (existingEmail || existingDNI)
+      if (existingEmail || existingDNI) {
         return res
           .status(400)
           .json("Usuario ya registrado con dichas crendenciales");
-
+      }
       const newProfessional = await createProfessionalUser(req.body);
+      const token = await generatorTKN({ id: newProfessional.id });
+      newProfessional.postRegisterToken = token;
+      const linkConfirmEmail = `${process.env.URL_FRONT}${token}`;
+      try {
+        await transporter.sendMail({
+          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+          to: email,
+          subject: "Confirm Email 📧✔",
+          html: `
+            <h2>¡Hi!</h2>
+            ------->OJO MODIFICAR TEXTO<---------------
+            <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+            <b>Please click on the following link, or paste this into your browser to complete the process:</b>`,
+        });
 
+        await transporter.sendMail({
+          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+          to: email,
+          subject: "Confirm Email 📧✔",
+          html: `
+            <h2>¡Hi!</h2>
+            <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+            <b>Please click on the following link, or paste this into your browser to complete the process:</b>
+            <a href="${linkConfirmEmail}">${linkConfirmEmail}</a>`,
+        });
+      } catch (error) {
+        return res.status(500).json({ data: err.message });
+      }
+      await newProfessional.save();
       return res.status(201).json(newProfessional);
     } catch (error) {
       return res.status(500).json({ data: error.message });
@@ -98,6 +126,18 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   }
 });
 
+professionalRoutes.get("/token", userJWTDTO, async (req, res) => {
+  const id = req.tkn.id;
+  try {
+    const professional = getProfessionalById(id);
+    if (!professional)
+      return res.status(404).json({ data: "NO PREGUNTES MAS!!" });
+    return res.status(100).json(professional)
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
+
 professionalRoutes.put(
   "/descriptionProfesional/:professionalId",
   professionalPostRegisterDTO,
@@ -110,10 +150,10 @@ professionalRoutes.put(
         professionalId,
         req.body
       );
-      if (!profesionalUpdate)return res.status(500).json("No se modifico correctamente");
-      
+      if (!profesionalUpdate)
+        return res.status(500).json("No se modifico correctamente");
+
       return res.status(201).json("Cambios generados");
-      
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
