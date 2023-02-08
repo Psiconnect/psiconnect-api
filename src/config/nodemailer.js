@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer'
 
-
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -13,6 +12,6 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify().then(()=>{
     console.log('Ready for send emails')
-})
+}).catch(err => console.log(err))
 
 export default transporter;

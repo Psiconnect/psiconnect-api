@@ -80,7 +80,7 @@ professionalRoutes.post(
       const newProfessional = await createProfessionalUser(req.body);
       const token = await generatorTKN({ id: newProfessional.id });
       newProfessional.postRegisterToken = token;
-      const linkConfirmEmail = `${process.env.URL_FRONT}${token}`;
+      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${token}`;
       try {
         await transporter.sendMail({
           from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
@@ -130,9 +130,8 @@ professionalRoutes.get("/token", userJWTDTO, async (req, res) => {
   const id = req.tkn.id;
   try {
     const professional = getProfessionalById(id);
-    if (!professional)
-      return res.status(404).json({ data: "NO PREGUNTES MAS!!" });
-    return res.status(100).json(professional)
+    if (!professional) return res.status(404).json({ data: "NO PREGUNTES MAS!!" });
+    return res.status(204).json(professional)
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
