@@ -49,13 +49,13 @@ userRoutes.post("/login", async (req, res) => {
 });
 
 userRoutes.get("/id", userJWTDTO,async (req, res) => {
-  const  id  = req.id;
+  const { id } = req.tkn;
   try {
    const user = await getUserById(id);
    if(!user) return res.status(404).json('no se encontro datos')
    return res.status(200).json(user)
   } catch (error) {
-    return res.status(400).send({ data: error.message });
+    return res.status(500).send({ data: error.message });
   }
 });
 
@@ -72,7 +72,7 @@ userRoutes.get("/", async (req, res) => {
 userRoutes.put("/newPassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
-    const user = await getUserById(req.id);
+    const user = await getUserById(req.tkn.id);
     const checkPassword = await compare(oldPassword, user?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
     user.password = newPassword;

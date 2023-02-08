@@ -30,6 +30,8 @@ professionalRoutes.get("/", async (req, res) => {
     }
   });
 
+  
+
 professionalRoutes.get("/:area", async (req, res) => {
   const { name, lastName } = req.query;
   const {area} = req.params;
@@ -85,6 +87,7 @@ professionalRoutes.post(
   }
 );
 // corregi un error by:dani
+// El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {

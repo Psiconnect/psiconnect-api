@@ -10,7 +10,7 @@ import { mapSkillsTesting } from "./src/testing/skills.js";
 import { mapTestReview } from "./src/testing/review.js"
 
 dotenv.config();
-//hola
+//hola como andan
 
 async function bootstrap() {
   await sequelize.sync({ force: true });
