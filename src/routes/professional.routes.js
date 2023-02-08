@@ -17,6 +17,18 @@ import {
 
 const professionalRoutes = Router();
 
+professionalRoutes.get("/", async (req, res) => {
+  const { name, lastName } = req.query;
+  try {
+    let data;
+    if (!name && !lastName) data = await findAllProfessional();
+    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
+    if (!data) return res.status(400).json("Base de datos vacia");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
 
 professionalRoutes.get("/area/:area", async (req, res) => {
@@ -26,21 +38,8 @@ professionalRoutes.get("/area/:area", async (req, res) => {
     let data;
     if (!name && !lastName) data = await findAllProfessionalWithArea(area);
     else data = await findAllProfessionalByAreaAndNames(area, name, lastName);
-    if (!data.length) return res.status(400).json("Base de datos vacia");
+    if (!data) return res.status(400).json("Base de datos vacia");
     return res.status(200).json(data);
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
-
-professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
-  const {id}=req.tkn;
-  try {
-    console.log(id)
-    const professional= await getProfessionalById(id);
-    console.log(professional)
-    if(!professional) return res.status(404).json('no se encontro datos');
-    return res.status(200).json(professional)
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -105,14 +104,16 @@ professionalRoutes.put(
   async (req, res) => {
     const { professionalId } = req.params;
     try {
-      const profesionalUpdate = setProfessionalDescription(
+      const validador = await getProfessionalById(professionalId);
+      if (!validador) return res.status(401).json("No se encontro profesional");
+      const profesionalUpdate = await setProfessionalDescription(
         professionalId,
         req.body
       );
-      if (!profesionalUpdate)
-        return res.status(500).json("No se modifico correctamente");
-
+      if (!profesionalUpdate)return res.status(500).json("No se modifico correctamente");
+      
       return res.status(201).json("Cambios generados");
+      
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
@@ -128,18 +129,6 @@ professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
     professional.password = newPassword;
     professional.save();
     return res.status(202).json("nice");
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
-professionalRoutes.get("/", async (req, res) => {
-  const { name, lastName } = req.query;
-  try {
-    let data;
-    if (!name && !lastName) data = await findAllProfessional();
-    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
-    if (!data.length) return res.status(400).json("Base de datos vacia");
-    return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }

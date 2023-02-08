@@ -18,16 +18,16 @@ const user = [
     lastName: "conAnteojos",
     password: "Test1234",
     DNI:"66666666",
-    area:'Depresion',
+    area:['Depresion','Ansiedad'],
     avatar:'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
   },
   {
     email: "rabadum@asd.com",
-    name: "doctorchapatin",
-    lastName: "conAnteojos",
+    name: "Hugo",
+    lastName: "Chavez",
     password: "Test1234",
     DNI:"66666666",
-    area:'Depresion',
+    area:['Depresion','Ansiedad'],
     avatar:'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
   },
   {
