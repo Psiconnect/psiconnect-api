@@ -1,7 +1,6 @@
 import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
-import USER from "../models/USERS.js";
 
 const user = [
   {
@@ -214,7 +213,6 @@ export async function mapProfesionalTesting() {
     const hashedPassword = await hash(u.password, 10);
      const pro = await PROFESSIONAL.create({ ...u, password:hashedPassword });
      const a = await AREA.findOne({where:{area:u.area}})
-     await pro.addArea(a)
-  
+    await pro.addArea(a)
   });
 }

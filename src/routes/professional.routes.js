@@ -50,7 +50,8 @@ professionalRoutes.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const professionalLogin = await getProfessionalByEmail(email);
+    const professionalLogin = await getProfessionalByEmail
+    (email);
     const checkPassword = await compare(password, professionalLogin?.password);
 
     if (!professionalLogin || !checkPassword)
