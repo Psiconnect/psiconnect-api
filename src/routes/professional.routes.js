@@ -4,6 +4,7 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
+import { getProfessionalReview } from '../query/queryToReview.jsx'
 import {  
   createProfessionalUser,
   findAllProfessional,
@@ -100,6 +101,23 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
     return res.status(500).json({ data: err.message });
   }
 });
+
+professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
+  const { professionalId } = req.params;
+  try {
+    const professionalReview = await getProfessionalReview(professionalId);
+    if (!professionalReview) return res.status(404).json("Profesional no encontrado");
+    
+
+    return res.status(200).json(professional);
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
+
+
+
+
 
 professionalRoutes.put(
   "/descriptionProfesional/:professionalId",
