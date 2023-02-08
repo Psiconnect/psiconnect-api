@@ -4,7 +4,12 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-import {
+
+import { getProfessionalReview } from '../query/queryToReview.js'
+import {  
+
+
+
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
@@ -19,7 +24,13 @@ const professionalRoutes = Router();
 
 
 
+  
+
+
+
+
 professionalRoutes.get("/area/:area", async (req, res) => {
+
   const { name, lastName } = req.query;
   const { area } = req.params;
   try {
@@ -87,17 +98,36 @@ professionalRoutes.post(
   }
 );
 // corregi un error by:dani
+// El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
     const professional = await getProfessionalById(professionalId);
     if (!professional) return res.status(404).json("Profesional no encontrado");
+    
 
     return res.status(200).json(professional);
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
 });
+
+professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
+  const { professionalId } = req.params;
+  try {
+    const professionalReview = await getProfessionalReview(professionalId);
+    if (!professionalReview) return res.status(404).json("Profesional no encontrado");
+    
+
+    return res.status(200).json(professional);
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
+
+
+
+
 
 professionalRoutes.put(
   "/descriptionProfesional/:professionalId",
