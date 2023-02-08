@@ -114,6 +114,7 @@ export async function getProfessionalById(id) {
   });
   return data;
 }
+
 export async function setModificationProfesional(params, body) {
   const data = await PROFESSIONAL.findOne({ where: { id:params } });
   if(!data)return null 

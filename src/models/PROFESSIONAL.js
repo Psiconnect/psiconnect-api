@@ -42,6 +42,12 @@ const PROFESSIONAL = sequelize.define(
     password: {
       type: DataTypes.STRING,
     },
+    resetToken:{
+      type: DataTypes.STRING
+    },
+    postRegisterToken:{
+      type: DataTypes.STRING
+    },
     state: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
