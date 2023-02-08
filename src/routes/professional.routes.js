@@ -90,6 +90,7 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   try {
     const professional = await getProfessionalById(professionalId);
     if (!professional) return res.status(404).json("Profesional no encontrado");
+    
 
     return res.status(200).json(professional);
   } catch (err) {
