@@ -13,6 +13,7 @@ import {
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
+  getProfessionalByTokenPostRegister,
   setProfessionalDescription,
 } from "../query/queryToPsico.js";
 
@@ -137,21 +138,25 @@ professionalRoutes.get("/token", userJWTDTO, async (req, res) => {
   }
 });
 
+
+//cambie el validador de id por uno de token 
 professionalRoutes.put(
-  "/descriptionProfesional/:professionalId",
+  "/descriptionProfesional",
   professionalPostRegisterDTO,
   async (req, res) => {
-    const { professionalId } = req.params;
+    const { authorization } = req.headers;
     try {
-      const validador = await getProfessionalById(professionalId);
+      const validador = await getProfessionalByTokenPostRegister(authorization);
       if (!validador) return res.status(401).json("No se encontro profesional");
       const profesionalUpdate = await setProfessionalDescription(
-        professionalId,
+        validador.id,
         req.body
       );
       if (!profesionalUpdate)
         return res.status(500).json("No se modifico correctamente");
 
+      profesionalUpdate.postRegisterToken= null;
+      await postRegisterToken.save()  
       return res.status(201).json("Cambios generados");
     } catch (error) {
       return res.status(500).json({ data: error.message });

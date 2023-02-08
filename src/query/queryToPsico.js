@@ -114,6 +114,12 @@ export async function getProfessionalById(id) {
   });
   return data;
 }
+export async function getProfessionalByTokenPostRegister(postRegisterToken) {
+  const data = await PROFESSIONAL.findOne({
+    where: { postRegisterToken },
+  });
+  return data;
+}
 
 export async function setModificationProfesional(params, body) {
   const data = await PROFESSIONAL.findOne({ where: { id:params } });
