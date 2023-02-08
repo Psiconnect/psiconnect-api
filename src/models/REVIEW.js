@@ -11,6 +11,7 @@ const REVIEW = sequelize.define(
         allowNull: false,
         unique:true
       },
+
       score:{
         type: DataTypes.INTEGER,
         validate:{
@@ -19,11 +20,7 @@ const REVIEW = sequelize.define(
         }
       },
       comments:{
-        type: DataTypes.INTEGER,
-        validate:{
-            min: 0,
-            max: 10
-        }
+        type: DataTypes.STRING //se cambio el tipo de dato que estaba como integer a string
       },
     },
     {
