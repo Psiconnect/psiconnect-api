@@ -5,12 +5,8 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-
 import { getProfessionalReview } from '../query/queryToReview.js'
 import {  
-
-
-
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
@@ -35,12 +31,6 @@ professionalRoutes.get("/", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
-
-
-  
-
-
-
 
 professionalRoutes.get("/area/:area", async (req, res) => {
 
@@ -141,10 +131,12 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
 
 professionalRoutes.get("/token", userJWTDTO, async (req, res) => {
   const id = req.tkn.id;
+  const authorization = req.headers.authorization.split(" ")[1];
   try {
-    const professional = getProfessionalById(id);
+    const professional = await getProfessionalById(id);
     if (!professional) return res.status(404).json({ data: "NO PREGUNTES MAS!!" });
-    return res.status(204)
+    if(professional.postRegisterToken !== authorization) return res.status(401).json({ data: "NO PREGUNTES MASSSS!!" });
+    return res.status(204).json(professional)
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
