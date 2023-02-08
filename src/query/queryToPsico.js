@@ -116,19 +116,38 @@ export async function getProfessionalById(id) {
 }
 export async function getProfessionalByTokenPostRegister(postRegisterToken) {
   const data = await PROFESSIONAL.findOne({
-    where: { postRegisterToken },
+    where: { postRegisterToken: postRegisterToken },
+  });
+  return data;
+}
+export async function getProfessionalByConfirmationToken(ConfirmationToken) {
+  const data = await PROFESSIONAL.findOne({
+    where: { ConfirmationToken: ConfirmationToken },
   });
   return data;
 }
 
 export async function setModificationProfesional(params, body) {
-  const data = await PROFESSIONAL.findOne({ where: { id:params } });
-  if(!data)return null 
+  const data = await PROFESSIONAL.findOne({ where: { id: params } });
+  if (!data) return null;
   data.description = body.description ? body.description : data.description;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
-  data.areas= body.areas ? body.areas : data.areas
-  data.skills= body.skills ? body.skills : data.skills
-  await data.save()
+ 
+  const newAreas= await Promise.all(
+    await body.areas.map(async (a) => {
+      const area = await AREA.findOne({ where: { area: a } });
+    return area.id
+    })
+  );
+  await data.setAreas(newAreas)
+  const  newSkill = await Promise.all(
+    await body.skills.map(async (s)=>{
+      const skill= await SKILLS.findOne({where:{skill:s}})
+      return skill.id
+    })
+  )
+  await data.setSkills(newSkill)
+  await data.save();
   return data;
 }
 

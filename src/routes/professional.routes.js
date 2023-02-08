@@ -11,12 +11,14 @@ import {
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
   findAllProfessionalWithArea,
+  getProfessionalByConfirmationToken,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
   getProfessionalByTokenPostRegister,
   setProfessionalDescription,
 } from "../query/queryToPsico.js";
+import { error } from "ajv/dist/vocabularies/applicator/dependencies.js";
 
 const professionalRoutes = Router();
 
@@ -81,19 +83,11 @@ professionalRoutes.post(
       }
       const newProfessional = await createProfessionalUser(req.body);
       const token = await generatorTKN({ id: newProfessional.id });
-      newProfessional.postRegisterToken = token;
-      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${token}`;
+      newProfessional.ConfirmationToken = token;
+      newProfessional.state= 'needConfirm'
+      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/confirmationEmail/${token}`;
       try {
-        await transporter.sendMail({
-          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
-          to: email,
-          subject: "Confirm Email 📧✔",
-          html: `
-            <h2>¡Hi!</h2>
-            ------->OJO MODIFICAR TEXTO<---------------
-            <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
-            <b>Please click on the following link, or paste this into your browser to complete the process:</b>`,
-        });
+   
 
         await transporter.sendMail({
           from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
@@ -103,7 +97,7 @@ professionalRoutes.post(
             <h2>¡Hi!</h2>
             <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
             <b>Please click on the following link, or paste this into your browser to complete the process:</b>
-            <a href="${linkConfirmEmail}">${linkConfirmEmail}</a>`,
+            <a href="${linkConfirmEmail}">VERIFICATE AHORA</a>`,
         });
       } catch (error) {
         return res.status(500).json({ data: err.message });
@@ -115,6 +109,47 @@ professionalRoutes.post(
     }
   }
 );
+
+professionalRoutes.put("/confirmationEmail/:token", async (req, res) => {
+  try {
+    const {token}= req.params;
+    if(!token)return res.status(404).json({data:'Need token'})
+    const professional= getProfessionalByConfirmationToken(token)
+    if (!professional) {
+      return res.status(404).json({data:'Token no coincide con ningun usuario'})
+    }
+    if (professional.state!=='needConfirm') {
+      return res.status(100).json({data:'El usuario ya fue confirmado'})
+    }
+    professional.state= 'pending';
+    professional.ConfirmationToken=null;
+    const newToken = await generatorTKN({ id: professional.id });
+    professional.postRegisterToken=newToken;
+    const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister/${newToken}`;
+    await professional.save()
+    try {
+
+      await transporter.sendMail({
+        from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+        to: email,
+        subject: "Confirm Email 📧✔",
+        html: `
+          <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
+          <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+          <b>Please click on the following link, or paste this into your browser to complete the process:</b>
+          <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
+      });
+    } catch (error) {
+      return res.status(500).json({ data: err.message });
+    }
+    return res.status(200).json('REVISAR TU CORREO')
+
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+
+})
+
 // corregi un error by:dani
 // El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
@@ -161,9 +196,11 @@ professionalRoutes.put(
   professionalPostRegisterDTO,
   async (req, res) => {
     const { authorization } = req.headers;
+    const token= authorization.split(' ')[1]
     try {
-      const validador = await getProfessionalByTokenPostRegister(authorization);
+      const validador = await getProfessionalByTokenPostRegister(token);
       if (!validador) return res.status(401).json("No se encontro profesional");
+      else if (validador.postRegisterToken!==authorization ){return res.status(401).json("NO PREGUNTES MAS");}
       const profesionalUpdate = await setProfessionalDescription(
         validador.id,
         req.body
@@ -172,7 +209,21 @@ professionalRoutes.put(
         return res.status(500).json("No se modifico correctamente");
 
       profesionalUpdate.postRegisterToken= null;
-      await postRegisterToken.save()  
+      await postRegisterToken.save() 
+      try {
+        await transporter.sendMail({
+          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+          to: email,
+          subject: "Confirm Email 📧✔",
+          html: `
+            <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
+            <h1>Recibimos tus datos correctamente.</h1>
+            <p>EMPEZA A LABURAR LADRI.</p>
+            `,
+        });
+      } catch (error) {
+        return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
+      } 
       return res.status(201).json("Cambios generados");
     } catch (error) {
       return res.status(500).json({ data: error.message });

@@ -48,6 +48,9 @@ const PROFESSIONAL = sequelize.define(
     postRegisterToken:{
       type: DataTypes.STRING
     },
+    ConfirmationToken:{
+      type: DataTypes.STRING
+    },
     state: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
