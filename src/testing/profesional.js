@@ -13,6 +13,24 @@ const user = [
     avatar:'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
   },
   {
+    email: "dani@gamil.com",
+    name: "dani",
+    lastName: "conAnteojos",
+    password: "Test1234",
+    DNI:"66666666",
+    area:'Depresion',
+    avatar:'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
+  },
+  {
+    email: "nacho@gmail.com",
+    name: "nacho",
+    lastName: "conAnteojos",
+    password: "Test1234",
+    DNI:"66666666",
+    area:'Depresion',
+    avatar:'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
+  },
+  {
     email: "rabadum@asd.com",
     name: "doctorchapatin",
     lastName: "conAnteojos",
