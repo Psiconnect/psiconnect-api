@@ -1,5 +1,6 @@
 import { compare } from "bcrypt";
 import { Router } from "express";
+import REVIEW from "../models/REVIEW.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
@@ -102,22 +103,6 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   }
 });
 
-professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
-  const { professionalId } = req.params;
-  try {
-    const professionalReview = await getProfessionalReview(professionalId);
-    if (!professionalReview) return res.status(404).json("Profesional no encontrado");
-    
-
-    return res.status(200).json(professional);
-  } catch (err) {
-    return res.status(500).json({ data: err.message });
-  }
-});
-
-
-
-
 
 professionalRoutes.put(
   "/descriptionProfesional/:professionalId",
@@ -151,5 +136,35 @@ professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+
+professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
+  const { professionalId } = req.params;
+  try {
+    const professionalReview = await getProfessionalReview(professionalId);
+    if (!professionalReview) return res.status(404).json("Profesional no encontrado");
+    
+
+    return res.status(200).json(professional);
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
+
+professionalRoutes.post("/:pofessionalId/review", async (req, res)  => {
+      const {comments, score, userId} = req.body
+      const { professionalId } = req.params
+
+      const newReview = await REVIEW.create({
+            comments: comments,
+            score: score,
+            professionalId: professionalId,
+            useId: userId
+      })
+
+})
+
+
+
 
 export default professionalRoutes;
