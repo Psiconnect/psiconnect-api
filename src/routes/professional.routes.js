@@ -150,6 +150,19 @@ professionalRoutes.put("/confirmationEmail/:token", async (req, res) => {
 
 })
 
+professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
+  const {id}=req.tkn;
+  try {
+    console.log(id)
+    const professional= await getProfessionalById(id);
+    console.log(professional)
+    if(!professional) return res.status(404).json('no se encontro datos');
+    return res.status(200).json(professional)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
 // corregi un error by:dani
 // El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
