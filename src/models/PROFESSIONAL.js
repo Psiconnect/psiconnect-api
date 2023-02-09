@@ -52,8 +52,7 @@ const PROFESSIONAL = sequelize.define(
       type: DataTypes.STRING
     },
     state: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+     type:DataTypes.ENUM('pending','needConfirm', 'avalible', 'disavalible'),
     },
   },
   {
