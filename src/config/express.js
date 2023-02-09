@@ -32,7 +32,6 @@ expressApp.use('/user', userRoutes)
 expressApp.use('/professional', professionalRoutes)
 expressApp.use('/areas', areaRoutes)
 expressApp.use('/skills', skillsRoutes)
-
 // Error catching endware.
 expressApp.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars

@@ -3,7 +3,7 @@ import Jwt from "jsonwebtoken";
 import { Router } from "express";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
-import userJWTDTO from "../helpers/checkTKN.js";
+import { userJWTDTO } from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 import {
   createUser,
