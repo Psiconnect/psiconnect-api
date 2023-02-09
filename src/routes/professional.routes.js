@@ -18,7 +18,7 @@ import {
   getProfessionalByTokenPostRegister,
   setProfessionalDescription,
 } from "../query/queryToPsico.js";
-import { error } from "ajv/dist/vocabularies/applicator/dependencies.js";
+
 
 const professionalRoutes = Router();
 
@@ -85,7 +85,7 @@ professionalRoutes.post(
       const token = await generatorTKN({ id: newProfessional.id });
       newProfessional.ConfirmationToken = token;
       newProfessional.state= 'needConfirm'
-      const linkConfirmEmail = `${process.env.URL_FRONT}/profesional/confirmationEmail/${token}`;
+      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/confirmationEmail/${token}`;
       try {
    
 
@@ -110,38 +110,39 @@ professionalRoutes.post(
   }
 );
 
-professionalRoutes.put("/confirmationEmail/:token", async (req, res) => {
+professionalRoutes.put("/confirmationEmail", async (req, res) => {
   try {
-    const {token}= req.params;
+    const {authorization}= req.headers;
+    const token = authorization.split(' ')[1]
     if(!token)return res.status(404).json({data:'Need token'})
     const professional= getProfessionalByConfirmationToken(token)
     if (!professional) {
       return res.status(404).json({data:'Token no coincide con ningun usuario'})
     }
     if (professional.state!=='needConfirm') {
-      return res.status(100).json({data:'El usuario ya fue confirmado'})
+      return res.status(401).json({data:'El usuario ya fue confirmado'})
     }
     professional.state= 'pending';
     professional.ConfirmationToken=null;
     const newToken = await generatorTKN({ id: professional.id });
     professional.postRegisterToken=newToken;
-    const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister/${newToken}`;
-    await professional.save()
+    const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
     try {
-
+      
       await transporter.sendMail({
         from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
         to: email,
         subject: "Confirm Email 📧✔",
         html: `
-          <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-          <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
-          <b>Please click on the following link, or paste this into your browser to complete the process:</b>
-          <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
+        <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
+        <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+        <b>Please click on the following link, or paste this into your browser to complete the process:</b>
+        <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
       });
     } catch (error) {
       return res.status(500).json({ data: err.message });
     }
+    await professional.save()
     return res.status(200).json('REVISAR TU CORREO')
 
   } catch (error) {
