@@ -120,7 +120,7 @@ professionalRoutes.put("/confirmationEmail", async (req, res) => {
       return res.status(404).json({data:'Token no coincide con ningun usuario'})
     }
     if (professional.state!=='needConfirm') {
-      return res.status(100).json({data:'El usuario ya fue confirmado'})
+      return res.status(401).json({data:'El usuario ya fue confirmado'})
     }
     professional.state= 'pending';
     professional.ConfirmationToken=null;
