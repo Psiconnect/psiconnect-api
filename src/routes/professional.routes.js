@@ -110,7 +110,7 @@ professionalRoutes.post(
   }
 );
 
-professionalRoutes.put("/confirmationEmail?tkn=token", async (req, res) => {
+professionalRoutes.put("/confirmationEmail", async (req, res) => {
   try {
     const {authorization}= req.headers;
     const token = authorization.split(' ')[1]
