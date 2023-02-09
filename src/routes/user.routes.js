@@ -12,7 +12,6 @@ import {
   getUserById,
   getUserByResetToken,
 } from "../query/queryToUser.js";
-import { config } from "dotenv";
 
 const userRoutes = Router();
 
@@ -91,7 +90,7 @@ userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
     const user = await getUserByEmail(email);
     const token = generatorTKN({ id: userLogin.id });
     user.resetToken = token;
-    user.save();
+    await user.save();
     let verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
     //emalaitor mail
     return res.status(200).json('Verificacion enviada al mail')

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findAllSkills} from "../query/queryToSkills.js";
+import { findAllSkills } from "../query/queryToSkills.js";
 
 
 const skillsRoutes = Router();
