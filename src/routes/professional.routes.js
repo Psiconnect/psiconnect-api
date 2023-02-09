@@ -137,32 +137,4 @@ professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
 });
 
 
-// professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
-//   const { professionalId } = req.params;
-//   try {
-//     const professionalReview = await getProfessionalReview(professionalId);
-//     if (!professionalReview) return res.status(404).json("Profesional no encontrado");
-    
-
-//     return res.status(200).json(professional);
-//   } catch (err) {
-//     return res.status(500).json({ data: err.message });
-//   }
-// });
-
-// professionalRoutes.post("/:pofessionalId/review", async (req, res)  => {
-//       const {comments, score, userId} = req.body
-//       const { professionalId } = req.params
-
-//       const newReview = await REVIEW.create({
-//             comments: comments,
-//             score: score,
-//             professionalId: professionalId,
-//       })
-
-// })
-
-
-
-
 export default professionalRoutes;

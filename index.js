@@ -18,7 +18,6 @@ async function bootstrap() {
   await mapAreaTesting()
   await mapProfesionalTesting()
   // await mapSkillsTesting()
-  // await mapTestReview()
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);

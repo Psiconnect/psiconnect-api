@@ -32,8 +32,6 @@ reviewRoutes.get('/:professionalId', async(req, res) => {
 }) 
 
 
-
-
 reviewRoutes.post('/:professionalId', async (req, res ) => {
     const { comments, score, userId } = req.body  
     const { professionalId } = req.params
