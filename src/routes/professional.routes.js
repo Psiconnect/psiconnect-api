@@ -85,7 +85,7 @@ professionalRoutes.post(
       const token = await generatorTKN({ id: newProfessional.id });
       newProfessional.ConfirmationToken = token;
       newProfessional.state= 'needConfirm'
-      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/confirmationEmail?tkn=${token}`;
+      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/confirmationEmail/${token}`;
       try {
    
 
