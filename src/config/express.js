@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import userRoutes from "../routes/user.routes.js";
+import reviewRoutes from "../routes/review.routes.js";
 import areaRoutes from "../routes/ares.routes.js";
 import professionalRoutes from "../routes/professional.routes.js";
 import skillsRoutes from '../routes/skilss.routes.js';
@@ -31,6 +32,7 @@ expressApp.use((req, res, next) => {
 expressApp.use('/user', userRoutes)
 expressApp.use('/professional', professionalRoutes)
 expressApp.use('/areas', areaRoutes)
+expressApp.use('/review', reviewRoutes)
 expressApp.use('/skills', skillsRoutes)
 
 // Error catching endware.

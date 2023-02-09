@@ -107,7 +107,11 @@ export async function createProfessionalUser(body) {
 }
 
 export async function getProfessionalById(id) {
-  const data = await PROFESSIONAL.findOne({ where: { id } });
+  const data = await PROFESSIONAL.findOne({
+     where: { id } 
+     
+    
+    });
   return data;
 }
 
