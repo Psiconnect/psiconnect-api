@@ -126,7 +126,7 @@ professionalRoutes.put("/confirmationEmail", async (req, res) => {
     professional.ConfirmationToken=null;
     const newToken = await generatorTKN({ id: professional.id });
     professional.postRegisterToken=newToken;
-    const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
+    const linkConfirmEmail = `${process.env.URL_BACK || 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
     try {
       
       await transporter.sendMail({
@@ -164,6 +164,8 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   }
 });
 
+// corregi un error by:dani
+// El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
@@ -197,7 +199,7 @@ professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
     if (!professionalReview) return res.status(404).json("Profesional no encontrado");
     
 
-    return res.status(200).json(professionalReview);
+    return res.status(200).json(professional);
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
