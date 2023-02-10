@@ -130,7 +130,7 @@ export async function getProfessionalByConfirmationToken(ConfirmationToken) {
 export async function setModificationProfesional(params, body) {
   const data = await PROFESSIONAL.findOne({ where: { id: params } });
   if (!data) return null;
-  data.description = body.description ? body.description : data.description;
+  d.descriptionata = body.description ? body.description : data.description;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
  
   const newAreas= await Promise.all(
