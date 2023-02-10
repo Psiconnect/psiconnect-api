@@ -5,8 +5,6 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import userJWTDTO from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
-
-import { getProfessionalReview } from '../query/queryToReview.js'
 import {  
   createProfessionalUser,
   findAllProfessional,
@@ -21,14 +19,6 @@ import {
 
 
 const professionalRoutes = Router();
-
-
-
-  
-
-
-
-
 professionalRoutes.get("/area/:area", async (req, res) => {
 
   const { name, lastName } = req.query;
