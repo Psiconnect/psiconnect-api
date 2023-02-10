@@ -56,6 +56,16 @@ userRoutes.get("/id", userJWTDTO, async (req, res) => {
     return res.status(500).send({ data: error.message });
   }
 });
+userRoutes.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await getUserById(id);
+    if (!user) return res.status(404).json("no se encontro datos");
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).send({ data: error.message });
+  }
+});
 
 userRoutes.get("/", async (req, res) => {
   try {
