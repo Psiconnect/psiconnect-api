@@ -114,15 +114,9 @@ export async function getProfessionalById(id) {
   });
   return data;
 }
-export async function getProfessionalByTokenPostRegister(postRegisterToken) {
+export async function getProfessionalByTokenAny(token, nameToken) {
   const data = await PROFESSIONAL.findOne({
-    where: { postRegisterToken: postRegisterToken },
-  });
-  return data;
-}
-export async function getProfessionalByConfirmationToken(ConfirmationToken) {
-  const data = await PROFESSIONAL.findOne({
-    where: { ConfirmationToken: ConfirmationToken },
+    where: { [nameToken]: token },
   });
   return data;
 }

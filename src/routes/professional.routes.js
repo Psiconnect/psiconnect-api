@@ -3,19 +3,18 @@ import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
-import userJWTDTO from "../helpers/checkTKN.js";
-import { generatorTKN } from "../helpers/generatorTKN.js";
+import { userConfirmEmailJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
+import { generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
 import { getProfessionalReview } from '../query/queryToReview.js'
 import {  
   createProfessionalUser,
   findAllProfessional,
   findAllProfessionalByAreaAndNames,
   findAllProfessionalWithArea,
-  getProfessionalByConfirmationToken,
   getProfessionalByDNI,
   getProfessionalByEmail,
   getProfessionalById,
-  getProfessionalByTokenPostRegister,
+  getProfessionalByTokenAny,
   setProfessionalDescription,
 } from "../query/queryToPsico.js";
 
@@ -71,7 +70,7 @@ professionalRoutes.post(
   "/register",
   professionalRegisterDTO,
   async (req, res) => {
-    try {
+    try { 
       const { email, DNI } = req.body;
       const existingEmail = await getProfessionalByEmail(email);
       const existingDNI = await getProfessionalByDNI(DNI);
@@ -82,81 +81,89 @@ professionalRoutes.post(
           .json("Usuario ya registrado con dichas crendenciales");
       }
       const newProfessional = await createProfessionalUser(req.body);
-      const token = await generatorTKN({ id: newProfessional.id });
-      newProfessional.ConfirmationToken = token;
-      newProfessional.state= 'needConfirm'
-      const linkConfirmEmail = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/confirmationEmail/${token}`;
-      try {
-   
 
+      const token = await generadorConfirmEmailTKN({ id: newProfessional.id });
+
+      newProfessional.confirmEmailToken = token;
+      newProfessional.state = 'needConfirm'
+
+      const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/confirmationEmail?tkn=${token}`;
+      try {
         await transporter.sendMail({
-          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+          from: `<${process.env.USER_EMAILER}>`,
           to: email,
-          subject: "Confirm Email 📧✔",
+          subject: "Confirmar email 📧✔",
           html: `
-            <h2>¡Hi!</h2>
-            <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
-            <b>Please click on the following link, or paste this into your browser to complete the process:</b>
-            <a href="${linkConfirmEmail}">VERIFICATE AHORA</a>`,
+            <h2>Confirmacion del email 📩</h2>
+            <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
+            <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
+            </p></p>
+            <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
+            <p>atte: El equipo de Psiconnect 💪✌.</p>
+            <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+            <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`
+            ,
         });
       } catch (error) {
         return res.status(500).json({ data: err.message });
       }
+      
       await newProfessional.save();
       return res.status(201).json(newProfessional);
+
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
   }
 );
 
-professionalRoutes.put("/confirmationEmail", async (req, res) => {
+professionalRoutes.get("/confirmationEmail", async (req, res) => {
   try {
-    const {authorization}= req.headers;
-    const token = authorization.split(' ')[1]
-    if(!token)return res.status(404).json({data:'Need token'})
-    const professional= getProfessionalByConfirmationToken(token)
-    if (!professional) {
-      return res.status(404).json({data:'Token no coincide con ningun usuario'})
-    }
-    if (professional.state!=='needConfirm') {
-      return res.status(401).json({data:'El usuario ya fue confirmado'})
-    }
-    professional.state= 'pending';
-    professional.ConfirmationToken=null;
-    const newToken = await generatorTKN({ id: professional.id });
-    professional.postRegisterToken=newToken;
+    const token = req.query.tkn;
+
+    const professional = await getProfessionalByTokenAny(token, 'confirmEmailToken')
+
+    if(!professional) return res.status(404).json({data:'Token no coincide con ningun usuario'})
+    if(professional.confirmEmailToken !== token) return res.status(401).json({ data: "No autorizado" });
+    if(professional.state !== 'needConfirm') return res.status(401).json({data:'El usuario ya fue confirmado'})
+    
+    professional.state = 'pending';
+    professional.confirmEmailToken = null;
+
+    const newToken = await generadorPostRegisterTKN({ id: professional.id });
+
+    professional.postRegisterToken = newToken;
     const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
-    try {
-      
+
+    try{
       await transporter.sendMail({
-        from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
-        to: email,
-        subject: "Confirm Email 📧✔",
+        from: `<${process.env.USER_EMAILER}>`,
+        to: professional.email,
+        subject: "MEEE QUIEERO METER UN TIRO FER, pero ,Bienvenido a Psiconnect",
         html: `
         <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
         <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
         <b>Please click on the following link, or paste this into your browser to complete the process:</b>
         <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
       });
-    } catch (error) {
-      return res.status(500).json({ data: err.message });
+    }catch (error) {
+      return res.status(500).json({ data: error.message });
     }
-    await professional.save()
-    return res.status(200).json('REVISAR TU CORREO')
 
-  } catch (error) {
+    await professional.save()
+    res.redirect(process.env.URL_FRONT)
+    return res.end
+
+  }catch (error) {
     return res.status(500).json({ data: error.message });
   }
-
-})
+});
 
 professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   const {id}=req.tkn;
   try {
     console.log(id)
     const professional= await getProfessionalById(id);
-    console.log(professional)
     if(!professional) return res.status(404).json('no se encontro datos');
     return res.status(200).json(professional)
   } catch (error) {
@@ -179,19 +186,6 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   }
 });
 
-professionalRoutes.get("/token", userJWTDTO, async (req, res) => {
-  const id = req.tkn.id;
-  const authorization = req.headers.authorization.split(" ")[1];
-  try {
-    const professional = await getProfessionalById(id);
-    if (!professional) return res.status(404).json({ data: "NO PREGUNTES MAS!!" });
-    if(professional.postRegisterToken !== authorization) return res.status(401).json({ data: "NO PREGUNTES MASSSS!!" });
-    return res.status(204).json(professional)
-  } catch (err) {
-    return res.status(500).json({ data: err.message });
-  }
-});
-
 professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
   const { professionalId } = req.params;
   try {
@@ -205,25 +199,38 @@ professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
   }
 });
 
+professionalRoutes.get("/token/postRegister", userPostRegisterJWTDTO, async (req, res) => {
+  const token = req.headers.post.split(" ")[1];
+  try {
+    const professional = await getProfessionalByTokenAny(token, 'postRegisterToken');
+
+    if (!professional) return res.status(404).json({ data: "Profesional No registrado" });
+    if(professional.postRegisterToken !== token) return res.status(401).json({ data: "No autorizado" });
+
+    return res.status(204).json(professional)
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
+
 professionalRoutes.put(
   "/descriptionProfesional",
   professionalPostRegisterDTO,
+  userPostRegisterJWTDTO,
   async (req, res) => {
-    const { authorization } = req.headers;
-    const token= authorization.split(' ')[1]
+    const token = req.tkn
     try {
-      const validador = await getProfessionalByTokenPostRegister(token);
-      if (!validador) return res.status(401).json("No se encontro profesional");
-      else if (validador.postRegisterToken!==authorization ){return res.status(401).json("NO PREGUNTES MAS");}
-      const profesionalUpdate = await setProfessionalDescription(
-        validador.id,
-        req.body
-      );
-      if (!profesionalUpdate)
-        return res.status(500).json("No se modifico correctamente");
+      const professional = await getProfessionalByTokenAny(token,'postRegisterToken');
 
-      profesionalUpdate.postRegisterToken= null;
-      await postRegisterToken.save() 
+      if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
+      if(professional.postRegisterToken !== token) return res.status(401).json({data:"No autorizado"});
+
+      const profesionalUpdate = await setProfessionalDescription(professional.id, req.body);
+
+      if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
+
+      profesionalUpdate.postRegisterToken = null;
+
       try {
         await transporter.sendMail({
           from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
@@ -237,8 +244,11 @@ professionalRoutes.put(
         });
       } catch (error) {
         return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
-      } 
+      }   
+
+      await postRegisterToken.save() 
       return res.status(201).json("Cambios generados");
+
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }

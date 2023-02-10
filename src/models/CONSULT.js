@@ -5,17 +5,19 @@ const CONSULT = sequelize.define(
   "consult",
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique:true
     },
     price: {
       type: DataTypes.STRING,
     },
+    status: {
+      type: DataTypes.STRING,
+    },
     date: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
   },
   {
