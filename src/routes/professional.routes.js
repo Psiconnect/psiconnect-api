@@ -87,7 +87,7 @@ professionalRoutes.post(
       newProfessional.confirmEmailToken = token;
       newProfessional.state = 'needConfirm'
 
-      const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/confirmationEmail?tkn=${token}`;
+      const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/confirmationEmail?tkn=${token}`;
       try {
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
@@ -151,7 +151,8 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
     }
 
     await professional.save()
-    return res.status(200).json('Email confirmado existosamente, REVISA TU CORREO')
+    res.redirect(process.env.URL_FRONT)
+    return res.end
 
   }catch (error) {
     return res.status(500).json({ data: error.message });
