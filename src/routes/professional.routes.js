@@ -161,8 +161,6 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   }
 });
 
-// corregi un error by:dani
-// El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
@@ -196,7 +194,7 @@ professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
     if (!professionalReview) return res.status(404).json("Profesional no encontrado");
     
 
-    return res.status(200).json(professional);
+    return res.status(200).json(professionalReview);
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }

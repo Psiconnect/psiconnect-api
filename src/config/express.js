@@ -8,6 +8,8 @@ import reviewRoutes from "../routes/review.routes.js";
 import areaRoutes from "../routes/ares.routes.js";
 import professionalRoutes from "../routes/professional.routes.js";
 import skillsRoutes from '../routes/skilss.routes.js';
+import paymentRoutes from "../routes/payment.routes.js";
+import consultsRoutes from "../routes/consults.routes.js";
 
 const expressApp = express();
 
@@ -34,6 +36,8 @@ expressApp.use('/professional', professionalRoutes)
 expressApp.use('/areas', areaRoutes)
 expressApp.use('/review', reviewRoutes)
 expressApp.use('/skills', skillsRoutes)
+expressApp.use('/payment', paymentRoutes)
+expressApp.use('/consult', consultsRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {
