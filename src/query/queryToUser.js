@@ -26,4 +26,9 @@ export async function getUserByResetToken(resetToken) {
   const data = await USER.findOne({ where: { resetToken } });
   return data;
 }
+export async function getOrCreate(body) {
+  const hashedPassword = await hash(body.password, 10);
+  const data = await USER.findOrCreate({where:{ ...body, password: hashedPassword }});
+  return data;
+}
 
