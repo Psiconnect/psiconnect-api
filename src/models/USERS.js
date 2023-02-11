@@ -30,7 +30,13 @@ const USER = sequelize.define(
       password:{
         type: DataTypes.STRING
       },
+      refreshToken:{
+        type: DataTypes.STRING
+      },
       resetToken:{
+        type: DataTypes.STRING
+      },
+      confirmEmailToken:{
         type: DataTypes.STRING
       },
       state:{

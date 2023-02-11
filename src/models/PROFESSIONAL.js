@@ -42,13 +42,16 @@ const PROFESSIONAL = sequelize.define(
     password: {
       type: DataTypes.STRING,
     },
+    refreshToken:{
+      type: DataTypes.STRING
+    },
     resetToken:{
       type: DataTypes.STRING
     },
     postRegisterToken:{
       type: DataTypes.STRING
     },
-    ConfirmationToken:{
+    confirmEmailToken:{
       type: DataTypes.STRING
     },
     state: {
