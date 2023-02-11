@@ -52,9 +52,9 @@ professionalRoutes.get("/area/:area", async (req, res) => {
 professionalRoutes.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    console.log(password);
     const professionalLogin = await getProfessionalByEmail(email);
-    const checkPassword = await compare(password, professionalLogin?.password);
+    const checkPassword = await compare(password, professionalLogin?.password || '');
 
     if (!professionalLogin || !checkPassword)
       return res.status(400).json("credenciales incorrectas");
