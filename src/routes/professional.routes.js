@@ -5,7 +5,6 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import { userConfirmEmailJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
 import { generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
-import { getProfessionalReview } from '../query/queryToReview.js'
 import {  
   createProfessionalUser,
   findAllProfessional,
@@ -210,10 +209,6 @@ professionalRoutes.get("/token/postRegister", userPostRegisterJWTDTO, async (req
     return res.status(500).json({ data: err.message });
   }
 });
-
-
-
-
 
 professionalRoutes.put(
   "/descriptionProfesional",

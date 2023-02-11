@@ -45,11 +45,13 @@ const USER = sequelize.define(
       },
 
       phone : {
-        type: DataTypes.STRING 
+        type: DataTypes.STRING,
+        
       },
 
       image : {
-        type: DataTypes.STRING 
+        type: DataTypes.STRING,
+        
       }
 
     },
