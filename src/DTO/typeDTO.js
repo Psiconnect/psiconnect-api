@@ -30,27 +30,23 @@ export const surnameDTOSchema = Type.String({
 
 
 export const skillDTOSchema =Type.Array({
-
-    
-    minLength: 5,
-    maxLength: 100,
-    errorMessage: {
-      minLength: "Skill debe tener al menos 5 caracteres de longitud",
-      maxLength: "Skill debe tener como máximo 100 caracteres de longitud",
-      format: "Value no apropiado"
-    },
+    // minLength: 5,
+    // maxLength: 100,
+    // errorMessage: {
+    //   minLength: "Skill debe tener al menos 5 caracteres de longitud",
+    //   maxLength: "Skill debe tener como máximo 100 caracteres de longitud",
+    //   format: "Value no apropiado"
+    // },
 }
 )
 export const areasDTOSchema =Type.Array({
-
-    
-    minLength: 5,
-    maxLength: 100,
-    errorMessage: {
-      minLength: "Area debe tener al menos 5 caracteres de longitud",
-      maxLength: "Area debe tener como máximo 100 caracteres de longitud",
-      format: "Value no apropiado"
-    },
+    // minLength: 5,
+    // maxLength: 100,
+    // errorMessage: {
+    //   minLength: "Area debe tener al menos 5 caracteres de longitud",
+    //   maxLength: "Area debe tener como máximo 100 caracteres de longitud",
+    //   format: "Value no apropiado"
+    // },
 }
 )
 
