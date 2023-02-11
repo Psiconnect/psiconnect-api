@@ -40,7 +40,12 @@ const USER = sequelize.define(
 
       phone : {
         type: DataTypes.STRING 
+      },
+
+      image : {
+        type: DataTypes.STRING 
       }
+
     },
     {
       timestamps: false,
