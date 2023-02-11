@@ -36,6 +36,10 @@ const USER = sequelize.define(
       state:{
         type: DataTypes.BOOLEAN,
         defaultValue:true
+      },
+
+      phone : {
+        type: DataTypes.STRING 
       }
     },
     {
