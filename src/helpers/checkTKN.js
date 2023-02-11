@@ -7,7 +7,6 @@ config();
 
 export const userJWTDTO = async (req, res, next) => {
   const { authorization } = req.headers;
-
   if (!authorization) return res.status(401).json("Credencial inexistente");
 
   const jwt = authorization.split(" ")[1];
