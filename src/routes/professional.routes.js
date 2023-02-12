@@ -233,13 +233,15 @@ professionalRoutes.put(
 
       try {
         await transporter.sendMail({
-          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
+          from: `<${process.env.USER_EMAILER}>`,
           to: email,
-          subject: "Confirm Email 📧✔",
+          subject: `Bienvenido al equipo de psicologos de Psiconnect`,
           html: `
-            <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-            <h1>Recibimos tus datos correctamente.</h1>
+            <h2>Felicidades ${professional.name} ${professional.lastName}</h2>       -----OJO MODIFICAR---------
+            <h1>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h1>
             <p>EMPEZA A LABURAR LADRI.</p>
+            <p>el link de abajo teoricamente llevaria a la pagina pero no esta implementado</p>
+            <a>link</a><span>el link todavia no esta incorporado</span>
             `,
         });
       } catch (error) {
