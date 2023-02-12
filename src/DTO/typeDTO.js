@@ -30,36 +30,32 @@ export const surnameDTOSchema = Type.String({
 
 
 export const skillDTOSchema =Type.Array({
-
-    
-    minLength: 5,
-    maxLength: 100,
-    errorMessage: {
-      minLength: "Skill debe tener al menos 5 caracteres de longitud",
-      maxLength: "Skill debe tener como máximo 100 caracteres de longitud",
-      format: "Value no apropiado"
-    },
+    // minLength: 5,
+    // maxLength: 100,
+    // errorMessage: {
+    //   minLength: "Skill debe tener al menos 5 caracteres de longitud",
+    //   maxLength: "Skill debe tener como máximo 100 caracteres de longitud",
+    //   format: "Value no apropiado"
+    // },
 }
 )
 export const areasDTOSchema =Type.Array({
-
-    
-    minLength: 5,
-    maxLength: 100,
-    errorMessage: {
-      minLength: "Area debe tener al menos 5 caracteres de longitud",
-      maxLength: "Area debe tener como máximo 100 caracteres de longitud",
-      format: "Value no apropiado"
-    },
+    // minLength: 5,
+    // maxLength: 100,
+    // errorMessage: {
+    //   minLength: "Area debe tener al menos 5 caracteres de longitud",
+    //   maxLength: "Area debe tener como máximo 100 caracteres de longitud",
+    //   format: "Value no apropiado"
+    // },
 }
 )
 
 export const descriptionDTOSchema = Type.String({
     minLength: 10,
-    maxLength: 200,
+    maxLength: 1500,
     errorMessage: {
-      minLength: "la descripcion debe tener al menos 20 caracteres de longitud",
-      maxLength: "la descripcion debe tener como máximo 200 caracteres de longitud",
+      minLength: "la descripcion debe tener al menos 10 caracteres de longitud",
+      maxLength: "la descripcion debe tener como máximo 1500 caracteres de longitud",
     },
   });
 
@@ -67,8 +63,8 @@ export const descriptionDTOSchema = Type.String({
     minLength: 20,
     maxLength: 200,
     errorMessage: {
-      minLength: "la descripcion debe tener al menos 20 caracteres de longitud",
-      maxLength: "la descripcion debe tener como máximo 200 caracteres de longitud",
+      minLength: "el linkedin debe tener al menos 20 caracteres de longitud",
+      maxLength: "el linkedin debe tener como máximo 200 caracteres de longitud",
     },
   });
 

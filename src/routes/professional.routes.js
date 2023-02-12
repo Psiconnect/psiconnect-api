@@ -190,14 +190,14 @@ professionalRoutes.get("/details/:professionalId/review", async (req, res) => {
     if (!professionalReview) return res.status(404).json("Profesional no encontrado");
     
 
-    return res.status(200).json(professional);
+    return res.status(200).json(professionalReview);
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
 });
 
 professionalRoutes.get("/token/postRegister", userPostRegisterJWTDTO, async (req, res) => {
-  const token = req.headers.post.split(" ")[1];
+  const token = req.tkn
   try {
     const professional = await getProfessionalByTokenAny(token, 'postRegisterToken');
 
@@ -244,7 +244,7 @@ professionalRoutes.put(
       }   
 
       await postRegisterToken.save() 
-      return res.status(201).json("Cambios generados");
+      return res.status(201).json("Informacion Añadida");
 
     } catch (error) {
       return res.status(500).json({ data: error.message });
@@ -277,6 +277,26 @@ professionalRoutes.get("/", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+
+
+professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
+  const { id }=req.tkn;
+  try {
+    const professional= await getProfessionalById(id);
+
+    if(!professional) return res.status(404).json('no se encontro datos');
+    
+    const profesionalUpdate = await setProfessionalDescription(id, req.body)
+
+    if(!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
+    
+    return res.status(200).json(profesionalUpdate)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
 
 
 export default professionalRoutes;

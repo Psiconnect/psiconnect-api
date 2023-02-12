@@ -91,17 +91,19 @@ export const userResetPasswordJWTDTO = async (req, res, next) => {
   }
 };
 export const userPostRegisterJWTDTO = async (req, res, next) => {
-  const { post } = req.headers;
+  const { pos } = req.headers;
 
-  if (!post) return res.status(401).json("Credencial inexistente");
+  if (!pos) return res.status(401).json("Credencial inexistente");
 
-  const jwt = post.split(" ")[1];
+  const jwt = pos.split(" ")[1];
 
   if (!jwt) return res.status(401).json("Token inexistente");
 
   try {
     const payload = verify(jwt, POST_REGISTER_JWT_PRIVATE_KEY);
+
     if(!payload) return res.status(401).json('jwt mal formado')
+
     req.tkn = jwt;
     next();
   } catch (error) {
