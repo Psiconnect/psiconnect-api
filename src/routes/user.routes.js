@@ -8,6 +8,7 @@ import { userJWTDTO } from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
 
 import {
+  updateUserData,
   createUser,
   findAllUser,
   getOrCreate,
@@ -137,22 +138,14 @@ userRoutes.post("/google",userRegisterDTO, async (req, res) => {
 });
 
 
-// userRoutes.put('/:id', async (req, res) => {
-//      const { id, name, lastName, phone, image } = req.body
-//     try {
-//      const user = await getUserById(id)
-//     if(!user){return res.status(404).json({data: 'datos no encontrados'})}
-
-//      const updateUser = await USERS.update({
-//         phone,
-//         image,
-//         name,
-//         lastName
-//      })
-//      return res.status(200).json(updateUser)
-//       }catch(error){return res.status(500).json({ data: error.message })
-// }
-
-// })
-
+userRoutes.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { name, lastName, phone, image } = req.body   
+    try{
+      const updateUser = await updateUserData(id, name, lastName, phone, image)
+       return res.status(200).json(updateUser)
+    } catch(error){
+        return res.status(500).json({ data: error.message });
+    }
+})
 export default userRoutes;

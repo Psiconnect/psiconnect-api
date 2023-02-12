@@ -277,4 +277,6 @@ professionalRoutes.get("/", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+
 export default professionalRoutes;

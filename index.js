@@ -13,11 +13,11 @@ dotenv.config();
 //hola como andan
 
 async function bootstrap() {
-  await sequelize.sync({ force: true });
+  await sequelize.sync({ force: false });
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
-  await mapSkillsTesting()
+  // await mapSkillsTesting()
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);

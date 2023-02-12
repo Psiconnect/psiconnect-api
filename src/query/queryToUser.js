@@ -18,7 +18,7 @@ export async function createUser(body) {
 }
 
 export async function getUserById(id) {
-  const data = await USER.findOne({ where: { id } });
+  const data = await USER.findOne({ where: { id  } });
   return data;
 }
 
@@ -32,7 +32,16 @@ export async function getOrCreate(body) {
   return data;
 }
 
+export async function updateUserData(id, name, lastName, phone, image) {
+  const userData = await USER.update(
+    {name ,
+     lastName,
+     phone,
+     image
+    
+    } , { where: { id } });
+}
 
 
-
+ 
 
