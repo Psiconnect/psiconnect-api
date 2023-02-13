@@ -251,20 +251,20 @@ professionalRoutes.put(
           to: profesionalUpdate?.email,
           subject: `Hay novedades en tu cuenta de Psiconnect`,
           html: `
-            <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones </h2>
+            <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones.</h2>
             <p>Completaste con exito todos los filtros y formularios, ahora puedes acceder a tu cuenta tranquilamente, 
             <p>Ya puedes empezar a trabajar y generar conexiones con tu pacientes.</p></p>
             <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
             <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
             <span>AGREGAR MAS DATOS E INFORMACION</span>
-            </br>
-            </br>
-            </br>
-            </br>
-            </br>
-            </br>
-            </br>
-            <p>algun empleador? manden wp 3816261327, trabajo por lo que sea</p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p>algun empleador? manden wp 3816261327, trabajo por lo que sea.</p>
             `,
         });
       } catch (error) {
