@@ -149,11 +149,9 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
     }catch (error) {
       return res.status(500).json({ data: error.message });
     }
-
     await professional.save()
-    res.redirect(process.env.URL_FRONT)
+    res.redirect(`${process.env.URL_FRONT}/confirmationEmail`)
     return res.end
-
   }catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -178,8 +176,6 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   try {
     const professional = await getProfessionalById(professionalId);
     if (!professional) return res.status(404).json("Profesional no encontrado");
-    
-
     return res.status(200).json(professional);
   } catch (err) {
     return res.status(500).json({ data: err.message });
