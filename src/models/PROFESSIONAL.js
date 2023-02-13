@@ -33,7 +33,7 @@ const PROFESSIONAL = sequelize.define(
     },
     description: {
       // hacer otra tabla
-      type: DataTypes.STRING(500),
+      type: DataTypes.TEXT,
     },
     linkedin: {
       
