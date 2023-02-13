@@ -40,7 +40,4 @@ areaRoutes.get('/professional/:Area', async (req, res) => {
   
 
 
-  
-
-
 export default areaRoutes;

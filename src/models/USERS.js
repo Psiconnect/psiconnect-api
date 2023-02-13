@@ -42,7 +42,18 @@ const USER = sequelize.define(
       state:{
         type: DataTypes.BOOLEAN,
         defaultValue:true
+      },
+
+      phone : {
+        type: DataTypes.STRING,
+        
+      },
+
+      image : {
+        type: DataTypes.STRING,
+        
       }
+
     },
     {
       timestamps: false,
