@@ -233,9 +233,9 @@ professionalRoutes.put(
 
       try {
         await transporter.sendMail({
-          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
-          to: email,
-          subject: "Confirm Email 📧✔",
+          from: `${process.env.USER_EMAILER}`,
+          to: profesionalUpdate.email,
+          subject: "Confirm Data 📧✔",
           html: `
             <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
             <h1>Recibimos tus datos correctamente.</h1>
@@ -245,9 +245,8 @@ professionalRoutes.put(
       } catch (error) {
         return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
       }   
-
-      await postRegisterToken.save() 
-      return res.status(201).json("Informacion Añadida");
+      const newToken = generatorTKN({id:profesionalUpdate.id})
+      return res.status(201).json({token:newToken, message: `Bienvenido a psiconnect ${profesionalUpdate.name}`});
 
     } catch (error) {
       return res.status(500).json({ data: error.message });
