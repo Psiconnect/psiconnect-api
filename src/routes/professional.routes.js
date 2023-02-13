@@ -136,13 +136,33 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
         to: professional.email,
+        subject: "Pre Registro para formar parte de los profesionales de Psiconnect",
+        html: `
+        <h2>Hola ${professional.name} ${professional.lastName}</h2>  
+        <p>Queremos darte las gracias por realizar el Pre registro de profesionales de Psiconnect, Como ya sabras o habras leido en nuestra web, 
+        para formar parte de nuestros profesionales deberas pasar por varios filtros o etapas, las cuales estan divididas en 4 :</p>
+        <ol>
+          <li><b> Pre Registro</b><p>- En el pre registro pediremos datos que consideramos importantes, estos datos no deberan estar sujetos a ningun otro profesional que exista o este en proceso para formar parte de psiconecct.</p></li>
+          <li><b>Validacion De Datos</b><p>- En esta etapa tendremos a personal muy confiable de nuestro equipo verificando que los datos que proporcionaste en el pre registro sean reales y de confianza, una vez verificado por nuestro personal recibirás un mensaje con una respuesta confirmando si lograste pasar el filtro o no, <b>esto suele tener un tiempo de espera aprox. 1 a 3 dias, se paciente.</b></p></li>
+          <li><b>Completar Tu Pefil</b><p>- Después de pasar la Validación de Datos lo único que tendrás que hacer será rellenar un formulario con los datos que te pedimos para poder completar tu perfil, <b>Estos datos son necesarios</b>.</p></li>
+          <li><b>Iniciar Sesion</b><p>- Después de completar los datos de tu perfil se iniciara sesion automaticamente y podras usar tu cuenta tranquilamente</p></li>
+          </ol>
+        <b>Recordatorio</b>
+        <p>Actualmente te encuentras en la etapa 2, asique se paciente y espera tu respuesta :)</p>
+        <p>Desde ya muchas gracias por tu atencion y te deseamos mucha suerte.</p>
+        <p>atte: El equipo de Psiconnect.💪✌</p>
+        `,
+      });
+      await transporter.sendMail({
+        from: `<${process.env.USER_EMAILER}>`,
+        to: professional.email,
         subject: "Bienvenido al equipo de psicologos de Psiconnect",
         html: `
-        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>       -----OJO MODIFICAR---------
-        <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
-        <h3>Ahora como siguiente paso deberas entrar al link y rellenar los datos pedidos en el formulario</h3>
-        <b>Please click on the following link, or paste this into your browser to complete the process:</b>
-        <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
+        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>  
+        <p>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos.</p>
+        <p>Ahora como siguiente paso deberas entrar al link y rellenar todos los datos pedidos en el formulario.</p>
+        <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+        <a href="${linkConfirmEmail}">CONTINUAR CON EL FORMULARIO</a>`,
       });
     }catch (error) {
       return res.status(500).json({ data: error.message });
@@ -229,13 +249,22 @@ professionalRoutes.put(
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
           to: profesionalUpdate?.email,
-          subject: `Bienvenido al equipo de psicologos de Psiconnect`,
+          subject: `Hay novedades en tu cuenta de Psiconnect`,
           html: `
-            <h2>Felicidades ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}</h2>       -----OJO MODIFICAR---------
-            <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
-            <p>EMPEZA A LABURAR LADRI.</p>
-            <p>el link de abajo teoricamente llevaria a la pagina pero no esta implementado</p>
-            <a>link</a><span>el link todavia no esta incorporado</span>
+            <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones </h2>
+            <p>Completaste con exito todos los filtros y formularios, ahora puedes acceder a tu cuenta tranquilamente, 
+            <p>Ya puedes empezar a trabajar y generar conexiones con tu pacientes.</p></p>
+            <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
+            <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
+            <span>AGREGAR MAS DATOS E INFORMACION</span>
+            </br>
+            </br>
+            </br>
+            </br>
+            </br>
+            </br>
+            </br>
+            <p>algun empleador? manden wp 3816261327, trabajo por lo que sea</p>
             `,
         });
       } catch (error) {
