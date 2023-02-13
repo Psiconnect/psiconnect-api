@@ -28,7 +28,6 @@ areaRoutes.get('/professional/:Area', async (req, res) => {
 
   areaRoutes.get('/onlyAreas', async (req, res) => {
     
-   
       try {
         const data = await findOnlyAreas();
   
@@ -38,9 +37,6 @@ areaRoutes.get('/professional/:Area', async (req, res) => {
         return res.status(500).json({ data: error.message });
       }
     })
-  
-
-
   
 
 

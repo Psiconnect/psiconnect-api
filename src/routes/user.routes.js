@@ -1,13 +1,17 @@
 import { compare } from "bcrypt";
 import Jwt from "jsonwebtoken";
 import { Router } from "express";
+import USERS from "../models/USERS.js";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import { userJWTDTO } from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
+
 import {
+  updateUserData,
   createUser,
   findAllUser,
+  getOrCreate,
   getUserByEmail,
   getUserById,
   getUserByResetToken,
@@ -34,11 +38,9 @@ userRoutes.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const userLogin = await getUserByEmail(email);
-    if (!userLogin)
-    return res.status(400).json("credenciales incorrectas");
+    if (!userLogin) return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
-    if (!checkPassword)
-      return res.status(400).json("credenciales incorrectas");
+    if (!checkPassword) return res.status(400).json("credenciales incorrectas");
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(200).json(token);
   } catch (error) {
@@ -47,12 +49,22 @@ userRoutes.post("/login", async (req, res) => {
   }
 });
 
-userRoutes.get("/id", userJWTDTO,async (req, res) => {
+userRoutes.get("/id", userJWTDTO, async (req, res) => {
   const { id } = req.tkn;
   try {
-   const user = await getUserById(id);
-   if(!user) return res.status(404).json('no se encontro datos')
-   return res.status(200).json(user)
+    const user = await getUserById(id);
+    if (!user) return res.status(404).json("no se encontro datos");
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).send({ data: error.message });
+  }
+});
+userRoutes.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await getUserById(id);
+    if (!user) return res.status(404).json("no se encontro datos");
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).send({ data: error.message });
   }
@@ -93,7 +105,7 @@ userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
     await user.save();
     let verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
     //emalaitor mail
-    return res.status(200).json('Verificacion enviada al mail')
+    return res.status(200).json("Verificacion enviada al mail");
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -115,5 +127,25 @@ userRoutes.put("/newPasswordForget", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+userRoutes.post("/google",userRegisterDTO, async (req, res) => {
+  try {
+    const newUser = await getOrCreate(req.body);
+    const token = await generatorTKN({ id: newUser[0].id });
+    return res.status(201).json(token);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
+
+userRoutes.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { name, lastName, phone, image } = req.body   
+    try{
+      const updateUser = await updateUserData(id, name, lastName, phone, image)
+       return res.status(200).json(updateUser)
+    } catch(error){
+        return res.status(500).json({ data: error.message });
+    }
+})
 export default userRoutes;

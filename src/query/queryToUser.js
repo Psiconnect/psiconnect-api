@@ -18,7 +18,7 @@ export async function createUser(body) {
 }
 
 export async function getUserById(id) {
-  const data = await USER.findOne({ where: { id } });
+  const data = await USER.findOne({ where: { id  } });
   return data;
 }
 
@@ -26,4 +26,22 @@ export async function getUserByResetToken(resetToken) {
   const data = await USER.findOne({ where: { resetToken } });
   return data;
 }
+export async function getOrCreate(body) {
+  const hashedPassword = await hash(body.password, 10);
+  const data = await USER.findOrCreate({where:{ ...body, password: hashedPassword }});
+  return data;
+}
+
+export async function updateUserData(id, name, lastName, phone, image) {
+  const userData = await USER.update(
+    {name ,
+     lastName,
+     phone,
+     image
+    
+    } , { where: { id } });
+}
+
+
+ 
 

@@ -153,13 +153,14 @@ export async function setProfessionalDescription(params, body) {
   }
   data.description = body.description ? body.description : data.description;
   data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
+  data.avatar = body.avatar ? body.avatar : data.avatar;
 
-  await body.areas.map(async (a) => {
+  await body.areas?.map(async (a) => {
     const area = await AREA.findOne({ where: { area: a } });
     data.addArea(area);
   });
 
-  await body.skills.map(async (a) => {
+  await body.skills?.map(async (a) => {
     const skill = await SKILLS.findOne({ where: { skill: a } });
     data.addSkills(skill);
   });
