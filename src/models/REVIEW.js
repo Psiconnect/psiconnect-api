@@ -19,9 +19,16 @@ const REVIEW = sequelize.define(
             max: 10
         }
       },
+
       comments:{
-        type: DataTypes.STRING //se cambio el tipo de dato que estaba como integer a string
+        type: DataTypes.STRING 
       },
+
+    
+   
+      
+
+      
     },
     {
       timestamps: false,

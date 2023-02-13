@@ -5,7 +5,6 @@ import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostR
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
 import { userConfirmEmailJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
 import { generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
-import { getProfessionalReview } from '../query/queryToReview.js'
 import {  
   createProfessionalUser,
   findAllProfessional,
@@ -20,20 +19,6 @@ import {
 
 
 const professionalRoutes = Router();
-
-professionalRoutes.get("/", async (req, res) => {
-  const { name, lastName } = req.query;
-  try {
-    let data;
-    if (!name && !lastName) data = await findAllProfessional();
-    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
-    if (!data) return res.status(400).json("Base de datos vacia");
-    return res.status(200).json(data);
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
-
 professionalRoutes.get("/area/:area", async (req, res) => {
 
   const { name, lastName } = req.query;
@@ -42,8 +27,21 @@ professionalRoutes.get("/area/:area", async (req, res) => {
     let data;
     if (!name && !lastName) data = await findAllProfessionalWithArea(area);
     else data = await findAllProfessionalByAreaAndNames(area, name, lastName);
-    if (!data) return res.status(400).json("Base de datos vacia");
+    if (!data.length) return res.status(400).json("Base de datos vacia");
     return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
+  const {id}=req.tkn;
+  try {
+    console.log(id)
+    const professional= await getProfessionalById(id);
+    console.log(professional)
+    if(!professional) return res.status(404).json('no se encontro datos');
+    return res.status(200).json(professional)
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -59,7 +57,6 @@ professionalRoutes.post("/login", async (req, res) => {
     if (!professionalLogin || !checkPassword)
       return res.status(400).json("credenciales incorrectas");
     const token = await generatorTKN({ id: professionalLogin.id });
-    console.log(professionalLogin.id)
     return res.status(201).json(token);
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -139,21 +136,20 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
         to: professional.email,
-        subject: "MEEE QUIEERO METER UN TIRO FER, pero ,Bienvenido a Psiconnect",
+        subject: "Bienvenido al equipo de psicologos de Psiconnect",
         html: `
-        <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-        <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>       -----OJO MODIFICAR---------
+        <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
+        <h3>Ahora como siguiente paso deberas entrar al link y rellenar los datos pedidos en el formulario</h3>
         <b>Please click on the following link, or paste this into your browser to complete the process:</b>
         <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
       });
     }catch (error) {
       return res.status(500).json({ data: error.message });
     }
-
     await professional.save()
-    res.redirect(process.env.URL_FRONT)
+    res.redirect(`${process.env.URL_FRONT}/confirmationEmail`)
     return res.end
-
   }catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -178,8 +174,6 @@ professionalRoutes.get("/details/:professionalId", async (req, res) => {
   try {
     const professional = await getProfessionalById(professionalId);
     if (!professional) return res.status(404).json("Profesional no encontrado");
-    
-
     return res.status(200).json(professional);
   } catch (err) {
     return res.status(500).json({ data: err.message });
@@ -225,28 +219,33 @@ professionalRoutes.put(
       if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
       if(professional.postRegisterToken !== token) return res.status(401).json({data:"No autorizado"});
 
-      const profesionalUpdate = await setProfessionalDescription(professional.id, req.body);
-
+      const profesionalUpdate = await setProfessionalDescription(professional?.id, req.body);
+  
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
       profesionalUpdate.postRegisterToken = null;
 
       try {
         await transporter.sendMail({
-          from: `${process.env.USER_EMAILER}`,
-          to: profesionalUpdate.email,
-          subject: "Confirm Data 📧✔",
+          from: `<${process.env.USER_EMAILER}>`,
+          to: profesionalUpdate?.email,
+          subject: `Bienvenido al equipo de psicologos de Psiconnect`,
           html: `
-            <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-            <h1>Recibimos tus datos correctamente.</h1>
+            <h2>Felicidades ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}</h2>       -----OJO MODIFICAR---------
+            <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
             <p>EMPEZA A LABURAR LADRI.</p>
+            <p>el link de abajo teoricamente llevaria a la pagina pero no esta implementado</p>
+            <a>link</a><span>el link todavia no esta incorporado</span>
             `,
         });
       } catch (error) {
         return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
       }   
-      const newToken = generatorTKN({id:profesionalUpdate.id})
-      return res.status(201).json({token:newToken, message: `Bienvenido a psiconnect ${profesionalUpdate.name}`});
+      const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
+      
+      await profesionalUpdate.save() 
+    
+      return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
 
     } catch (error) {
       return res.status(500).json({ data: error.message });
@@ -267,6 +266,20 @@ professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+professionalRoutes.get("/", async (req, res) => {
+  const { name, lastName } = req.query;
+  try {
+    let data;
+    if (!name && !lastName) data = await findAllProfessional();
+    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
+    if (!data.length) return res.status(400).json("Base de datos vacia");
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+
 
 professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
   const { id }=req.tkn;
