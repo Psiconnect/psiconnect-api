@@ -136,10 +136,11 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
         to: professional.email,
-        subject: "MEEE QUIEERO METER UN TIRO FER, pero ,Bienvenido a Psiconnect",
+        subject: "Bienvenido al equipo de psicologos de Psiconnect",
         html: `
-        <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-        <p>Good morning, new Styles shop user, I hope you are well, please, in order to use your account you have to confirm your email, to do so do the following:</p>
+        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>       -----OJO MODIFICAR---------
+        <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
+        <h3>Ahora como siguiente paso deberas entrar al link y rellenar los datos pedidos en el formulario</h3>
         <b>Please click on the following link, or paste this into your browser to complete the process:</b>
         <a href="${linkConfirmEmail}">CONTINUA EL FORMULARIO</a>`,
       });
@@ -218,29 +219,33 @@ professionalRoutes.put(
       if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
       if(professional.postRegisterToken !== token) return res.status(401).json({data:"No autorizado"});
 
-      const profesionalUpdate = await setProfessionalDescription(professional.id, req.body);
-
+      const profesionalUpdate = await setProfessionalDescription(professional?.id, req.body);
+  
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
       profesionalUpdate.postRegisterToken = null;
 
       try {
         await transporter.sendMail({
-          from: ` "📫 Confirm Email...📢" <${process.env.USER_EMAILER}>`,
-          to: email,
-          subject: "Confirm Email 📧✔",
+          from: `<${process.env.USER_EMAILER}>`,
+          to: profesionalUpdate?.email,
+          subject: `Bienvenido al equipo de psicologos de Psiconnect`,
           html: `
-            <h2>¡Hi!</h2>       -----OJO MODIFICAR---------
-            <h1>Recibimos tus datos correctamente.</h1>
+            <h2>Felicidades ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}</h2>       -----OJO MODIFICAR---------
+            <h3>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos</h3>
             <p>EMPEZA A LABURAR LADRI.</p>
+            <p>el link de abajo teoricamente llevaria a la pagina pero no esta implementado</p>
+            <a>link</a><span>el link todavia no esta incorporado</span>
             `,
         });
       } catch (error) {
         return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
       }   
-
-      await postRegisterToken.save() 
-      return res.status(201).json("Informacion Añadida");
+      const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
+      
+      await profesionalUpdate.save() 
+    
+      return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
 
     } catch (error) {
       return res.status(500).json({ data: error.message });
