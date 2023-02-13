@@ -21,6 +21,7 @@ const Data = [
   area:'Genero',
   image:"https://res.cloudinary.com/dcdywqotf/image/upload/v1675267920/areas/ComunidadLGBT_vloo89.svg"
 },
+
 ];
 
 export async function mapAreaTesting() {
