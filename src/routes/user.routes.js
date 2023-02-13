@@ -1,11 +1,14 @@
 import { compare } from "bcrypt";
 import Jwt from "jsonwebtoken";
 import { Router } from "express";
+import USERS from "../models/USERS.js";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import { userJWTDTO } from "../helpers/checkTKN.js";
 import { generatorTKN } from "../helpers/generatorTKN.js";
+
 import {
+  updateUserData,
   createUser,
   findAllUser,
   getOrCreate,
@@ -134,4 +137,15 @@ userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   }
 });
 
+
+userRoutes.put('/:id', async (req, res) => {
+    const { id } = req.params
+    const { name, lastName, phone, image } = req.body   
+    try{
+      const updateUser = await updateUserData(id, name, lastName, phone, image)
+       return res.status(200).json(updateUser)
+    } catch(error){
+        return res.status(500).json({ data: error.message });
+    }
+})
 export default userRoutes;
