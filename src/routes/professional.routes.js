@@ -285,6 +285,7 @@ professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
     const professional = await getUserById(req.id);
+    if(!professional) res.status(404).json({error:'Profesional inexistente'})
     const checkPassword = await compare(oldPassword, professional?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
     professional.password = newPassword;
