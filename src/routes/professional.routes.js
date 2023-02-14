@@ -41,7 +41,7 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
     console.log(id)
     const professional= await getProfessionalById(id);
     console.log(professional)
-    if(!professional) return res.status(404).json('no se encontro datos');
+    if(!professional) return res.status(404).json({error:'no se encontro datos'});
     return res.status(200).json(professional)
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -324,6 +324,74 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+professionalRoutes.put("/forget-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) res.status(400).json({ message: "Email is required" });
+  try {
+    const professional = await getProfessionalByEmail(email);
+    if(!professional)res.status(400).json({ message: "Verificacion enviada al email" });
+    const token = generatorTKN({ id: userLogin.id });
+    const linkEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/newPasswordForgetEmail?tkn=${token}`;
+    try {
+      await transporter.sendMail({
+        from: `<${process.env.USER_EMAILER}>`,
+        to: email,
+        subject: "OLVIDE MI CLAVE 📧✔",
+        html: `
+        <h2>He olvidado mi clave 📩</h2>
+        <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
+        <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
+        </p></p>
+        <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
+        <p>atte: El equipo de Psiconnect 💪✌.</p>
+        <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+        <a href="${linkEmail}"> VERIFICAR AHORA 👍 </a>`
+        ,
+      });
+      professional.resetToken = token;
+      await professional.save();
+    } catch (error) {
+      return res.status(500).json({ data: error.message });
+    }
+    return res.status(200).json("Verificacion enviada al email");
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+professionalRoutes.put("/newPasswordForgetEmail", async (req, res) => {
+
+  const resetToken = req.query.tkn;
+  try {
+    const profesional = await getProfessionalByTokenAny(resetToken,'resetToken');
+    if (!profesional) {
+      return res.status(404).json({ data: 'Credenciales incorrectas'});
+    }
+    res.redirect(`${process.env.URL_FRONT}/ChangeForgetPassword?tkn=${resetToken}`)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+professionalRoutes.put("/ChangePasswordForget", async (req, res) => {
+  const resetToken = req.query.tkn;
+  const {newPassword}= req.body;
+  try {
+    const profesional = await getProfessionalByTokenAny(resetToken,'resetToken');
+    if (!profesional) {
+      return res.status(40).json({ data: 'Credenciales incorrectas'});
+    }
+    profesional.password= newPassword;
+    profesional.resetToken= null;
+    await profesional.save()
+    res.redirect(`${process.env.URL_FRONT}}`)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
 
 
 
