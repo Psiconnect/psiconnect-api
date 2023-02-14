@@ -3,7 +3,7 @@ import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
-import { userConfirmEmailJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
+import {  userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
 import { generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
 import {  
   createProfessionalUser,
@@ -14,6 +14,7 @@ import {
   getProfessionalByEmail,
   getProfessionalById,
   getProfessionalByTokenAny,
+  setModificationProfesional,
   setProfessionalDescription,
 } from "../query/queryToPsico.js";
 
@@ -237,9 +238,9 @@ professionalRoutes.put(
       const professional = await getProfessionalByTokenAny(token,'postRegisterToken');
 
       if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
-      if(professional.postRegisterToken !== token) return res.status(401).json({data:"No autorizado"});
+     ;
 
-      const profesionalUpdate = await setProfessionalDescription(professional?.id, req.body);
+      const profesionalUpdate = await setModificationProfesional(professional, req.body);
   
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
@@ -270,12 +271,10 @@ professionalRoutes.put(
           return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
         }   
         const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
-        
+        profesionalUpdate.status= 'avalible';
         profesionalUpdate.postRegisterToken = null;
         await profesionalUpdate.save() 
-        
         return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
-
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
@@ -317,7 +316,7 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
     if(!professional) return res.status(404).json('no se encontro datos');
     
-    const profesionalUpdate = await setProfessionalDescription(id, req.body)
+    const profesionalUpdate = await setProfessionalDescription(professional, req.body)
 
     if(!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
     
