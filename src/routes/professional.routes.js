@@ -3,8 +3,8 @@ import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
-import {  userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
-import { generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
+import { userConfirmEmailJWTDTO, userResetPasswordJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
+import { generadorResetPasswordTKN, generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
 import {  
   createProfessionalUser,
   findAllProfessional,
@@ -41,7 +41,7 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
     console.log(id)
     const professional= await getProfessionalById(id);
     console.log(professional)
-    if(!professional) return res.status(404).json('no se encontro datos');
+    if(!professional) return res.status(404).json({error:'no se encontro datos'});
     return res.status(200).json(professional)
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -82,10 +82,7 @@ professionalRoutes.post(
 
       const token = await generadorConfirmEmailTKN({ id: newProfessional.id });
 
-      newProfessional.confirmEmailToken = token;
-      newProfessional.state = 'needConfirm'
-
-      const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/confirmationEmail?tkn=${token}`;
+      const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/confirmationEmail?confirm=${token}`;
       try {
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
@@ -100,13 +97,15 @@ professionalRoutes.post(
             <p>atte: El equipo de Psiconnect 💪✌.</p>
             <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
             <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`
-            ,
         });
       } catch (error) {
         return res.status(500).json({ data: err.message });
       }
-      
+      newProfessional.confirmEmailToken = token;
+      newProfessional.state = 'needConfirm'
+
       await newProfessional.save();
+
       return res.status(201).json(newProfessional);
 
     } catch (error) {
@@ -115,9 +114,9 @@ professionalRoutes.post(
   }
 );
 
-professionalRoutes.get("/confirmationEmail", async (req, res) => {
+professionalRoutes.get("/confirmationEmail", userConfirmEmailJWTDTO, async (req, res) => {
   try {
-    const token = req.query.tkn;
+    const token = req.tkn;
 
     const professional = await getProfessionalByTokenAny(token, 'confirmEmailToken')
 
@@ -242,14 +241,6 @@ professionalRoutes.put(
           <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
           <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
           <span>AGREGAR MAS DATOS E INFORMACION</span>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-            <br>
-            <p>algun empleador? manden wp 3816261327, trabajo por lo que sea.</p>
             `,
           });
 
@@ -260,21 +251,25 @@ professionalRoutes.put(
 
         await profesionalUpdate.save() 
 
-        return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
+        return res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
   }
 );
 
-professionalRoutes.put("/password", userJWTDTO, async (req, res) => {
+professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
-    const professional = await getUserById(req.id);
+    const professional = await getUserById(req.tkn.id);
+    if(!professional) res.status(404).json({error:'Profesional inexistente'})
+
     const checkPassword = await compare(oldPassword, professional?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
-    professional.password = newPassword;
+
+    professional?.password = await hash(newPassword, 10);
     professional.save();
+
     return res.status(202).json("nice");
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -308,5 +303,78 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+professionalRoutes.put("/forget-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) res.status(400).json({ message: "Email is required" });
+  try {
+    const professional = await getProfessionalByEmail(email);
+    if(!professional)res.status(400).json({ message: "Verificacion enviada al email" });
+
+    const token = generadorResetPasswordTKN({ id: professional.id });
+    
+    const linkEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/newPasswordForgetEmail?reset=${token}`;
+    try {
+      await transporter.sendMail({
+        from: `<${process.env.USER_EMAILER}>`,
+        to: email,
+        subject: "OLVIDE MI CLAVE 📧✔",
+        html: `
+        <h2>He olvidado mi clave 📩</h2>
+        <p>Hola de nuevo ${professional?.name} ${professional?.lastName}, alparecer te has olvidado de tu contraseña y has solicitado un cambio de contraseña.
+        <p>Porfavor lee el siguiente parrafo.</p>
+        <p>Recuerda que tienes solo 15 min. para poder realizar el proceso ⏱, si no llegas a completarlo, deberas volver a solicitar el cambio de contraseña♻.</p> 
+        <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
+        <p>atte: El equipo de Psiconnect 💪✌.</p>
+        <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+        <a href="${linkEmail}"> CAMBIAR CONTRASEÑA 👍 </a>`
+        ,
+      });
+      professional.resetToken = token;
+      await professional.save();
+    } catch (error) {
+      return res.status(500).json({ data: error.message });
+    }
+    return res.status(200).json("Verificacion enviada al email");
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+professionalRoutes.get("/newPasswordForgetEmail", async (req, res) => {
+
+  const resetToken = req.query.reset;
+  try {
+    const profesional = await getProfessionalByTokenAny(resetToken,'resetToken');
+    if (!profesional) {
+      return res.status(404).json({ data: 'Credenciales incorrectas'});
+    }
+    res.redirect(`${process.env.URL_FRONT}/ChangeForgetPassword?tkn=${resetToken}`)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+professionalRoutes.put("/ChangePasswordForget", userResetPasswordJWTDTO,  async (req, res) => {
+  const reset = req.tkn;
+  const { newPassword }= req.body;
+  try {
+    const profesional = await getProfessionalByTokenAny(reset,'resetToken');
+    if (!profesional) return res.status(401).json({ data: 'Credenciales incorrectas'});
+
+    profesional.password = await hash(newPassword, 10);
+    profesional.resetToken = null;
+
+    await profesional.save();
+
+    return res.status(200).send('La contraseña se modifico correctamente')
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+
+
 
 export default professionalRoutes;
