@@ -121,15 +121,10 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
     const professional = await getProfessionalByTokenAny(token, 'confirmEmailToken')
 
     if(!professional) return res.status(404).json({data:'Token no coincide con ningun usuario'})
-    if(professional.confirmEmailToken !== token) return res.status(401).json({ data: "No autorizado" });
     if(professional.state !== 'needConfirm') return res.status(401).json({data:'El usuario ya fue confirmado'})
-    
-    professional.state = 'pending';
-    professional.confirmEmailToken = null;
 
     const newToken = await generadorPostRegisterTKN({ id: professional.id });
 
-    professional.postRegisterToken = newToken;
     const linkPostRegister = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
 
     try{
@@ -167,7 +162,12 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
     }catch (error) {
       return res.status(500).json({ data: error.message });
     }
+    professional.state = 'pending';
+    professional.confirmEmailToken = null;
+    professional.postRegisterToken = newToken;
+
     await professional.save()
+    
     res.redirect(`${process.env.URL_FRONT}`)
     return res.end
   }catch (error) {
