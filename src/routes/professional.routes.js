@@ -120,7 +120,7 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
 
     const professional = await getProfessionalByTokenAny(token, 'confirmEmailToken')
 
-    if(!professional) return res.status(404).json({data:'Token no coincide con ningun usuario'})
+    if(!professional) return res.status(404).json({data:'No encontrado'})
     if(professional.state !== 'needConfirm') return res.status(401).json({data:'El usuario ya fue confirmado'})
 
     const newToken = await generadorPostRegisterTKN({ id: professional.id });
@@ -236,7 +236,7 @@ professionalRoutes.put(
     try {
       const professional = await getProfessionalByTokenAny(token,'postRegisterToken');
 
-      if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
+      if(!professional) return res.status(404).json({data:"Usuario no encontrado"});
 
       const profesionalUpdate = await setModificationProfesional(professional, req.body);
   
@@ -269,7 +269,7 @@ professionalRoutes.put(
         } 
         const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
 
-        profesionalUpdate.status= 'avalible';
+        profesionalUpdate.status = 'avalible';
         profesionalUpdate.postRegisterToken = null;
 
         await profesionalUpdate.save() 
