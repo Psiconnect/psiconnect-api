@@ -165,3 +165,28 @@ export async function setModificationProfesional(professional, body) {
 
   return professional;
 }
+
+export async function editProfesional(professional, body) {
+  professional.description = body.description 
+  professional.linkedin = body.linkedin
+  professional.avatar = body.avatar
+
+  const areasIds = await Promise.all( 
+    body.areas?.map(async el => {
+      const area = await AREA.findByPk(el.id)
+      return area.id
+    })
+  );
+  await professional.setAreas(areasIds)
+  const skillsIds = await Promise.all( 
+    body.skills?.map(async el => {
+      const skill = await SKILLS.findByPk(el.id)
+      return skill.id
+    })
+  );
+  await professional.setSkills(skillsIds)
+
+  await professional.save()
+
+  return await PROFESSIONAL.findByPk(professional.id);
+}

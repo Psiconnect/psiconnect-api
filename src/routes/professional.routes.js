@@ -15,6 +15,7 @@ import {
   getProfessionalById,
   getProfessionalByTokenAny,
   setModificationProfesional,
+  editProfesional
 } from "../query/queryToPsico.js";
 
 
@@ -313,7 +314,7 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
     if(!professional) return res.status(404).json('no se encontro datos');
     
-    const profesionalUpdate = await setModificationProfesional(professional, req.body)
+    const profesionalUpdate = await editProfesional(professional, req.body)
 
     if(!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
     
