@@ -176,18 +176,6 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
   }
 });
 
-professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
-  const {id}=req.tkn;
-  try {
-    console.log(id)
-    const professional= await getProfessionalById(id);
-    if(!professional) return res.status(404).json('no se encontro datos');
-    return res.status(200).json(professional)
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
-
 // corregi un error by:dani
 // El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
@@ -243,7 +231,6 @@ professionalRoutes.put(
   
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
-      try {
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
           to: profesionalUpdate?.email,
@@ -265,9 +252,7 @@ professionalRoutes.put(
             <p>algun empleador? manden wp 3816261327, trabajo por lo que sea.</p>
             `,
           });
-        } catch (error) {
-          return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
-        } 
+
         const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
 
         profesionalUpdate.status = 'avalible';
@@ -308,14 +293,14 @@ professionalRoutes.get("/", async (req, res) => {
   }
 });
 professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
-  const { id }=req.tkn;
+  const { id } = req.tkn;
   try {
     const professional= await getProfessionalById(id);
 
-    if(!professional) return res.status(404).json('no se encontro datos');
-    
-    const profesionalUpdate = await editProfesional(professional, req.body)
+    if(!professional) return res.status(404).json('no se encontro datos');  
 
+    const profesionalUpdate = await editProfesional(professional, req.body)
+  
     if(!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
     
     return res.status(200).json(profesionalUpdate)

@@ -83,9 +83,7 @@ export async function findAllProfessionalWithArea(area) {
 
 export async function findAllProfessional() {
   const data = await PROFESSIONAL.findAll({
-    include: {
-      model: AREA,
-    },
+    include: [{ model: AREA }, { model: SKILLS }],
   });
   return data;
 }
@@ -113,6 +111,7 @@ export async function getProfessionalById(id) {
   });
   return data;
 }
+
 export async function getProfessionalByTokenAny(token, nameToken) {
   const data = await PROFESSIONAL.findOne({
     where: { [nameToken]: token },
@@ -120,67 +119,38 @@ export async function getProfessionalByTokenAny(token, nameToken) {
   return data;
 }
 
-// export async function setModificationProfesional(professional, body) {
-//   professional.description = body.description 
-//   professional.linkedin = body.linkedin
-//   professional.avatar = body.avatar
-
-  // const areasIds = body.areas.map(el => el.id)
-  // const skillsIds = body.skills.map(el => el.id)
-
-  // await professional.setAreas(areasIds)
-  // await professional.setSkills(skillsIds)
-
-//   await professional.save();
-
-//   return professional;
-// }
-
 export async function setModificationProfesional(professional, body) {
   professional.description = body.description 
   professional.linkedin = body.linkedin
-  professional.avatar = body.avatar
-
-  // const areasIds = await Promise.all( 
-  //   body.areas?.map(async el => {
-  //     const area = await AREA.findByPk(el.id)
-  //     return area.id
-  //   })
-  // );
-  // const skillsIds = await Promise.all( 
-  //   body.skills?.map(async el => {
-  //     const skill = await SKILLS.findByPk(el.id)
-  //     return skill.id
-  //   })
-  // );
+  professional.avatar = body.avatar ? body.avatar : 'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
 
   const areasIds = body.areas.map(el => el.id)
+  await professional.setAreas(areasIds)
+
   const skillsIds = body.skills.map(el => el.id)
-
-  await professional.setAreas(areasIds)
-  await professional.setSkills(skillsIds)
-
-  await professional.setAreas(areasIds)
   await professional.setSkills(skillsIds)
 
   return professional;
 }
 
 export async function editProfesional(professional, body) {
-  professional.description = body.description 
-  professional.linkedin = body.linkedin
-  professional.avatar = body.avatar
+  professional.description = body.description ? body.description : professional.description
+  professional.linkedin = body.linkedin ? body.linkedin : professional.linkedin
+  professional.avatar = body.avatar ? body.avatar : 'https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png'
+
+  await professional.removeSkills()
+  await professional.removeAreas()
 
   const areasIds = await Promise.all( 
     body.areas?.map(async el => {
-      const area = await AREA.findByPk(el.id)
+      const area = await AREA.findOne({where:{area:el}})
       return area.id
     })
   );
   await professional.setAreas(areasIds)
   const skillsIds = await Promise.all( 
     body.skills?.map(async el => {
-      const skill = await SKILLS.findByPk(el.id)
+      const skill = await SKILLS.findOne({where:{skill:el}})
       return skill.id
     })
   );
@@ -188,5 +158,10 @@ export async function editProfesional(professional, body) {
 
   await professional.save()
 
-  return await PROFESSIONAL.findByPk(professional.id);
+  return await PROFESSIONAL.findOne({
+    where:{
+      id:professional.id
+    },
+    include: [{ model: AREA }, { model: SKILLS }],
+  });
 }
