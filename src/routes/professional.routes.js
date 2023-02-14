@@ -130,7 +130,7 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
     const newToken = await generadorPostRegisterTKN({ id: professional.id });
 
     professional.postRegisterToken = newToken;
-    const linkConfirmEmail = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
+    const linkPostRegister = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
 
     try{
       await transporter.sendMail({
@@ -162,13 +162,13 @@ professionalRoutes.get("/confirmationEmail", async (req, res) => {
         <p>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos.</p>
         <p>Ahora como siguiente paso deberas entrar al link y rellenar todos los datos pedidos en el formulario.</p>
         <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
-        <a href="${linkConfirmEmail}">CONTINUAR CON EL FORMULARIO</a>`,
+        <a href="${linkPostRegister}">CONTINUAR CON EL FORMULARIO</a>`,
       });
     }catch (error) {
       return res.status(500).json({ data: error.message });
     }
     await professional.save()
-    res.redirect(`${process.env.URL_FRONT}/confirmationEmail`)
+    res.redirect(`${process.env.URL_FRONT}`)
     return res.end
   }catch (error) {
     return res.status(500).json({ data: error.message });
