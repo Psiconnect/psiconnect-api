@@ -120,51 +120,31 @@ export async function getProfessionalByTokenAny(token, nameToken) {
   return data;
 }
 
-export async function setModificationProfesional(params, body) {
-  const data = await PROFESSIONAL.findOne({ where: { id: params } });
-  if (!data) return null;
-  data.description = body.description 
-  data.linkedin = body.linkedin
-  data.avatar = body.avatar
- 
-  const newAreas= await Promise.all(
-    await body.areas.map(async (a) => {
-      const area = await AREA.findOne({ where: { area: a } });
-    return area.id
-    })
-  );
-  await data.setAreas(newAreas)
-  const  newSkill = await Promise.all(
-    await body.skills.map(async (s)=>{
-      const skill= await SKILLS.findOne({where:{skill:s}})
-      return skill.id
-    })
-  )
-  await data.setSkills(newSkill)
-  await data.save();
-  return data;
+export async function setModificationProfesional(professional, body) {
+  professional.description = body.description 
+  professional.linkedin = body.linkedin
+  professional.avatar = body.avatar
+  await professional.setAreas(body.areas)
+  await professional.setSkills(body.skills)
+  await professional.save();
+  return professional;
 }
 
-export async function setProfessionalDescription(params, body) {
-  const data = await PROFESSIONAL.findOne({ where: { id: params } });
+export async function setProfessionalDescription(professional, body) {
 
-  if (!data) {
-    return null;
-  }
-  data.description = body.description 
-  data.linkedin = body.linkedin
-  data.avatar = body.avatar
-  data.state = 'avalible'
+  professional.description = body.description 
+  professional.linkedin = body.linkedin
+  professional.avatar = body.avatar
 
   await body.areas?.map(async (a) => {
     const area = await AREA.findOne({ where: { area: a } });
-    data.addArea(area);
+    professional.addArea(area);
   });
 
   await body.skills?.map(async (a) => {
     const skill = await SKILLS.findOne({ where: { skill: a } });
-    data.addSkills(skill);
+    professional.addSkills(skill);
   });
-  await data.save();
-  return data;
+  await professional.save();
+  return professional;
 }
