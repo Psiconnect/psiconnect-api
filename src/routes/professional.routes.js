@@ -243,38 +243,38 @@ professionalRoutes.put(
   
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
-      profesionalUpdate.postRegisterToken = null;
-
+      
       try {
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
           to: profesionalUpdate?.email,
           subject: `Hay novedades en tu cuenta de Psiconnect`,
           html: `
-            <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones.</h2>
-            <p>Completaste con exito todos los filtros y formularios, ahora puedes acceder a tu cuenta tranquilamente, 
-            <p>Ya puedes empezar a trabajar y generar conexiones con tu pacientes.</p></p>
-            <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
-            <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
-            <span>AGREGAR MAS DATOS E INFORMACION</span>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+          <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones.</h2>
+          <p>Completaste con exito todos los filtros y formularios, ahora puedes acceder a tu cuenta tranquilamente, 
+          <p>Ya puedes empezar a trabajar y generar conexiones con tu pacientes.</p></p>
+          <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
+          <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
+          <span>AGREGAR MAS DATOS E INFORMACION</span>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
             <br>
             <p>algun empleador? manden wp 3816261327, trabajo por lo que sea.</p>
             `,
-        });
-      } catch (error) {
-        return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
-      }   
-      const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
-      
-      await profesionalUpdate.save() 
-    
-      return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
+          });
+        } catch (error) {
+          return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
+        }   
+        const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
+        
+        profesionalUpdate.postRegisterToken = null;
+        await profesionalUpdate.save() 
+        
+        return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
 
     } catch (error) {
       return res.status(500).json({ data: error.message });

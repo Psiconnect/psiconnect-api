@@ -21,5 +21,4 @@ export async function findAllProfessionalWithArea(area) {
     const data = await AREA.findAll();
     const areas = data.map(e=> e.area)
     return areas;
-  
   }
