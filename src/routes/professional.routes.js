@@ -309,6 +309,4 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
   }
 });
 
-
-
 export default professionalRoutes;
