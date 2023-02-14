@@ -19,6 +19,5 @@ export async function findAllProfessionalWithArea(area) {
   }
   export async function findOnlyAreas() {
     const data = await AREA.findAll();
-    const areas = data.map(e=> e.area)
-    return areas;
+    return data;
   }

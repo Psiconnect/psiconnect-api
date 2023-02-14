@@ -124,27 +124,14 @@ export async function setModificationProfesional(professional, body) {
   professional.description = body.description 
   professional.linkedin = body.linkedin
   professional.avatar = body.avatar
-  await professional.setAreas(body.areas)
-  await professional.setSkills(body.skills)
-  await professional.save();
-  return professional;
-}
 
-export async function setProfessionalDescription(professional, body) {
+  const areasIds = body.areas.map(el => el.id)
+  const skillsIds = body.skills.map(el => el.id)
 
-  professional.description = body.description 
-  professional.linkedin = body.linkedin
-  professional.avatar = body.avatar
+  await professional.setAreas(areasIds)
+  await professional.setSkills(skillsIds)
 
-  await body.areas?.map(async (a) => {
-    const area = await AREA.findOne({ where: { area: a } });
-    professional.addArea(area);
-  });
+  await data.save();
 
-  await body.skills?.map(async (a) => {
-    const skill = await SKILLS.findOne({ where: { skill: a } });
-    professional.addSkills(skill);
-  });
-  await professional.save();
-  return professional;
+  return data;
 }

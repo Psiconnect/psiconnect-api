@@ -15,7 +15,6 @@ import {
   getProfessionalById,
   getProfessionalByTokenAny,
   setModificationProfesional,
-  setProfessionalDescription,
 } from "../query/queryToPsico.js";
 
 
@@ -238,13 +237,11 @@ professionalRoutes.put(
       const professional = await getProfessionalByTokenAny(token,'postRegisterToken');
 
       if(!professional) return res.status(404).json({data:"Token no coincide con ningun usuario"});
-     ;
 
       const profesionalUpdate = await setModificationProfesional(professional, req.body);
   
       if (!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
 
-      
       try {
         await transporter.sendMail({
           from: `<${process.env.USER_EMAILER}>`,
@@ -269,11 +266,14 @@ professionalRoutes.put(
           });
         } catch (error) {
           return res.status(500).json({ data:'no se envio correo correctamente pero igual anda a laburar' });
-        }   
+        } 
         const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
+
         profesionalUpdate.status= 'avalible';
         profesionalUpdate.postRegisterToken = null;
+
         await profesionalUpdate.save() 
+
         return res.status(201).json({message:"Informacion Añadida",token: tokenLogin});
     } catch (error) {
       return res.status(500).json({ data: error.message });
@@ -306,9 +306,6 @@ professionalRoutes.get("/", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
-
-
-
 professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
   const { id }=req.tkn;
   try {
@@ -316,7 +313,7 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
     if(!professional) return res.status(404).json('no se encontro datos');
     
-    const profesionalUpdate = await setProfessionalDescription(professional, req.body)
+    const profesionalUpdate = await setModificationProfesional(professional, req.body)
 
     if(!profesionalUpdate) return res.status(500).json("No se modifico correctamente");
     
