@@ -1,8 +1,7 @@
 import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
-import SPECIALTY from "../models/SPECIALTY.js";
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import SKILLS from "../models/SKILLS.js";
 
 const opIlikeProfessional = (text) => {
@@ -124,8 +123,9 @@ export async function getProfessionalByTokenAny(token, nameToken) {
 export async function setModificationProfesional(params, body) {
   const data = await PROFESSIONAL.findOne({ where: { id: params } });
   if (!data) return null;
-  data.description = body.description ? body.description : data.description;
-  data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
+  data.description = body.description 
+  data.linkedin = body.linkedin
+  data.avatar = body.avatar
  
   const newAreas= await Promise.all(
     await body.areas.map(async (a) => {
@@ -151,9 +151,10 @@ export async function setProfessionalDescription(params, body) {
   if (!data) {
     return null;
   }
-  data.description = body.description ? body.description : data.description;
-  data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
-  data.avatar = body.avatar ? body.avatar : data.avatar;
+  data.description = body.description 
+  data.linkedin = body.linkedin
+  data.avatar = body.avatar
+  data.state = 'avalible'
 
   await body.areas?.map(async (a) => {
     const area = await AREA.findOne({ where: { area: a } });
