@@ -267,7 +267,7 @@ professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
     const checkPassword = await compare(oldPassword, professional?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
 
-    professional?.password = await hash(newPassword, 10);
+    professional.password = await hash(newPassword, 10);
     professional.save();
 
     return res.status(202).json("nice");

@@ -33,7 +33,7 @@ export const userConfirmEmailJWTDTO = async (req, res, next) => {
   try {
     const payload = verify(jwt, CONFIRM_EMAIL_JWT_PRIVATE_KEY);
     if(!payload) return res.status(401).json('jwt mal formado')
-    req.tkn = confirm;
+    req.tkn = jwt;
     next();
   } catch (error) {
     return res.status(401).json(error.message);
@@ -85,7 +85,7 @@ export const userResetPasswordJWTDTO = async (req, res, next) => {
   try {
     const payload = verify(jwt, RESET_JWT_PRIVATE_KEY);
     if(!payload) return res.status(401).json('Error de credenciales')
-    req.tkn = reset;
+    req.tkn = jwt;
     next();
   } catch (error) {
     return res.status(401).json(error.message);
