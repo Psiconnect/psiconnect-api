@@ -8,6 +8,7 @@ const user = [
     name: "John",
     lastName: "Doe",
     password: "Abcdefg1",
+    state:false
   },
   {
     email: "user2@example.com",
