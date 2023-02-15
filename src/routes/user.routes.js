@@ -101,32 +101,67 @@ userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
   try {
     const user = await getUserByEmail(email);
     const token = generatorTKN({ id: userLogin.id });
-    user.resetToken = token;
-    await user.save();
-    let verificationLink = `http://localhost:5000/newPasswordForget/${token}`;
-    //emalaitor mail
+    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?tkn=${token}`;
+    try {
+      await transporter.sendMail({
+        from: `<${process.env.USER_EMAILER}>`,
+        to: email,
+        subject: "OLVIDE MI CLAVE 📧✔",
+        html: `
+        <h2>He olvidado mi clave 📩</h2>
+        <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
+        <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
+        </p></p>
+        <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
+        <p>atte: El equipo de Psiconnect 💪✌.</p>
+        <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+        <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`
+        ,
+      });
+      user.resetToken = token;
+      await user.save();
+    } catch (error) {
+      return res.status(500).json({ data: error.message });
+    }
     return res.status(200).json("Verificacion enviada al mail");
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
 });
 
-userRoutes.put("/newPasswordForget", async (req, res) => {
-  const { newPassword } = req.body;
-  const resetToken = req.headers.reset;
-  if (!(resetToken && newPassword)) {
-    res.status(400).json({ message: "All the credentials it required" });
-  }
+userRoutes.put("/newPasswordForgetEmail", async (req, res) => {
+
+  const resetToken = req.query.tkn;
   try {
     const user = await getUserByResetToken(resetToken);
-    user.password = newPassword;
-    user.resetToken = "";
-    user.save();
-    return res.status(202).json({ message: "Someting goes Wrog!" });
+    if (!user) {
+      return res.status(404).json({ data: 'Credenciales incorrectas'});
+    }
+    res.redirect(`${process.env.URL_FRONT}/ChangeForgetPassword?tkn=${resetToken}`)
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
 });
+
+//necesita un DTO y un modal
+userRoutes.put("/ChangePasswordForget", async (req, res) => {
+  const resetToken = req.query.tkn;
+  const {newPassword}= req.body;
+  try {
+    const user = await getUserByResetToken(resetToken);
+    if (!user) {
+      return res.status(40).json({ data: 'Credenciales incorrectas'});
+    }
+    user.password= newPassword;
+    user.resetToken= null;
+    user.save()
+    res.redirect(`${process.env.URL_FRONT}`)
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   try {
     const newUser = await getOrCreate(req.body);
