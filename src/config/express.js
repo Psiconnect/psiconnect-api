@@ -10,6 +10,7 @@ import professionalRoutes from "../routes/professional.routes.js";
 import skillsRoutes from '../routes/skilss.routes.js';
 import paymentRoutes from "../routes/payment.routes.js";
 import consultsRoutes from "../routes/consults.routes.js";
+import adminRoutes from "../routes/admin.routes.js";
 
 
 const expressApp = express();
@@ -39,6 +40,7 @@ expressApp.use('/review', reviewRoutes)
 expressApp.use('/skills', skillsRoutes)
 expressApp.use('/payment', paymentRoutes)
 expressApp.use('/consult', consultsRoutes)
+expressApp.use('/admin', adminRoutes)
 
 // Error catching endware.
 expressApp.use((err, req, res, next) => {

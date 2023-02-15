@@ -1,8 +1,7 @@
 import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
-import SPECIALTY from "../models/SPECIALTY.js";
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import SKILLS from "../models/SKILLS.js";
 
 const opIlikeProfessional = (text) => {
@@ -67,8 +66,8 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
       },
     });
   }
-
-  return data;
+  data = await data.filter(prof => prof.state === 'avalible' );
+  return data
 }
 export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({
@@ -79,15 +78,22 @@ export async function findAllProfessionalWithArea(area) {
       },
     },
   });
-  return data;
+  const response = await data.filter(prof => prof.state === 'avalible' );
+  return response;
 }
 
 export async function findAllProfessional() {
-  const data = await PROFESSIONAL.findAll({
-    include: {
-      model: AREA,
-    },
+  const professionals = await PROFESSIONAL.findAll({
+    include: [{ model: AREA }, { model: SKILLS }],
   });
+  const data = await Promise.all(
+    professionals.map(async (e) => {
+      e = JSON.parse(JSON.stringify(e));
+      e.areas = e.areas.map((e) => e.area).join();
+      e.skills = e.skills.map((e) => e.skill).join();
+      return e;
+    })
+  );
   return data;
 }
 
@@ -114,6 +120,7 @@ export async function getProfessionalById(id) {
   });
   return data;
 }
+
 export async function getProfessionalByTokenAny(token, nameToken) {
   const data = await PROFESSIONAL.findOne({
     where: { [nameToken]: token },
@@ -121,49 +128,55 @@ export async function getProfessionalByTokenAny(token, nameToken) {
   return data;
 }
 
-export async function setModificationProfesional(params, body) {
-  const data = await PROFESSIONAL.findOne({ where: { id: params } });
-  if (!data) return null;
-  data.description = body.description ? body.description : data.description;
-  data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
- 
-  const newAreas= await Promise.all(
-    await body.areas.map(async (a) => {
-      const area = await AREA.findOne({ where: { area: a } });
-    return area.id
-    })
-  );
-  await data.setAreas(newAreas)
-  const  newSkill = await Promise.all(
-    await body.skills.map(async (s)=>{
-      const skill= await SKILLS.findOne({where:{skill:s}})
-      return skill.id
-    })
-  )
-  await data.setSkills(newSkill)
-  await data.save();
-  return data;
+export async function setModificationProfesional(professional, body) {
+  professional.description = body.description;
+  professional.linkedin = body.linkedin;
+  professional.avatar = body.avatar
+    ? body.avatar
+    : "https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png";
+
+  const areasIds = body.areas.map((el) => el.id);
+  await professional.setAreas(areasIds);
+
+  const skillsIds = body.skills.map((el) => el.id);
+  await professional.setSkills(skillsIds);
+
+  return professional;
 }
 
-export async function setProfessionalDescription(params, body) {
-  const data = await PROFESSIONAL.findOne({ where: { id: params } });
+export async function editProfesional(professional, body) {
+  professional.description = body.description
+    ? body.description
+    : professional.description;
+  professional.linkedin = body.linkedin ? body.linkedin : professional.linkedin;
+  professional.avatar = body.avatar
+    ? body.avatar
+    : "https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png";
 
-  if (!data) {
-    return null;
-  }
-  data.description = body.description ? body.description : data.description;
-  data.linkedin = body.linkedin ? body.linkedin : data.linkedin;
-  data.avatar = body.avatar ? body.avatar : data.avatar;
+  await professional.removeSkills();
+  await professional.removeAreas();
 
-  await body.areas?.map(async (a) => {
-    const area = await AREA.findOne({ where: { area: a } });
-    data.addArea(area);
+  const areasIds = await Promise.all(
+    body.areas?.map(async (el) => {
+      const area = await AREA.findOne({ where: { area: el } });
+      return area.id;
+    })
+  );
+  await professional.setAreas(areasIds);
+  const skillsIds = await Promise.all(
+    body.skills?.map(async (el) => {
+      const skill = await SKILLS.findOne({ where: { skill: el } });
+      return skill.id;
+    })
+  );
+  await professional.setSkills(skillsIds);
+
+  await professional.save();
+
+  return await PROFESSIONAL.findOne({
+    where: {
+      id: professional.id,
+    },
+    include: [{ model: AREA }, { model: SKILLS }],
   });
-
-  await body.skills?.map(async (a) => {
-    const skill = await SKILLS.findOne({ where: { skill: a } });
-    data.addSkills(skill);
-  });
-  await data.save();
-  return data;
 }

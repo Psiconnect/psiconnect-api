@@ -1,23 +1,28 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const PAYMENT = sequelize.define(
-  "payment",
+const ADMIN = sequelize.define(
+  "admin",
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
     },
-    price: {
+    password: {
       type: DataTypes.STRING,
     },
-    status: {
+    email: {
       type: DataTypes.STRING,
     },
-    date: {
+    avatar: {
+      type: DataTypes.STRING(800),
+    },
+    rol: {
       type: DataTypes.STRING,
+      defaultValue: "admin",
     },
   },
   {
@@ -25,4 +30,4 @@ const PAYMENT = sequelize.define(
   }
 );
 
-export default PAYMENT;
+export default ADMIN;
