@@ -5,6 +5,7 @@ import CONSULT from "./CONSULT.js";
 import SPECIALTY from "./SPECIALTY.js";
 import AREA from "./AREAS.js";
 import SKILLS from "./SKILLS.js";
+import PAYMENT from "./PAYMENTS.js";
 
 const PROFESSIONAL = sequelize.define(
   "professional",
@@ -68,6 +69,9 @@ REVIEW.belongsTo(PROFESSIONAL);
 
 PROFESSIONAL.hasMany(CONSULT);
 CONSULT.belongsTo(PROFESSIONAL);
+
+PROFESSIONAL.hasMany(PAYMENT);
+PAYMENT.belongsTo(PROFESSIONAL);
 
 PROFESSIONAL.belongsToMany(SPECIALTY, {
   through: "PROFESSIONAL_SPECIALTY",
