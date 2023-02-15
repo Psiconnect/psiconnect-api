@@ -4,7 +4,6 @@ import CONSULT from "../models/CONSULT.js";
 
 export async function createConsult(body){
     const newConsult = await CONSULT.create(body);
-    console.log(body.id);
     return newConsult
 }
 
@@ -24,7 +23,7 @@ export async function getAllConsultByUser(userId){
 }
 
 export async function getConsultById(id){
-const consult = await CONSULT.findOne({where:id});
+const consult = await CONSULT.findOne({where:{id:id}});
     return consult;
 }
 export async function getAllConsult(){

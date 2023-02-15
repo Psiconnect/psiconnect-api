@@ -5,6 +5,7 @@ import CONSULT from "./CONSULT.js";
 import SPECIALTY from "./SPECIALTY.js";
 import AREA from "./AREAS.js";
 import SKILLS from "./SKILLS.js";
+import PAYMENT from "./PAYMENTS.js";
 
 const PROFESSIONAL = sequelize.define(
   "professional",
@@ -54,6 +55,14 @@ const PROFESSIONAL = sequelize.define(
     confirmEmailToken:{
       type: DataTypes.STRING
     },
+    price:{
+      type: DataTypes.STRING,
+      defaultValue: '15'
+    },
+    rol:{
+      type: DataTypes.STRING,
+      defaultValue: 'prof'
+    },
     state: {
       type: DataTypes.ENUM('pending','needConfirm', 'avalible', 'disavalible'),
     },
@@ -68,6 +77,9 @@ REVIEW.belongsTo(PROFESSIONAL);
 
 PROFESSIONAL.hasMany(CONSULT);
 CONSULT.belongsTo(PROFESSIONAL);
+
+PROFESSIONAL.hasMany(PAYMENT);
+PAYMENT.belongsTo(PROFESSIONAL);
 
 PROFESSIONAL.belongsToMany(SPECIALTY, {
   through: "PROFESSIONAL_SPECIALTY",

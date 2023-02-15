@@ -22,7 +22,7 @@ export const userJWTDTO = async (req, res, next) => {
   }
 };
 export const userConfirmEmailJWTDTO = async (req, res, next) => {
-  const { confirm } = req.headers;
+  const { confirm } = req.query;
 
   if (!confirm) return res.status(401).json("Credencial inexistente");
 
@@ -74,17 +74,18 @@ export const adminRefreshJWTDTO = async (req, res, next) => {
   }
 }
 export const userResetPasswordJWTDTO = async (req, res, next) => {
-  const { authorization } = req.headers;
+  const { reset } = req.headers;
 
-  if (!authorization) return res.status(401).json("Credencial inexistente");
+  if (!reset) return res.status(401).json("Credencial inexistente");
 
-  const jwt = authorization.split(" ")[1];
+  const jwt = reset.split(" ")[1];
 
   if (!jwt) return res.status(401).json("Token inexistente");
 
   try {
     const payload = verify(jwt, RESET_JWT_PRIVATE_KEY);
-    req.tkn = payload;
+    if(!payload) return res.status(401).json('Error de credenciales')
+    req.tkn = jwt;
     next();
   } catch (error) {
     return res.status(401).json(error.message);
