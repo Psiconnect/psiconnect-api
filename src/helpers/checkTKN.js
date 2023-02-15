@@ -29,7 +29,7 @@ export const userConfirmEmailJWTDTO = async (req, res, next) => {
 
   if (!confirm) return res.status(401).json("Credencial inexistente");
 
-  const jwt = confirm.split(" ")[1];
+  const jwt = confirm
 
   if (!jwt) return res.status(401).json("Token inexistente");
 

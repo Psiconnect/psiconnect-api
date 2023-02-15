@@ -123,7 +123,7 @@ professionalRoutes.get("/confirmationEmail", userConfirmEmailJWTDTO, async (req,
 
     const newToken = await generadorPostRegisterTKN({ id: professional.id });
 
-    const linkPostRegister = `${process.env.URL_FRONT+'/profesional/postRegister?tkn'+newToken|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
+    const linkPostRegister = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
 
     try{
       await transporter.sendMail({
