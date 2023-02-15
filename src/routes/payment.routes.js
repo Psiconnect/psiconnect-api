@@ -4,7 +4,7 @@ import request from "request";
 import { completeConsult, createConsult } from "../query/queryToConsult.js";
 import { getProfessionalById } from "../query/queryToPsico.js";
 import { getUserById } from "../query/queryToUser.js";
-import { createPayment, getAllPayment, getAllPaymentByProfessional, getAllPaymentByUser, getPaymentById } from "../query/queryToPayment.js";
+import { createPayment, getAllPayment, getAllPaymentByProfessional, getAllPaymentByUser, getPaymentById, getResultAllPaymentByProfessional } from "../query/queryToPayment.js";
 config();
 
 const auth = { user: process.env.CLIENT, pass: process.env.SECRET };
@@ -128,6 +128,15 @@ paymentRoutes.get("/professional/:professionalId", async (req, res) => {
       req.params.professionalId
     );
     return res.json(consult);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+paymentRoutes.get("/professionalPayment/:professionalId", async (req, res) => {
+  const {professionalId} = req.params
+  try {
+    const consult = await getResultAllPaymentByProfessional(professionalId);
+    return res.status(200).json(consult);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
