@@ -249,7 +249,9 @@ professionalRoutes.put(
 
         await profesionalUpdate.save() 
 
-        return res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.redirect(`${process.env.URL_FRONT}`)
+        return res.end
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
