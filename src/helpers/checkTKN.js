@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import { verify } from "jsonwebtoken";
+import { adminCheck } from "./adminLogin.js";
 const { CONFIRM_EMAIL_JWT_PRIVATE_KEY, JWT_PRIVATE_KEY, REFRESH_JWT_PRIVATE_KEY,
         RESET_JWT_PRIVATE_KEY, POST_REGISTER_JWT_PRIVATE_KEY } = process.env;
 
@@ -15,6 +16,8 @@ export const userJWTDTO = async (req, res, next) => {
 
   try {
     const payload = verify(jwt, JWT_PRIVATE_KEY);
+    const admin = await adminCheck(payload.id);
+    if(admin) return res.json(admin);
     req.tkn = payload;
     next();
   } catch (error) {
