@@ -53,7 +53,11 @@ const USER = sequelize.define(
       image : {
         type: DataTypes.STRING,
         
-      }
+      },
+      rol:{
+        type: DataTypes.STRING,
+        defaultValue: 'user'
+      },
 
     },
     {

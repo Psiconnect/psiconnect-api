@@ -55,6 +55,14 @@ const PROFESSIONAL = sequelize.define(
     confirmEmailToken:{
       type: DataTypes.STRING
     },
+    price:{
+      type: DataTypes.STRING,
+      defaultValue: '15'
+    },
+    rol:{
+      type: DataTypes.STRING,
+      defaultValue: 'prof'
+    },
     state: {
       type: DataTypes.ENUM('pending','needConfirm', 'avalible', 'disavalible'),
     },
