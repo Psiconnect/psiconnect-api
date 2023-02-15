@@ -1,6 +1,7 @@
 import { DataTypes} from "sequelize";
 import sequelize from "../config/db.js";
 import CONSULT from "./CONSULT.js";
+import PAYMENT from "./PAYMENTS.js";
 import REVIEW from "./REVIEW.js";
 
 
@@ -52,7 +53,11 @@ const USER = sequelize.define(
       image : {
         type: DataTypes.STRING,
         
-      }
+      },
+      rol:{
+        type: DataTypes.STRING,
+        defaultValue: 'user'
+      },
 
     },
     {
@@ -65,6 +70,9 @@ const USER = sequelize.define(
 
     USER.hasMany(CONSULT);
     CONSULT.belongsTo(USER);
+    
+    USER.hasMany(PAYMENT);
+    PAYMENT.belongsTo(USER);
 
 
 export default USER;
