@@ -16,6 +16,7 @@ import {
   getUserById,
   getUserByResetToken,
 } from "../query/queryToUser.js";
+import { adminLogin } from "../helpers/adminLogin.js";
 
 const userRoutes = Router();
 
@@ -33,7 +34,7 @@ userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   }
 });
 
-userRoutes.post("/login", async (req, res) => {
+userRoutes.post("/login",adminLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
 

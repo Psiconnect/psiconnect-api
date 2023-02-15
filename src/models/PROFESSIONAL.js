@@ -61,7 +61,7 @@ const PROFESSIONAL = sequelize.define(
     },
     rol:{
       type: DataTypes.STRING,
-      defaultValue: 'prof'
+      defaultValue: 'professional'
     },
     state: {
       type: DataTypes.ENUM('pending','needConfirm', 'avalible', 'disavalible'),

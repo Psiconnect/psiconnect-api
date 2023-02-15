@@ -7,6 +7,7 @@ import { mapUserTesting } from "./src/testing/user.js";
 import { mapProfesionalTesting } from "./src/testing/profesional.js";
 import { mapAreaTesting } from "./src/testing/areas.js";
 import { mapSkillsTesting } from "./src/testing/skills.js";
+import { mapAdminTesting } from "./src/testing/admin.js";
 
 
 dotenv.config();
@@ -18,6 +19,7 @@ async function bootstrap() {
   await mapAreaTesting()
   await mapProfesionalTesting()
   await mapSkillsTesting()
+  await mapAdminTesting()
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);

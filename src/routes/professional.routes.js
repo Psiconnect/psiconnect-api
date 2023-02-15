@@ -3,6 +3,7 @@ import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
+import { adminLogin } from "../helpers/adminLogin.js";
 import { userConfirmEmailJWTDTO, userResetPasswordJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
 import { generadorResetPasswordTKN, generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
 import {  
@@ -38,9 +39,7 @@ professionalRoutes.get("/area/:area", async (req, res) => {
 professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   const {id}=req.tkn;
   try {
-    console.log(id)
     const professional= await getProfessionalById(id);
-    console.log(professional)
     if(!professional) return res.status(404).json({error:'no se encontro datos'});
     return res.status(200).json(professional)
   } catch (error) {
@@ -48,10 +47,9 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   }
 });
 
-professionalRoutes.post("/login", async (req, res) => {
+professionalRoutes.post("/login",adminLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(password);
     const professionalLogin = await getProfessionalByEmail(email);
     const checkPassword = await compare(password, professionalLogin?.password || '');
 
