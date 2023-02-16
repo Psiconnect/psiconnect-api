@@ -24,7 +24,7 @@ adminRoutes.delete("/delete-user/:id", async (req, res) => {
   try {
     const user = await getUserById(id);
     if (!user) return res.status(404).json("No se encontro el usuario");
-    await user.destoy();
+    await user.destroy();
     return res.status(200).json("Usuario eliminado correctamente");
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -48,7 +48,7 @@ adminRoutes.delete("/delete-area/:id", async (req, res) => {
   try {
     const area = await AREA.findByPk(id)
     if (!area) return res.status(404).json("No se encontro el area");
-    await area.destoy();
+    await area.destroy();
     return res.status(200).json("Area eliminada correctamente");
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -76,7 +76,7 @@ adminRoutes.delete("/delete-professional/:id", async (req, res) => {
   try {
     const user = await getProfessionalById(id);
     if (!user) return res.status(404).json("No se encontro el usuario");
-    await user.destoy();
+    await user.destroy();
     return res.status(200).json('Usuario eliminado correctamente');
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -99,7 +99,7 @@ adminRoutes.delete("/delete-review/:id", async (req, res) => {
   try {
     const review = await  REVIEW.findByPk(id);
     if (!review) return res.status(404).json("No se encontro el review");
-    await review.destoy();
+    await review.destroy();
     return res.status(200).json('Review eliminado correctamente');
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -122,7 +122,7 @@ adminRoutes.delete("/delete-skill/:id", async (req, res) => {
   try {
     const skill = await  SKILLS.findByPk(id);
     if (!skill) return res.status(404).json("No se encontro el skill");
-    await skill.destoy();
+    await skill.destroy();
     return res.status(200).json('skill eliminado correctamente');
   } catch (error) {
     return res.status(500).json({ data: error.message });
