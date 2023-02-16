@@ -55,6 +55,7 @@ professionalRoutes.post("/login",adminLogin, async (req, res) => {
 
     if (!professionalLogin || !checkPassword)
       return res.status(400).json("credenciales incorrectas");
+    if(professionalLogin.state !== 'avalible') return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: professionalLogin.id });
     return res.status(201).json(token);
   } catch (error) {
@@ -249,7 +250,9 @@ professionalRoutes.put(
 
         await profesionalUpdate.save() 
 
-        return res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.redirect(`${process.env.URL_FRONT}`)
+        return res.end
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
