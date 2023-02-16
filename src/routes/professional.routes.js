@@ -3,6 +3,7 @@ import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
 import professionalRegisterDTO from "../DTO/professionalDTO/professionalRegisterDTO.js";
+import { adminLogin } from "../helpers/adminLogin.js";
 import { userConfirmEmailJWTDTO, userResetPasswordJWTDTO, userJWTDTO, userPostRegisterJWTDTO } from "../helpers/checkTKN.js";
 import { generadorResetPasswordTKN, generadorConfirmEmailTKN, generatorTKN, generadorPostRegisterTKN } from "../helpers/generatorTKN.js";
 import {  
@@ -38,9 +39,7 @@ professionalRoutes.get("/area/:area", async (req, res) => {
 professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   const {id}=req.tkn;
   try {
-    console.log(id)
     const professional= await getProfessionalById(id);
-    console.log(professional)
     if(!professional) return res.status(404).json({error:'no se encontro datos'});
     return res.status(200).json(professional)
   } catch (error) {
@@ -48,15 +47,15 @@ professionalRoutes.get("/id", userJWTDTO, async (req, res) => {
   }
 });
 
-professionalRoutes.post("/login", async (req, res) => {
+professionalRoutes.post("/login",adminLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(password);
     const professionalLogin = await getProfessionalByEmail(email);
     const checkPassword = await compare(password, professionalLogin?.password || '');
 
     if (!professionalLogin || !checkPassword)
       return res.status(400).json("credenciales incorrectas");
+    if(professionalLogin.state !== 'avalible') return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: professionalLogin.id });
     return res.status(201).json(token);
   } catch (error) {
@@ -125,7 +124,7 @@ professionalRoutes.get("/confirmationEmail", userConfirmEmailJWTDTO, async (req,
 
     const newToken = await generadorPostRegisterTKN({ id: professional.id });
 
-    const linkPostRegister = `${process.env.URL_FRONT|| 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
+    const linkPostRegister = `${process.env.URL_FRONT || 'http://127.0.0.1:5173'}/profesional/postRegister?tkn=${newToken}`;
 
     try{
       await transporter.sendMail({
@@ -251,7 +250,9 @@ professionalRoutes.put(
 
         await profesionalUpdate.save() 
 
-        return res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.status(202).json({message:"Informacion Añadida",token: tokenLogin});
+        res.redirect(`${process.env.URL_FRONT}`)
+        return res.end
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }

@@ -16,6 +16,7 @@ import {
   getUserById,
   getUserByResetToken,
 } from "../query/queryToUser.js";
+import { adminLogin } from "../helpers/adminLogin.js";
 
 const userRoutes = Router();
 
@@ -33,7 +34,7 @@ userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   }
 });
 
-userRoutes.post("/login", async (req, res) => {
+userRoutes.post("/login",adminLogin, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -41,6 +42,7 @@ userRoutes.post("/login", async (req, res) => {
     if (!userLogin) return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
     if (!checkPassword) return res.status(400).json("credenciales incorrectas");
+    if(!userLogin.state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(200).json(token);
   } catch (error) {
