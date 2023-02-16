@@ -1,4 +1,6 @@
 import PAYMENT from "../models/PAYMENTS.js";
+import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import USERS from "../models/USERS.js";
 
 export async function createPayment(body) {
   const newPayment = await PAYMENT.create(body);
@@ -6,7 +8,14 @@ export async function createPayment(body) {
 }
 
 export async function getAllPayment() {
-  const payments = await PAYMENT.findAll();
+  const payments = await PAYMENT.findAll({
+    include: [
+        {
+          model: USERS,
+        },
+        { model: PROFESSIONAL },
+      ],
+});
   return payments;
 }
 
