@@ -1,5 +1,6 @@
 import CONSULT from "../models/CONSULT.js";
-
+import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import USERS from "../models/USERS.js";
 
 
 export async function createConsult(body){
@@ -27,6 +28,13 @@ const consult = await CONSULT.findOne({where:{id:id}});
     return consult;
 }
 export async function getAllConsult(){
-    const consults = await CONSULT.findAll()
+    const consults = await CONSULT.findAll({
+        include: [
+            {
+              model: USERS,
+            },
+            { model: PROFESSIONAL },
+          ],
+    })
     return consults;
 }
