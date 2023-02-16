@@ -205,7 +205,6 @@ professionalRoutes.get("/token/postRegister", userPostRegisterJWTDTO, async (req
     const professional = await getProfessionalByTokenAny(token, 'postRegisterToken');
 
     if (!professional) return res.status(404).json({ data: "Profesional No registrado" });
-    if(professional.postRegisterToken !== token) return res.status(401).json({ data: "No autorizado" });
 
     return res.status(204).json(professional)
   } catch (err) {
@@ -374,6 +373,18 @@ professionalRoutes.put("/ChangePasswordForget", userResetPasswordJWTDTO,  async 
   }
 });
 
+professionalRoutes.get("/token/forgetPassword", userResetPasswordJWTDTO, async (req, res) => {
+  const token = req.tkn
+  try {
+    const professional = await getProfessionalByTokenAny(token, 'resetToken');
+
+    if (!professional) return res.status(404).json({ data: "Profesional No registrado" });
+
+    return res.status(204).json(professional)
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
+  }
+});
 
 
 
