@@ -18,6 +18,15 @@ const AREA = sequelize.define(
     image: {
       type: DataTypes.STRING(300)
     },
+    description:{
+      type: DataTypes.STRING(400)
+
+    },
+    state:{
+      type: DataTypes.BOOLEAN,
+      defaultValue:true
+    },
+
   },
   {
     timestamps: false,
