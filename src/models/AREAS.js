@@ -18,6 +18,7 @@ const AREA = sequelize.define(
     image: {
       type: DataTypes.STRING(300)
     },
+   
     description: {
       type: DataTypes.TEXT
     },
