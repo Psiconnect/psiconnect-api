@@ -88,7 +88,7 @@ paymentRoutes.get(`/execute-payment`, async (req, res) => {
       } catch (error) {
         return res.status(500).json({ data: error.message });
       }
-      res.redirect(`${process.env.URL_FRONT}/userProfile/profile`)
+      res.redirect(`${process.env.URL_FRONT}/userProfile/appointments`)
       return res.end
     }
   );
