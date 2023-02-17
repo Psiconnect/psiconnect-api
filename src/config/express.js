@@ -19,7 +19,7 @@ const expressApp = express();
 expressApp.use(express.json());
 expressApp.use(morgan("dev"));
 expressApp.use(cors());
-expressApp.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+expressApp.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 expressApp.use(bodyParser.json({ limit: "50mb" }));
 expressApp.use(cookieParser());
 expressApp.use((req, res, next) => {

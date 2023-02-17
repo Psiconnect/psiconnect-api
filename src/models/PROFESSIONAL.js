@@ -2,7 +2,6 @@ import { DataTypes } from "sequelize";
 import REVIEW from "./REVIEW.js";
 import sequelize from "../config/db.js";
 import CONSULT from "./CONSULT.js";
-import SPECIALTY from "./SPECIALTY.js";
 import AREA from "./AREAS.js";
 import SKILLS from "./SKILLS.js";
 import PAYMENT from "./PAYMENTS.js";
@@ -81,14 +80,6 @@ CONSULT.belongsTo(PROFESSIONAL);
 PROFESSIONAL.hasMany(PAYMENT);
 PAYMENT.belongsTo(PROFESSIONAL);
 
-PROFESSIONAL.belongsToMany(SPECIALTY, {
-  through: "PROFESSIONAL_SPECIALTY",
-  timestamps: false,
-});
-SPECIALTY.belongsToMany(PROFESSIONAL, {
-  through: "PROFESSIONAL_SPECIALTY",
-  timestamps: false,
-});
 PROFESSIONAL.belongsToMany(AREA, {
   through: "PROFESSIONAL_AREA",
   timestamps: false,
