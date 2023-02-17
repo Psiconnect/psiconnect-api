@@ -1,4 +1,4 @@
-import { compare } from "bcrypt";
+import { compare , hash} from "bcrypt";
 import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
@@ -261,14 +261,14 @@ professionalRoutes.put(
 professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
-    const professional = await getUserById(req.tkn.id);
+    const professional = await getProfessionalById(req.tkn.id);
     if(!professional) res.status(404).json({error:'Profesional inexistente'})
 
     const checkPassword = await compare(oldPassword, professional?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
 
     professional.password = await hash(newPassword, 10);
-    professional.save();
+    await professional.save();
 
     return res.status(202).json("nice");
   } catch (error) {
@@ -307,19 +307,18 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
 professionalRoutes.put("/forget-password", async (req, res) => {
   const { email } = req.body;
-
   if (!email) res.status(400).json({ message: "Email is required" });
   try {
     const professional = await getProfessionalByEmail(email);
-    if(!professional)res.status(400).json({ message: "Verificacion enviada al email" });
+    if(!professional)res.status(404).json({ message: "Verificacion enviada al email" });
 
-    const token = generadorResetPasswordTKN({ id: professional.id });
+    const token = await generadorResetPasswordTKN({ id: professional.id });
     
     const linkEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/newPasswordForgetEmail?reset=${token}`;
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
-        to: email,
+        to: professional.email,
         subject: "OLVIDE MI CLAVE 📧✔",
         html: `
         <h2>He olvidado mi clave 📩</h2>
@@ -331,12 +330,13 @@ professionalRoutes.put("/forget-password", async (req, res) => {
         <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
         <a href="${linkEmail}"> CAMBIAR CONTRASEÑA 👍 </a>`
         ,
-      });
-      professional.resetToken = token;
-      await professional.save();
+      }); 
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
+    professional.resetToken = token;
+    await professional.save();
+
     return res.status(200).json("Verificacion enviada al email");
   } catch (error) {
     return res.status(500).json({ data: error.message });
