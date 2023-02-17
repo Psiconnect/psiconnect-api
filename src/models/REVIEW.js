@@ -45,30 +45,18 @@ const REVIEW = sequelize.define(
 
       comments:{
         type: DataTypes.STRING 
+
       },
 
-    },
-
-    score: {
-      type: DataTypes.INTEGER,
-      validate: {
-        min: 0,
-        max: 10,
-      },
-    },
-
-    comments: {
-      type: DataTypes.STRING,
-    },
-
+      
     state: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-  },
-  {
-    timestamps: false,
+
+}, {
+     timestamps: false,
   }
-);
+) ;
 
 export default REVIEW;
