@@ -1,4 +1,4 @@
-import { compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { Router } from "express";
 import transporter from "../config/nodemailer.js";
 import professionalPostRegisterDTO from "../DTO/professionalDTO/prefesionalPostRegisterDTO.js";
@@ -261,14 +261,14 @@ professionalRoutes.put(
 professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
-    const professional = await getUserById(req.tkn.id);
+    const professional = await getProfessionalById(req.tkn.id);
     if(!professional) res.status(404).json({error:'Profesional inexistente'})
 
     const checkPassword = await compare(oldPassword, professional?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
 
     professional.password = await hash(newPassword, 10);
-    professional.save();
+    await professional.save();
 
     return res.status(202).json("nice");
   } catch (error) {
