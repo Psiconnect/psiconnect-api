@@ -18,9 +18,9 @@ const AREA = sequelize.define(
     image: {
       type: DataTypes.STRING(300)
     },
-    description:{
-      type: DataTypes.STRING(400)
-
+   
+    description: {
+      type: DataTypes.TEXT
     },
     state:{
       type: DataTypes.BOOLEAN,

@@ -180,5 +180,33 @@ adminRoutes.delete("/delete-skill/:id", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+adminRoutes.post("/create-skill", async (req, res) => {
+  try {
+  const { skill } = req.body;
+  if ((!skill))
+    return res.status(400).json("por favor complete bien todo los campos");
+    
+    const data = await SKILLS.create({skill});
+    return res.status(201).json('skill creada correctamente');
+
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+adminRoutes.put("/edit-skill/:id", async (req, res) => {
+  const { id } = req.params;
+  const { skill } = req.body;
+  if ((!skill))
+    return res.status(400).json("por favor complete bien todo los campos");
+  try {
+    const skillEdit = await SKILLS.findByPk(id);
+    skillEdit.skill = skill;
+    await skillEdit.save();
+
+    return res.status(200).json('skill editada correctamente')
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
 
 export default adminRoutes;
