@@ -306,19 +306,18 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
 professionalRoutes.put("/forget-password", async (req, res) => {
   const { email } = req.body;
-
   if (!email) res.status(400).json({ message: "Email is required" });
   try {
     const professional = await getProfessionalByEmail(email);
-    if(!professional)res.status(400).json({ message: "Verificacion enviada al email" });
+    if(!professional)res.status(404).json({ message: "Verificacion enviada al email" });
 
-    const token = generadorResetPasswordTKN({ id: professional.id });
+    const token = await generadorResetPasswordTKN({ id: professional.id });
     
     const linkEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/professional/newPasswordForgetEmail?reset=${token}`;
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
-        to: email,
+        to: professional.email,
         subject: "OLVIDE MI CLAVE 📧✔",
         html: `
         <h2>He olvidado mi clave 📩</h2>
@@ -330,12 +329,13 @@ professionalRoutes.put("/forget-password", async (req, res) => {
         <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
         <a href="${linkEmail}"> CAMBIAR CONTRASEÑA 👍 </a>`
         ,
-      });
-      professional.resetToken = token;
-      await professional.save();
+      }); 
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
+    professional.resetToken = token;
+    await professional.save();
+
     return res.status(200).json("Verificacion enviada al email");
   } catch (error) {
     return res.status(500).json({ data: error.message });

@@ -4,6 +4,19 @@ import PROFESSIONAL from "../models/PROFESSIONAL.js";
 
 const user = [
   {
+    email:"salud.psiconnect@gmail.com",
+    name: "Braian",
+    lastName: "Valdez",
+    description:
+      "El mejor psicologo que pordes encontrar y pagar, pobre.",
+    linkedin: "https://www.linkedin.com/in/braian-valdez-365679239/",
+    password: "Test1234",
+    area: ['Ansiedad', 'Autoestima'],
+    state: "avalible",
+    avatar:
+      "https://construyored.com/storage/usuarios/images/large/15547722395cabf10fb0617.png",
+  },
+  {
     name: "Dianna",
     lastName: "Graham",
     email: "diannagraham@tingles.com",
