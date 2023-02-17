@@ -19,6 +19,9 @@ reviewRoutes.get('/:professionalId', async(req, res) => {
             comments: el.comments,
             userId: el.userId,
             professionalId : el.professionalId,
+            puntualidad: el.puntualidad,
+            trato: el.trato,
+            general: el.general,
             username: el.user.name,
             lastusername: el.user.lastName
         }
@@ -33,7 +36,7 @@ reviewRoutes.get('/:professionalId', async(req, res) => {
 
 
 reviewRoutes.post('/:professionalId', async (req, res ) => {
-    const { comments, score, userId } = req.body  
+    const { comments, score, userId, puntualidad, trato, general, } = req.body  
     const { professionalId } = req.params
 
     try{
@@ -46,11 +49,11 @@ reviewRoutes.post('/:professionalId', async (req, res ) => {
             comments,
             score,     
             userId,
-            professionalId    
+            professionalId,
+            puntualidad,
+            trato,
+            general,
         })
-
-       
-      
 
         return res.status(200).json(newReview)
     } 

@@ -15,8 +15,31 @@ const REVIEW = sequelize.define(
       score:{
         type: DataTypes.INTEGER,
         validate:{
-            min: 0,
-            max: 10
+            min: 1,
+            max: 5
+        }
+      },
+      puntualidad:{
+        type: DataTypes.INTEGER,
+        validate:{
+            min: 1,
+            max: 5
+        }
+      },
+
+      trato:{
+        type: DataTypes.INTEGER,
+        validate:{
+            min: 1,
+            max: 5
+        }
+      },
+
+      general:{
+        type: DataTypes.INTEGER,
+        validate:{
+            min: 1,
+            max: 5
         }
       },
 
@@ -24,11 +47,6 @@ const REVIEW = sequelize.define(
         type: DataTypes.STRING 
       },
 
-    
-   
-      
-
-      
     },
     {
       timestamps: false,

@@ -288,6 +288,7 @@ professionalRoutes.get("/", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
 professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
   const { id } = req.tkn;
   try {
