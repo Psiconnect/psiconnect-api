@@ -16,6 +16,10 @@ const SKILLS = sequelize.define(
       allowNull: false,
       unique:true
     },
+    state: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,
