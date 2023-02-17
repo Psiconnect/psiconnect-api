@@ -1015,7 +1015,7 @@ const user = [
     lastName: "Melton",
     email: "sanchezmelton@tingles.com",
     description:
-      "Nostrud voluptate do voluptate voluptate sint. Qui ullamco ullamco elit duis non enim. Sint dolore dolore amet elit incididunt occaecat id pariatur est excepteur. Reprehenderit qui esse deserunt nulla velit aute culpa velit labore.\r\n",
+      "Especializado en consultas familiares con amplia experiencia en el manejo de problemas familiares complejos. Enfoque orientado a soluciones, mi fuerte esta en ayudr a las familias a identificar los desafíos y dificultades que enfrentan, a comprender sus orígenes y a desarrollar estrategias efectivas para superarlos. Utilizando técnicas terapéuticas probadas y métodos personalizados de tratamiento, trabajo en colaboración con cada familia para fomentar relaciones saludables y fortalecer los vínculos emocionales entre sus miembros. Si busca una atención personalizada y efectiva para los problemas familiares, yo puedo ayudarle.\r\n",
     linkedin: "https://www.linkedin.com/in/jonathandanielarce/",
     password: "Test1234",
     area: "Familiar",
