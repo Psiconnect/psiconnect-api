@@ -22,6 +22,7 @@ const AREA = sequelize.define(
     description: {
       type: DataTypes.TEXT
     },
+    
     state:{
       type: DataTypes.BOOLEAN,
       defaultValue:true
