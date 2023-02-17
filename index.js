@@ -18,7 +18,7 @@ async function bootstrap() {
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
-  await mapSkillsTesting()
+  // await mapSkillsTesting()
   await mapAdminTesting()
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {

@@ -13,7 +13,7 @@ const REVIEW = sequelize.define(
     },
 
     score: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       validate: {
         min: 0,
         max: 10,

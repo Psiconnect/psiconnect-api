@@ -28,7 +28,7 @@ reviewRoutes.get("/:professionalId", async (req, res) => {
 });
 
 reviewRoutes.post("/:professionalId", async (req, res) => {
-  const { comments, score, userId } = req.body;
+  const { comments, score, userId, puntualidad, trato, general } = req.body;
   const { professionalId } = req.params;
 
   try {
@@ -39,6 +39,9 @@ reviewRoutes.post("/:professionalId", async (req, res) => {
     }
     const newReview = await REVIEW.create({
       comments,
+      puntualidad,
+      trato,
+      general,
       score,
       userId,
       professionalId,
