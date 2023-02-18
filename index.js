@@ -14,7 +14,7 @@ dotenv.config();
 //hola como andan
 
 async function bootstrap() {
-  await sequelize.sync({ force: false});
+  await sequelize.sync({ force: false });
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
