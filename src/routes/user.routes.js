@@ -1,5 +1,6 @@
 import { compare , hash} from "bcrypt";
 import Jwt from "jsonwebtoken";
+import transporter from "../config/nodemailer.js";
 import { Router } from "express";
 import USERS from "../models/USERS.js";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
@@ -194,6 +195,7 @@ userRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
 userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
   try {
     const { email } = req.body;
+    console.log(email);
     const user = await getUserById(req.tkn.id);
 
     if (!user) {
