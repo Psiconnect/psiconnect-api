@@ -4,8 +4,8 @@ import { Router } from "express";
 import USERS from "../models/USERS.js";
 import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
-import { userJWTDTO } from "../helpers/checkTKN.js";
-import { generatorTKN } from "../helpers/generatorTKN.js";
+import { userJWTDTO, userResetPasswordJWTDTO } from "../helpers/checkTKN.js";
+import { generatorTKN, generadorConfirmEmailTKN, generadorResetPasswordTKN } from "../helpers/generatorTKN.js";
 
 import {
   updateUserData,
@@ -42,11 +42,11 @@ userRoutes.post("/login",adminLogin, async (req, res) => {
     if (!userLogin) return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
     if (!checkPassword) return res.status(400).json("credenciales incorrectas");
+    console.log(userLogin.state);
     if(!userLogin.state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(200).json(token);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });
@@ -96,14 +96,15 @@ userRoutes.put("/newPassword", userJWTDTO, async (req, res) => {
   }
 });
 
-userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
+userRoutes.put("/forget-password", async (req, res) => {
   const { email } = req.body;
 
   if (!email) res.status(400).json({ message: "Email is required" });
   try {
     const user = await getUserByEmail(email);
-    const token = generatorTKN({ id: userLogin.id });
-    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?tkn=${token}`;
+    if(!user) return res.status(404).json({data:'No encontrado'})
+    const token = await generadorResetPasswordTKN({ id: user?.id });
+    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?reset=${token}`;
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
@@ -120,11 +121,12 @@ userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
         <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`
         ,
       });
-      user.resetToken = token;
-      await user.save();
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
+    user.resetToken = token;
+    await user.save();
+
     return res.status(200).json("Verificacion enviada al mail");
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -133,7 +135,7 @@ userRoutes.put("/forget-password", userEmailDTO, async (req, res) => {
 
 userRoutes.put("/newPasswordForgetEmail", async (req, res) => {
 
-  const resetToken = req.query.tkn;
+  const resetToken = req.query.reset;
   try {
     const user = await getUserByResetToken(resetToken);
     if (!user) {
@@ -146,18 +148,18 @@ userRoutes.put("/newPasswordForgetEmail", async (req, res) => {
 });
 
 //necesita un DTO y un modal
-userRoutes.put("/ChangePasswordForget", async (req, res) => {
-  const resetToken = req.query.tkn;
+userRoutes.put("/ChangePasswordForget",userResetPasswordJWTDTO , async (req, res) => {
+  const resetToken = req.tkn;
   const {newPassword}= req.body;
   try {
     const user = await getUserByResetToken(resetToken);
     if (!user) {
-      return res.status(40).json({ data: 'Credenciales incorrectas'});
+      return res.status(401).json({ data: 'Credenciales incorrectas'});
     }
     user.password= newPassword;
     user.resetToken= null;
     user.save()
-    res.redirect(`${process.env.URL_FRONT}`)
+    return res.status(200).send('La contraseña se modifico correctamente')
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -167,6 +169,7 @@ userRoutes.put("/ChangePasswordForget", async (req, res) => {
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   try {
     const newUser = await getOrCreate(req.body);
+    if(!newUser[0].state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: newUser[0].id });
     return res.status(201).json(token);
   } catch (error) {
