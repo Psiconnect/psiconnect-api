@@ -80,33 +80,27 @@ professionalRoutes.post("/login", adminLogin, async (req, res) => {
 
 professionalRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
   try {
-    const { newEmail } = req.body;
+    const { email } = req.body;
     const professional = await getProfessionalById(req.tkn.id);
 
     if (!professional) {
       return res.status(404).json("Profesional no encontrado");
     }
 
-    const existingEmail = await getProfessionalByEmail(newEmail);
-
-    if (existingEmail) {
-      return res.status(400).json("Email ya registrado por otro usuario");
-    }
-
-    const token = await generadorConfirmEmailTKN({ id });
+    const token = await generadorConfirmEmailTKN({ id: professional.id });
     const linkConfirmEmail = `${
       process.env.URL_BACK || "http://localhost:5000"
-    }/professional/confirmationChangeEmail?confirm=${token}`;
+    }professional/confirmationChangeEmail?confirm=${token}&email=${email}`;
 
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
-        to: newEmail,
-        subject: "Confirmar nuevo email 📧✔",
+        to: email,
+        subject: "Confirmar email 📧✔",
         html: `
-          <h2>Confirmacion del nuevo email 📩</h2>
-          <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu nuevo email para actualizar tu cuenta de Psiconnect ✔.
-          <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas volver a solicitar el cambio de email 🔄.</p> 
+          <h2>Confirmacion del email 📩</h2>
+          <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
+          <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
           </p></p>
           <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
           <p>atte: El equipo de Psiconnect 💪✌.</p>
@@ -114,20 +108,11 @@ professionalRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
           <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`,
       });
     } catch (error) {
-      return res.status(500).json({ data: error.message });
+      return res.status(403).json({ data: error.message });
     }
-
-    professional.newEmail = newEmail;
     professional.confirmEmailToken = token;
-    professional.state = "needConfirmEmail";
-
     await professional.save();
-    res.json({
-      message:
-        "Por favor, revisa tu correo electrónico para confirmar el cambio de email",
-    });
-    res.redirect(`${process.env.URL_FRONT}`);
-    return res.end;
+    return res.status(200).json("AL FIN!");
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }
@@ -258,10 +243,11 @@ professionalRoutes.get(
 
 professionalRoutes.get(
   "/confirmationChangeEmail",
-  userConfirmEmailJWTDTO,
+
   async (req, res) => {
     try {
-      const token = req.tkn;
+      const token = req.query.confirm;
+      const email = req.query.email;
 
       const professional = await getProfessionalByTokenAny(
         token,
@@ -269,29 +255,9 @@ professionalRoutes.get(
       );
 
       if (!professional) return res.status(404).json({ data: "No encontrado" });
-      if (professional.state !== "needConfirm")
-        return res.status(401).json({ data: "El usuario ya fue confirmado" });
 
-      const linkPostRegister = `${
-        process.env.URL_FRONT || "http://127.0.0.1:5173"
-      }/profesional/postRegister?tkn=${newToken}`;
-      try {      
-        await transporter.sendMail({
-          from: `<${process.env.USER_EMAILER}>`,
-          to: professional.email,
-          subject: "Bienvenido al equipo de psicologos de Psiconnect",
-          html: `
-        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>  
-        <p>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos.</p>
-        <p>Ahora como siguiente paso deberas entrar al link y rellenar todos los datos pedidos en el formulario.</p>
-        <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
-        <a href="${linkPostRegister}">CONTINUAR CON EL FORMULARIO</a>`,
-        });
-      } catch (error) {
-        return res.status(500).json({ data: error.message });
-      }
-      professional.state = "avalible";
       professional.confirmEmailToken = null;
+      professional.email = email;
       await professional.save();
       res.redirect(`${process.env.URL_FRONT}`);
       return res.end;
