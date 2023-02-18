@@ -1,9 +1,7 @@
 import { Router } from "express";
-import REVIEW from "../models/REVIEW.js";
 import { getProfessionalById } from "../query/queryToPsico.js";
 import { getUserById } from "../query/queryToUser.js";
 import { createReview, findAllReviews } from "../query/queryToReview.js";
-import { json } from "body-parser";
 
 const reviewRoutes = Router();
 
@@ -64,7 +62,7 @@ reviewRoutes.post('/:professionalId', async (req, res ) => {
         if(!professional || !users) {
             return res.status(404).json({data: 'datos no encontrados'})
         }
-        if(Qreview)return res.status(401).json({data:'Revisar review'})
+        if(review)return res.status(401).json({data:'Revisar'})
         const newReview=  await createReview(review)
         return res.status(200).json(newReview)
     } 
@@ -73,9 +71,5 @@ reviewRoutes.post('/:professionalId', async (req, res ) => {
     }
 
 })
-
-
-
-
 
 export default reviewRoutes
