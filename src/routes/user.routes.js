@@ -1,4 +1,4 @@
-import { compare } from "bcrypt";
+import { compare , hash} from "bcrypt";
 import Jwt from "jsonwebtoken";
 import { Router } from "express";
 import USERS from "../models/USERS.js";
@@ -15,6 +15,7 @@ import {
   getUserByEmail,
   getUserById,
   getUserByResetToken,
+  getUserByTokenAny,
 } from "../query/queryToUser.js";
 import { adminLogin } from "../helpers/adminLogin.js";
 
@@ -164,6 +165,97 @@ userRoutes.put("/ChangePasswordForget",userResetPasswordJWTDTO , async (req, res
     return res.status(500).json({ data: error.message });
   }
 });
+
+
+
+userRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
+  const { newPassword, oldPassword } = req.body;
+  try {
+    const user = await getUserById(req.tkn.id);
+    
+
+    if (!user)
+      res.status(404).json({ error: "Profesional inexistente" });
+
+    const checkPassword = await compare(oldPassword, user?.password);
+    if (!checkPassword) return res.status(400).json("contraseña incorrecta");
+
+    const pass= await hash(newPassword, 10);
+    user.password =pass
+    await user.save();
+
+    return res.status(202).json("nice");
+  } catch (error) {
+    
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await getUserById(req.tkn.id);
+
+    if (!user) {
+      return res.status(404).json("Usuario no encontrado");
+    }
+
+    const token = await generadorConfirmEmailTKN({ id: user.id });
+    const linkConfirmEmail = `${
+      process.env.URL_BACK || "http://localhost:5000"
+    }user/confirmationChangeEmail?confirm=${token}&email=${email}`;
+
+    try {
+      await transporter.sendMail({
+        from: `<${process.env.USER_EMAILER}>`,
+        to: email,
+        subject: "Confirmar email 📧✔",
+        html: `
+          <h2>Confirmacion del email 📩</h2>
+          <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
+          <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
+          </p></p>
+          <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
+          <p>atte: El equipo de Psiconnect 💪✌.</p>
+          <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
+          <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`,
+      });
+    } catch (error) {
+      return res.status(403).json({ data: error.message });
+    }
+    user.confirmEmailToken = token;
+    await user.save();
+    return res.status(200).json("AL FIN!");
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+userRoutes.get(
+  "/confirmationChangeEmail",
+
+  async (req, res) => {
+    try {
+      const token = req.query.confirm;
+      const email = req.query.email;
+
+      const user = await getUserByTokenAny(
+        token,
+        "confirmEmailToken"
+      );
+
+      if (!user) return res.status(404).json({ data: "No encontrado" });
+
+      user.confirmEmailToken = null;
+      user.email = email;
+      await user.save();
+      res.redirect(`${process.env.URL_FRONT}`);
+      return res.end;
+    } catch (error) {
+      return res.status(500).json({ data: error.message });
+    }
+  }
+);
 
 
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
