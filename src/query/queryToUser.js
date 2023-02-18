@@ -49,4 +49,10 @@ export async function getUserByTokenAny(token, nameToken) {
   });
   return data;
 }
+export async function getUserREALByTokenAny(token, nameToken) {
+  const data = await USER.findOne({
+    where: { [nameToken]: token },
+  });
+  return data;
+}
 

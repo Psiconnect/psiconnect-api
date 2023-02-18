@@ -2,8 +2,6 @@ import { compare , hash} from "bcrypt";
 import Jwt from "jsonwebtoken";
 import transporter from "../config/nodemailer.js";
 import { Router } from "express";
-import USERS from "../models/USERS.js";
-import userEmailDTO from "../DTO/userDTO/userEmailDTO.js";
 import userRegisterDTO from "../DTO/userDTO/userRegisterDTO.js";
 import { userJWTDTO, userResetPasswordJWTDTO } from "../helpers/checkTKN.js";
 import { generatorTKN, generadorConfirmEmailTKN, generadorResetPasswordTKN } from "../helpers/generatorTKN.js";
@@ -16,7 +14,7 @@ import {
   getUserByEmail,
   getUserById,
   getUserByResetToken,
-  getUserByTokenAny,
+  getUserREALByTokenAny,
 } from "../query/queryToUser.js";
 import { adminLogin } from "../helpers/adminLogin.js";
 
@@ -205,7 +203,7 @@ userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
     const token = await generadorConfirmEmailTKN({ id: user.id });
     const linkConfirmEmail = `${
       process.env.URL_BACK || "http://localhost:5000"
-    }user/confirmationChangeEmail?confirm=${token}&email=${email}`;
+    }user/email/confirmationChangeEmail?confirm=${token}&email=${email}`;
 
     try {
       await transporter.sendMail({
@@ -234,18 +232,13 @@ userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
 });
 
 userRoutes.get(
-  "/confirmationChangeEmail",
-
+  "/email/confirmationChangeEmail",
   async (req, res) => {
     try {
       const token = req.query.confirm;
       const email = req.query.email;
 
-      const user = await getUserByTokenAny(
-        token,
-        "confirmEmailToken"
-      );
-
+      const user = await getUserREALByTokenAny(token,"confirmEmailToken");
       if (!user) return res.status(404).json({ data: "No encontrado" });
 
       user.confirmEmailToken = null;

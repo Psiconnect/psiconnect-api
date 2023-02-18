@@ -243,7 +243,6 @@ professionalRoutes.get(
 
 professionalRoutes.get(
   "/confirmationChangeEmail",
-
   async (req, res) => {
     try {
       const token = req.query.confirm;
