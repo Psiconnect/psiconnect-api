@@ -42,11 +42,11 @@ userRoutes.post("/login",adminLogin, async (req, res) => {
     if (!userLogin) return res.status(400).json("credenciales incorrectas");
     const checkPassword = await compare(password, userLogin?.password);
     if (!checkPassword) return res.status(400).json("credenciales incorrectas");
+    console.log(userLogin.state);
     if(!userLogin.state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: userLogin.id });
     return res.status(200).json(token);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });
@@ -169,6 +169,7 @@ userRoutes.put("/ChangePasswordForget",userResetPasswordJWTDTO , async (req, res
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   try {
     const newUser = await getOrCreate(req.body);
+    if(!newUser[0].state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
     const token = await generatorTKN({ id: newUser[0].id });
     return res.status(201).json(token);
   } catch (error) {

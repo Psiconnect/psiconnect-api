@@ -98,7 +98,7 @@ export async function findAllProfessional() {
 }
 
 export async function getProfessionalByEmail(email) {
-  const data = await PROFESSIONAL.findOne({ where: { email } });
+  const data = await PROFESSIONAL.findOne({ where: { email:email } });
   return data;
 }
 
