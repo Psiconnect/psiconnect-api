@@ -14,11 +14,11 @@ dotenv.config();
 //hola como andan
 
 async function bootstrap() {
-  await sequelize.sync({ force: false });
+  await sequelize.sync({ force: true });
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
-  // await mapSkillsTesting()
+  await mapSkillsTesting()
   await mapAdminTesting()
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {

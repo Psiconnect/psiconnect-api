@@ -18,10 +18,9 @@ const opIlikeProfessional = (text) => {
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
   const include = {};
-
   if (area) {
-    include.model = AREA;
     include.where = { area };
+    include.model = AREA;
   }
 
   if (name && lastName) {
@@ -31,12 +30,10 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   } else if (lastName) {
     where[Op.or] = opIlikeProfessional(lastName);
   }
-
   const data = await PROFESSIONAL.findAll({
     where,
     include,
-  });
-
+  });  
   return data.filter((prof) => prof.state === "avalible");
 }
 export async function findAllProfessionalWithArea(area) {
