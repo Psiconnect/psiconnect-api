@@ -243,7 +243,6 @@ professionalRoutes.get(
 
 professionalRoutes.get(
   "/confirmationChangeEmail",
-
   async (req, res) => {
     try {
       const token = req.query.confirm;
@@ -373,6 +372,7 @@ professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
     const professional = await getProfessionalById(req.tkn.id);
+    console.log(professional.password);
     if (!professional)
       res.status(404).json({ error: "Profesional inexistente" });
 
