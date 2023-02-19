@@ -6,19 +6,26 @@ import { createReview, findAllReviews } from "../query/queryToReview.js";
 const reviewRoutes = Router();
 
 reviewRoutes.get("/:professionalId", async (req, res) => {
+  const {professionalId} = req.params
   try {
     const reviews = await findAllReviews();
-    const mapReviews = reviews.map((el) => {
-      return {
-        id: el.id,
-        score: el.score,
-        comments: el.comments,
-        userId: el.userId,
-        professionalId: el.professionalId,
-        username: el.user.name,
-        lastusername: el.user.lastName,
-      };
-    });
+    const filterReviews = reviews?.filter((el) => el.professionalId === professionalId );
+    const mapReviews = filterReviews?.map(el => {
+        return {
+          id : el.id,
+          score : el.score,
+          comments: el.comments,
+          userId: el.userId,
+          professionalId : el.professionalId,
+          puntualidad: el.puntualidad,
+          trato: el.trato,
+          general: el.general,
+          username: el.user.name,
+          lastusername: el.user.lastName,
+          professionalName : el.professional.name,
+          lastprofessionalName : el.professional.lastName
+        }
+    })    
     if (!reviews) return res.status(400).json("Base de datos vacia");
     return res.status(200).json(mapReviews);
   } catch (error) {
