@@ -27,6 +27,7 @@ import {
   getProfessionalByTokenAny,
   setModificationProfesional,
   editProfesional,
+  findAllBestProfessionalDESC,
 } from "../query/queryToPsico.js";
 
 const professionalRoutes = Router();
@@ -266,8 +267,6 @@ professionalRoutes.get(
   }
 );
 
-// corregi un error by:dani
-// El endpoint de area estaba pisando esta ruta le agregue details antes del params
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
@@ -510,11 +509,21 @@ professionalRoutes.get(
       if (!professional)
         return res.status(404).json({ data: "Profesional No registrado" });
 
-      return res.status(204).json(professional);
-    } catch (err) {
-      return res.status(500).json({ data: err.message });
-    }
+    return res.status(204).json(professional);
+  } catch (err) {
+    return res.status(500).json({ data: err.message });
   }
-);
+});
+
+professionalRoutes.post("/score", async(req, res) => {
+  try{
+    const professionals = await findAllBestProfessionalDESC();
+    res.status(200).json(professionals);
+    
+  }catch(err){
+    return res.status(500).json({ data: err.message });
+  }
+})
+
 
 export default professionalRoutes;

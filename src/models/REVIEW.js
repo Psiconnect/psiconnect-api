@@ -55,7 +55,8 @@ const REVIEW = sequelize.define(
       defaultValue: true,
     },
 
-}, {
+    },
+    {
      timestamps: false,
   }
 ) ;
