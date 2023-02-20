@@ -8,12 +8,13 @@ import { mapProfesionalTesting } from "./src/testing/profesional.js";
 import { mapAreaTesting } from "./src/testing/areas.js";
 import { mapSkillsTesting } from "./src/testing/skills.js";
 import { mapAdminTesting } from "./src/testing/admin.js";
+import { idTestingReviews } from './src/testing/review.js'
 
 dotenv.config();
 //hola como andan
 
 async function bootstrap() {
-  await sequelize.sync({ force: true });
+  await sequelize.sync({ force: true }); 
   await mapUserTesting()
   await mapAreaTesting()
   await mapProfesionalTesting()
@@ -25,7 +26,7 @@ async function bootstrap() {
   });
 }
 bootstrap();
-
-
-
+setTimeout(() => {
+  idTestingReviews()
+} ,5000)
 

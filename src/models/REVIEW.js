@@ -13,11 +13,7 @@ const REVIEW = sequelize.define(
       },
 
       score:{
-        type: DataTypes.FLOAT,
-        validate:{
-            min: 1,
-            max: 5
-        }
+        type: DataTypes.DECIMAL,
       },
       puntualidad:{
         type: DataTypes.INTEGER,
