@@ -58,6 +58,13 @@ const PROFESSIONAL = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: '15'
     },
+    score:{
+      type: DataTypes.FLOAT,
+      validate:{
+        min: 1,
+        max: 5
+    }
+    },
     rol:{
       type: DataTypes.STRING,
       defaultValue: 'professional'
