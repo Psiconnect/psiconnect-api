@@ -61,19 +61,20 @@ reviewRoutes.get("/", async (req, res) => {
 
 
 reviewRoutes.post('/:professionalId', async (req, res ) => {
-    const  {review}  = req.body  
+    const  review = req.body  
     const { professionalId } = req.params
+    console.log(review);
     try{
         const professional = await getProfessionalById(professionalId)
         const users = await getUserById(review.userId)
         if(!professional || !users) {
             return res.status(404).json({data: 'datos no encontrados'})
         }
-        if(review)return res.status(401).json({data:'Revisar'})
         const newReview=  await createReview(review)
         return res.status(200).json(newReview)
     } 
     catch (error) {
+      console.log(error);
         return res.status(500).json({ data: error.message })
     }
 
