@@ -154,7 +154,10 @@ export async function findAllBestProfessionalDESC() {
   const professionals = await PROFESSIONAL.findAll({
     order: [
       [literal('score'), 'DESC']
-    ]
+    ],
+    include:[{
+      model:REVIEW
+    }]
   })
-  return professionals.filter(el => el.score !== null ).slice(0,5);
+  return professionals.filter(el => el.score !== null ).slice(0,6);
 }

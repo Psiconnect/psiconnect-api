@@ -423,15 +423,6 @@ export async function mapTestingReviews() {
         },{
             comments: null,
             score: null,
-            puntualidad: 5,
-            trato: 5,
-            general: 5,
-            userId: null, 
-            professionalId: null,
-            state:true
-        },{
-            comments: null,
-            score: null,
             puntualidad: 3,
             trato: 5,
             general: 5,
@@ -441,9 +432,99 @@ export async function mapTestingReviews() {
         },{
             comments: null,
             score: null,
-            puntualidad: 4,
-            trato: 5,
-            general: 5,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
+            userId: null, 
+            professionalId: null,
+            state:true
+        },{
+            comments: null,
+            score: null,
+            puntualidad: (Math.floor(Math.random() * 5) + 1),
+            trato: (Math.floor(Math.random() * 5) + 1),
+            general: (Math.floor(Math.random() * 5) + 1),
             userId: null, 
             professionalId: null,
             state:true
@@ -533,9 +614,9 @@ export async function mapTestingReviews() {
 
     for( const el of reviews)  {
 
-        const indexOfProfessional = Math.round(Math.random() * professionals.length)-1;
-        const indexOfUser = Math.round(Math.random() * users.length)-1;
-        const indexOfComment = Math.round(Math.random() * comentarios.length)-1;
+        const indexOfProfessional = Math.round(Math.random() * (professionals.length-1));
+        const indexOfUser = Math.round(Math.random() * (users.length-1));
+        const indexOfComment = Math.round(Math.random() * (comentarios.length-1));
         
         el.comments = comentarios[indexOfComment];
         el.userId = mapUsers[indexOfUser];
