@@ -122,6 +122,16 @@ paymentRoutes.get("/user/:userId", async (req, res) => {
   }
 });
 
+paymentRoutes.get("/userPayment/:userId", async (req, res) => {
+  const {userId} = req.params
+  try {
+    const consult = await getResultAllPaymentByUser(userId);
+    return res.status(200).json(consult);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
 paymentRoutes.get("/professional/:professionalId", async (req, res) => {
   try {
     const consult = await getAllPaymentByProfessional(

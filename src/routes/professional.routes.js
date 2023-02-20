@@ -243,7 +243,6 @@ professionalRoutes.get(
 
 professionalRoutes.get(
   "/confirmationChangeEmail",
-
   async (req, res) => {
     try {
       const token = req.query.confirm;
@@ -373,6 +372,7 @@ professionalRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
   try {
     const professional = await getProfessionalById(req.tkn.id);
+    console.log(professional.password);
     if (!professional)
       res.status(404).json({ error: "Profesional inexistente" });
 
@@ -392,8 +392,8 @@ professionalRoutes.get("/", async (req, res) => {
   try {
     let data;
     if (!name && !lastName) data = await findAllProfessional();
-    else data = await findAllProfessionalByAreaAndNames(null, name, lastName);
-    if (!data.length) return res.status(400).json("Base de datos vacia");
+    else data = await findAllProfessionalByAreaAndNames('Ansiedad', name, lastName);
+    if (!data.length) return res.status(404).json("Base de datos vacia");
     return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ data: error.message });
