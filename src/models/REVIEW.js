@@ -57,8 +57,8 @@ const REVIEW = sequelize.define(
 
     },
     {
-     freezeTableName: true
-    }
+     timestamps: false,
+  }
 ) ;
 
 export default REVIEW;
