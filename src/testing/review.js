@@ -20,8 +20,11 @@ const comentarios = [
     "Una experiencia regular en general, nada destacable."
   ];
 
+  
 
-export async function idTestingReviews() {
+
+export async function mapTestingReviews() {
+    
     const users = await USER.findAll()  
     const mapUsers = users.map(el => el.id)
     const professionals = await PROFESSIONAL.findAll()  
@@ -30,7 +33,7 @@ export async function idTestingReviews() {
     const reviews = [
         {
         comments: comentarios[0],
-        score: (Math.random() * 5) + 1,
+        score: ((Math.random() * 4) +1).toFixed(1) ,
         puntualidad: (Math.floor(Math.random() * 5) + 1),
         trato: (Math.floor(Math.random() * 5) + 1),
         general: (Math.floor(Math.random() * 5) + 1),
@@ -41,7 +44,7 @@ export async function idTestingReviews() {
 
         {
         comments: comentarios[1],
-        score: (Math.random() * 5) + 1,
+        score: ((Math.random() * 4) +1).toFixed(1) ,
         puntualidad: (Math.floor(Math.random() * 5) + 1),
         trato: (Math.floor(Math.random() * 5) + 1),
         general: (Math.floor(Math.random() * 5) + 1),
@@ -52,7 +55,7 @@ export async function idTestingReviews() {
         
         {
         comments:comentarios[8],
-        score: (Math.random() * 5) + 1,
+        score: ((Math.random() * 4) +1).toFixed(1) ,
         puntualidad: (Math.floor(Math.random() * 5) + 1),
         trato: (Math.floor(Math.random() * 5) + 1),
         general: (Math.floor(Math.random() * 5) + 1),
@@ -62,7 +65,7 @@ export async function idTestingReviews() {
 
         {
         comments: comentarios[5],
-        score: (Math.random() * 5) + 1,
+        score: ((Math.random() * 4) +1).toFixed(1),
         puntualidad: (Math.floor(Math.random() * 5) + 1),
         trato: (Math.floor(Math.random() * 5) + 1),
         general: (Math.floor(Math.random() * 5) + 1),
@@ -72,7 +75,7 @@ export async function idTestingReviews() {
 
         {
         comments: comentarios[10],
-        score: (Math.floor(Math.random() * 5) + 1),
+        score: ((Math.random() * 4) +1).toFixed(1) ,
         puntualidad: (Math.floor(Math.random() * 5) + 1),
         trato: (Math.floor(Math.random() * 5) + 1),
         general: (Math.floor(Math.random() * 5) + 1),
@@ -88,7 +91,7 @@ export async function idTestingReviews() {
 
     const reviewsCreated = await REVIEW.findAll()
     console.log(reviewsCreated, 'reviews')
-    return reviewsCreated
+    
     
 
 }

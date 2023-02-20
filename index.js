@@ -8,7 +8,7 @@ import { mapProfesionalTesting } from "./src/testing/profesional.js";
 import { mapAreaTesting } from "./src/testing/areas.js";
 import { mapSkillsTesting } from "./src/testing/skills.js";
 import { mapAdminTesting } from "./src/testing/admin.js";
-import { idTestingReviews } from './src/testing/review.js'
+import { mapTestingReviews } from './src/testing/review.js'
 
 
 dotenv.config();
@@ -29,6 +29,6 @@ async function bootstrap() {
 
 bootstrap();
 setTimeout(() => {
-  idTestingReviews()
+  mapTestingReviews()
 } ,5000)
 

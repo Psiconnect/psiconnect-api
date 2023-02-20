@@ -19,6 +19,9 @@ const CONSULT = sequelize.define(
     date: {
       type: DataTypes.STRING,
     },
+    linkpay : {
+      type: DataTypes.TEXT
+    }
   },
   {
     timestamps: false,
