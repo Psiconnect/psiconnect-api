@@ -4,11 +4,16 @@ import USER from "../models/USERS.js";
 
 const user = [
   {
+    email: "fernando@gmail.com",
+    name: "Fernando",
+    lastName: "Ramones",
+    password: "Test1234",
+  },
+  {
     email: "user1@example.com",
     name: "John",
     lastName: "Doe",
     password: "Abcdefg1",
-    state:false
   },
   {
     email: "user2@example.com",

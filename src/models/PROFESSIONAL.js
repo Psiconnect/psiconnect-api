@@ -59,7 +59,7 @@ const PROFESSIONAL = sequelize.define(
       defaultValue: '15'
     },
     score:{
-      type: DataTypes.DECIMAL,
+      type: DataTypes.FLOAT,
       validate:{
         min: 1,
         max: 5
