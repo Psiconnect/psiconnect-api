@@ -20,10 +20,10 @@ reviewRoutes.get("/:professionalId", async (req, res) => {
           puntualidad: el.puntualidad,
           trato: el.trato,
           general: el.general,
-          username: el.user.name,
-          lastusername: el.user.lastName,
-          professionalName : el.professional.name,
-          lastprofessionalName : el.professional.lastName
+          username: el.user?.name,
+          lastusername: el.user?.lastName,
+          professionalName : el.professional?.name,
+          lastprofessionalName : el.professional?.lastName
         }
     })    
     if (!reviews) return res.status(400).json("Base de datos vacia");
@@ -47,12 +47,12 @@ reviewRoutes.get("/", async (req, res) => {
             puntualidad: el.puntualidad,
             trato: el.trato,
             general: el.general,
-            username: el.user.name,
-            lastusername: el.user.lastName
+            username: el.user?.name,
+            lastusername: el.user?.lastName
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");
-    return res.status(200).json(mapReviews)
+    return res.status(200).json(reviews)
 
     }catch(error) {
         return res.status(404).json({data: error.message})
