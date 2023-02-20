@@ -9,7 +9,6 @@ import { mapAreaTesting } from "./src/testing/areas.js";
 import { mapSkillsTesting } from "./src/testing/skills.js";
 import { mapAdminTesting } from "./src/testing/admin.js";
 
-
 dotenv.config();
 //hola como andan
 
@@ -25,5 +24,8 @@ async function bootstrap() {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);
   });
 }
-
 bootstrap();
+
+
+
+

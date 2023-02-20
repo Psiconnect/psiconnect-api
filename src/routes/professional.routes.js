@@ -16,7 +16,8 @@ import {
   getProfessionalById,
   getProfessionalByTokenAny,
   setModificationProfesional,
-  editProfesional
+  editProfesional,
+  findAllBestProfessionalDESC
 } from "../query/queryToPsico.js";
 
 
@@ -174,8 +175,6 @@ professionalRoutes.get("/confirmationEmail", userConfirmEmailJWTDTO, async (req,
   }
 });
 
-// corregi un error by:dani
-// El endpoint de area estaba pisando esta ruta le agregue details antes del params 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
   try {
@@ -388,6 +387,15 @@ professionalRoutes.get("/token/forgetPassword", userResetPasswordJWTDTO, async (
   }
 });
 
+professionalRoutes.post("/score", async(req, res) => {
+  try{
+    const professionals = await findAllBestProfessionalDESC();
+    res.status(200).json(professionals)
+    
+  }catch(err){
+    return res.status(500).json({ data: err.message });
+  }
+})
 
 
 export default professionalRoutes;

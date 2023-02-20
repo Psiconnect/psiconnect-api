@@ -13,7 +13,7 @@ const REVIEW = sequelize.define(
       },
 
       score:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL,
         validate:{
             min: 1,
             max: 5
@@ -54,9 +54,10 @@ const REVIEW = sequelize.define(
       defaultValue: true,
     },
 
-}, {
-     timestamps: false,
-  }
+    },
+    {
+     freezeTableName: true
+    }
 ) ;
 
 export default REVIEW;

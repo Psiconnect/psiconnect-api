@@ -3,6 +3,8 @@ import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import { Op } from "sequelize";
 import SKILLS from "../models/SKILLS.js";
+import REVIEW from "../models/REVIEW.js";
+import { literal } from 'sequelize';
 
 const opIlikeProfessional = (text) => {
   return {
@@ -179,4 +181,13 @@ export async function editProfesional(professional, body) {
     },
     include: [{ model: AREA }, { model: SKILLS }],
   });
+}
+
+export async function findAllBestProfessionalDESC() {
+  const professionals = await PROFESSIONAL.findAll({
+    order: [
+      [literal('score'), 'DESC']
+    ]
+  })
+  return professionals.filter(el => el.score !== null ).slice(0,5);
 }
