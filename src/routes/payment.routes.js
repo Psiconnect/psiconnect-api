@@ -48,8 +48,10 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
       },
       async (err, response) => {
         try {
+          console.log(response)
           const newConsult = await createConsult({
             id: response.body.id,
+            linkpay: response.body.links[1].href,
             status: response.body.status,
             ...req.body,
           });
@@ -59,6 +61,7 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
             ...req.body,
           })
         } catch (error) {
+          console.log(error)
           return res.status(500).json({ data: error.message });
         }
         res.json({ data: response.body });
