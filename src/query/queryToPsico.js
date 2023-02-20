@@ -16,58 +16,25 @@ const opIlikeProfessional = (text) => {
 };
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
-  let data;
-  if (area && name && lastName) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.and]: {
-          [Op.or]: opIlikeProfessional(name),
-          [Op.or]: opIlikeProfessional(lastName),
-        },
-      },
-      include: {
-        model: AREA,
-        where: {
-          area,
-        },
-      },
-    });
-  } else if (area && name) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.or]: opIlikeProfessional(name),
-      },
-      include: {
-        model: AREA,
-        where: {
-          area,
-        },
-      },
-    });
-  } else if (name && lastName && !area) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.and]: {
-          [Op.or]: opIlikeProfessional(name),
-          [Op.or]: opIlikeProfessional(lastName),
-        },
-      },
-      include: {
-        model: AREA,
-      },
-    });
-  } else if (name) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.or]: opIlikeProfessional(name),
-      },
-      include: {
-        model: AREA,
-      },
-    });
+  const where = {};
+  const include = {};
+  if (area) {
+    include.where = { area };
+    include.model = AREA;
   }
-  data = await data.filter(prof => prof.state === 'avalible' );
-  return data
+
+  if (name && lastName) {
+    where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
+  } else if (name) {
+    where[Op.or] = opIlikeProfessional(name);
+  } else if (lastName) {
+    where[Op.or] = opIlikeProfessional(lastName);
+  }
+  const data = await PROFESSIONAL.findAll({
+    where,
+    include,
+  });  
+  return data.filter((prof) => prof.state === "avalible");
 }
 export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({

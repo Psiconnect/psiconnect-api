@@ -43,5 +43,16 @@ export async function updateUserData(id, name, lastName, phone, image) {
 }
 
 
- 
+export async function getUserByTokenAny(token, nameToken) {
+  const data = await PROFESSIONAL.findOne({
+    where: { [nameToken]: token },
+  });
+  return data;
+}
+export async function getUserREALByTokenAny(token, nameToken) {
+  const data = await USER.findOne({
+    where: { [nameToken]: token },
+  });
+  return data;
+}
 

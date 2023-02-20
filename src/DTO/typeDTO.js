@@ -89,3 +89,50 @@ export const passwordDTOSchema = Type.String({
     maxLength: "password debe tener como máximo 25 caracteres de longitud",
   },
 });
+
+export const commentsDTOSchema = Type.String({
+  maxLength: 400,
+  errorMessage: {
+    maxLength: "La review no puede tener más de 400 caracteres",
+  },
+});
+
+export const punctualityDTOSchema = Type.Number({
+  minimum: 1,
+  maximum: 5,
+  errorMessage: {
+    type: "El tipo de puntualidad no es válido, debe ser un número",
+    minimum: "La puntualidad debe ser mayor o igual a 1",
+    maximum: "La puntualidad debe ser menor o igual a 5",
+  },
+});
+
+export const treatmentDTOSchema = Type.Number({
+  minimum: 1,
+  maximum: 5,
+  errorMessage: {
+    type: "El tipo de trato no es válido, debe ser un número",
+    minimum: "El trato debe ser mayor o igual a 1",
+    maximum: "El trato debe ser menor o igual a 5",
+  },
+});
+
+export const scoreDTOSchema = Type.Number({
+  minimum: 0,
+  maximum: 5,
+  errorMessage: {
+    type: "El tipo del score no es válido, debe ser un número",
+    minimum: "El score debe ser mayor o igual a 0",
+    maximum: "El score debe ser menor o igual a 5",
+  },
+});
+
+export const generalDTOSchema = Type.Number({
+  minimum: 0,
+  maximum: 5,
+  errorMessage: {
+    type: "El tipo de general no es válido, debe ser un número",
+    minimum: "El valor general debe ser mayor o igual a 0",
+    maximum: "El valor general debe ser menor o igual a 5",
+  },
+});

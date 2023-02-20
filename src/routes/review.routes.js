@@ -1,8 +1,7 @@
 import { Router } from "express";
-import REVIEW from "../models/REVIEW.js";
 import { getProfessionalById } from "../query/queryToPsico.js";
 import { getUserById } from "../query/queryToUser.js";
-import { findAllReviews } from "../query/queryToReview.js";
+import { createReview, findAllReviews } from "../query/queryToReview.js";
 
 const reviewRoutes = Router();
 
@@ -34,30 +33,6 @@ reviewRoutes.get("/:professionalId", async (req, res) => {
   }
 });
 
-reviewRoutes.post("/:professionalId", async (req, res) => {
-  const { comments, score, userId, puntualidad, trato, general } = req.body;
-  const { professionalId } = req.params;
-  try {
-    const professional = await getProfessionalById(professionalId);
-    console.log(professional, 'profesional')
-    const users = await getUserById(userId);
-    if (!professional || !users) {
-      return res.status(404).json({ data: "datos no encontrados" });
-    }
-    const newReview = await REVIEW.create({
-      puntualidad,
-      trato,
-      general,
-      comments,
-      score,
-      userId,
-      professionalId,
-    });
-    return res.status(200).json(newReview);
-  } catch (error) {
-    return res.status(500).json({ data: error.message });
-  }
-});
 
 reviewRoutes.get("/", async (req, res) => {
     try {
@@ -85,11 +60,23 @@ reviewRoutes.get("/", async (req, res) => {
   });
 
 
+reviewRoutes.post('/:professionalId', async (req, res ) => {
+    const  {review}  = req.body  
+    const { professionalId } = req.params
+    try{
+        const professional = await getProfessionalById(professionalId)
+        const users = await getUserById(review.userId)
+        if(!professional || !users) {
+            return res.status(404).json({data: 'datos no encontrados'})
+        }
+        if(review)return res.status(401).json({data:'Revisar'})
+        const newReview=  await createReview(review)
+        return res.status(200).json(newReview)
+    } 
+    catch (error) {
+        return res.status(500).json({ data: error.message })
+    }
 
-
-
-
-
-
+})
 
 export default reviewRoutes
