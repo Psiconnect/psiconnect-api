@@ -29,9 +29,6 @@ async function bootstrap() {
 
 bootstrap();
 setTimeout(() => {
-
   idTestingReviews()
-  
-
 } ,5000)
 

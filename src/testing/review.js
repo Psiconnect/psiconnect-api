@@ -27,8 +27,6 @@ export async function idTestingReviews() {
     const professionals = await PROFESSIONAL.findAll()  
     const  mapProfessionals= professionals.map(el => el.id)
  
-
-
     const reviews = [
         {
         comments: comentarios[0],
@@ -88,7 +86,6 @@ export async function idTestingReviews() {
         await REVIEW.create(el)
     }
 
-   
     const reviewsCreated = await REVIEW.findAll()
     console.log(reviewsCreated, 'reviews')
     return reviewsCreated
