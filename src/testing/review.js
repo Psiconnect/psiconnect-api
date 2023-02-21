@@ -29,6 +29,7 @@ export async function mapTestingReviews() {
     const mapUsers = users.map(el => el.id)
     const professionals = await PROFESSIONAL.findAll()  
     const  mapProfessionals= professionals.map(el => el.id)
+    console.log(mapProfessionals)
  
     const reviews = [
         {
@@ -90,6 +91,9 @@ export async function mapTestingReviews() {
     }
 
     const reviewsCreated = await REVIEW.findAll()
+    console.log(reviewsCreated, 'reviews')
+    
+    
 
 }
 
