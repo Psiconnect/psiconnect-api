@@ -257,8 +257,8 @@ userRoutes.get(
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   try {
     const newUser = await getOrCreate(req.body);
-    if(!newUser[0].state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
-    const token = await generatorTKN({ id: newUser[0].id });
+    if(!newUser.state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
+    const token = await generatorTKN({ id: newUser.id });
     return res.status(201).json(token);
   } catch (error) {
     return res.status(500).json({ data: error.message });
