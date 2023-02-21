@@ -48,7 +48,7 @@ reviewRoutes.get("/", async (req, res) => {
             trato: el.trato,
             general: el.general,
             username: el.user?.name,
-            lastusername: el.user?.lastName
+            lastusername: el.user?.lastName,
             professionalName : el.professional?.name,
             lastprofessionalName : el.professional?.lastName
         }
