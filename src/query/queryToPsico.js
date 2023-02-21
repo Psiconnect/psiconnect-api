@@ -157,7 +157,11 @@ export async function findAllBestProfessionalDESC() {
     ],
     include:[{
       model:REVIEW
+    },{
+      model:SKILLS
+    },{
+      model:AREA
     }]
-  })
+  });
   return professionals.filter(el => el.score !== null ).slice(0,6);
 }
