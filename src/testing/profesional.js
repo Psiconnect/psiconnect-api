@@ -9,7 +9,7 @@ const user = [
     name: "Braian",
     lastName: "Valdez",
     description:
-      "El mejor psicologo que pordes encontrar y pagar, pobre.",
+      "El mejor psicologo que podras encontrar en esta web. si quieres saber mas mandame un msg a: https://www.linkedin.com/in/braian-valdez-365679239/",
     linkedin: "https://www.linkedin.com/in/braian-valdez-365679239/",
     password: "Test1234",
     area: ['Ansiedad', 'Autoestima'],
