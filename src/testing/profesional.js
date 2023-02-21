@@ -1,6 +1,7 @@
 import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import SKILLS from "../models/SKILLS.js";
 
 const user = [
   {
@@ -8,7 +9,7 @@ const user = [
     name: "Braian",
     lastName: "Valdez",
     description:
-      "El mejor psicologo que pordes encontrar y pagar, pobre.",
+      "El mejor psicologo que podras encontrar en esta web. si quieres saber mas mandame un msg a: https://www.linkedin.com/in/braian-valdez-365679239/",
     linkedin: "https://www.linkedin.com/in/braian-valdez-365679239/",
     password: "Test1234",
     area: ['Ansiedad', 'Autoestima'],
@@ -19,6 +20,7 @@ const user = [
   {
     name: "Dianna",
     lastName: "Graham",
+    price: '60',
     email: "diannagraham@tingles.com",
     description:
       "Cupidatat ad amet dolore aliqua velit ad. Reprehenderit labore cupidatat veniam ad ipsum reprehenderit Lorem dolor deserunt ea laboris nulla. Ipsum mollit culpa ad excepteur pariatur ex dolore dolore magna deserunt consectetur laborum. Officia aute magna exercitation ipsum aliqua commodo reprehenderit et Lorem tempor deserunt. Incididunt duis nostrud consectetur tempor minim eu pariatur. Cupidatat cupidatat anim cillum nisi minim velit fugiat dolore anim excepteur voluptate ipsum proident. Amet id mollit proident aliquip enim magna labore pariatur id eiusmod adipisicing voluptate enim.\r\n",
@@ -33,6 +35,7 @@ const user = [
     name: "Lucille",
     lastName: "Stephenson",
     email: "lucillestephenson@tingles.com",
+    price: '50',
     description:
       "Reprehenderit aliquip elit ea eu proident exercitation ex cupidatat exercitation. Enim sit nulla labore irure ut aliqua mollit eu do ullamco commodo. Occaecat nulla ipsum anim eiusmod do anim sint fugiat aute pariatur eu irure aliquip laboris. Sint et nulla ut et consectetur. Pariatur quis amet deserunt irure adipisicing tempor qui occaecat cupidatat et voluptate exercitation quis.\r\n",
     linkedin: "https://www.linkedin.com/in/jonathandanielarce/",
@@ -327,6 +330,7 @@ const user = [
   {
     name: "Charmaine",
     lastName: "Noble",
+    price: '60',
     email: "charmainenoble@tingles.com",
     description:
       "Dolore culpa est et consectetur ad. Irure laborum Lorem sit ex Lorem officia cupidatat duis tempor mollit eu magna laboris. Velit minim eu qui eu commodo ipsum officia eiusmod sint consequat commodo.\r\n",
@@ -392,6 +396,7 @@ const user = [
   {
     name: "Norman",
     lastName: "Johnston",
+    price: '40',
     email: "normanjohnston@tingles.com",
     description:
       "Incididunt eiusmod cillum cillum nostrud qui sint sunt cupidatat mollit magna in tempor. Magna deserunt in proident duis esse velit. Enim duis non culpa velit aliqua.\r\n",
@@ -573,6 +578,7 @@ const user = [
   {
     name: "Alicia",
     lastName: "Callahan",
+    price: '60',
     email: "aliciacallahan@tingles.com",
     description:
       "Minim ipsum deserunt amet irure reprehenderit pariatur aliquip dolore mollit officia. Aliqua reprehenderit irure ad sunt id fugiat dolor veniam aliquip excepteur cillum occaecat sit. Dolore deserunt irure officia nisi ad.\r\n",
@@ -599,6 +605,7 @@ const user = [
   {
     name: "Elinor",
     lastName: "Burt",
+    price: '70',
     email: "elinorburt@tingles.com",
     description:
       "Eiusmod ex dolore ipsum irure reprehenderit. Fugiat voluptate nisi tempor minim occaecat et nulla. Laborum cupidatat aliqua ad fugiat consectetur do consequat voluptate aute enim veniam quis Lorem. Aliqua exercitation mollit irure ut enim pariatur occaecat anim veniam aliquip. Adipisicing magna ea ea minim officia ipsum incididunt. Eu minim elit ea incididunt aliqua aliqua pariatur minim cillum consectetur.\r\n",
@@ -793,6 +800,7 @@ const user = [
   {
     name: "Long",
     lastName: "Harris",
+    price: '60',
     email: "longharris@tingles.com",
     description:
       "Ad consequat elit sit exercitation. Proident cupidatat id elit laboris incididunt proident laborum nulla aliqua quis aliquip ullamco aliqua. Id aliquip nisi in veniam non ea ad veniam esse et reprehenderit id voluptate dolor. Adipisicing sunt nulla est sit aliqua. Consequat tempor ut do anim exercitation minim elit. Laboris commodo et esse nisi nulla in ad sint ea eu ullamco fugiat eiusmod.\r\n",
@@ -819,6 +827,7 @@ const user = [
   {
     name: "Bass",
     lastName: "Schneider",
+    price: '50',
     email: "bassschneider@tingles.com",
     description:
       "Exercitation cillum consequat id elit consectetur anim aliquip aute qui sunt cupidatat non nostrud. Et dolore cillum duis mollit proident consequat incididunt. Dolor id ullamco nulla eu exercitation enim consectetur velit dolor dolor enim. Nulla pariatur do proident reprehenderit laborum duis ipsum esse veniam sint. Deserunt ea et exercitation ad qui et mollit exercitation. Do fugiat dolor consequat culpa fugiat incididunt Lorem.\r\n",
@@ -1102,6 +1111,7 @@ const user = [
   {
     name: "Reeves",
     lastName: "Berry",
+    price: '60',
     email: "reevesberry@tingles.com",
     description:
       "In Lorem anim elit cupidatat ad nulla est est eu in cupidatat amet id. Aute eu occaecat nisi qui occaecat. Aute mollit occaecat cillum do est deserunt.\r\n",
@@ -1115,6 +1125,7 @@ const user = [
   {
     name: "Kristina",
     lastName: "Sullivan",
+    price: '30',
     email: "kristinasullivan@tingles.com",
     description:
       "Ipsum nisi adipisicing eu duis amet minim officia dolore laborum velit. Adipisicing ad anim sit adipisicing nisi commodo labore occaecat. Non reprehenderit minim labore incididunt culpa ullamco. Et officia ex minim culpa duis ullamco dolor aute anim dolore aliqua. Tempor exercitation ex deserunt ea duis exercitation laborum do veniam adipisicing eu.\r\n",
@@ -1304,11 +1315,22 @@ const user = [
       "https://s36496.pcdn.co/wp-content/uploads/2017/11/9-si-foto-cv.png",
   },
 ];
+
+const skills = ['AMABLE','EMPATICO','SIMPATICO','MOTIVADOR','ENERGICO','CONSERVADOR',
+                'LOGICO','PERSUASIVO','ORGANIZADO','ADAPTABLE','ANALITICO','PROGRESISTA'];
+
 export async function mapProfesionalTesting() {
   user.map(async (u) => {
+    const randomIndexSkill = Math.round(Math.random()*(skills.length-1))
+    const randomIndexSkillTwo =  Math.round(Math.random()*(skills.length-1))
+
     const hashedPassword = await hash(u.password, 10);
     const pro = await PROFESSIONAL.create({ ...u, password: hashedPassword });
     const a = await AREA.findOne({ where: { area: u.area } });
+    const s = await SKILLS.findOne({where:{skill:skills[randomIndexSkill]}});
+    const sk = await SKILLS.findOne({where:{skill:skills[randomIndexSkillTwo]}});
+    await pro.addSkills(sk);
+    await pro.addSkills(s);
     await pro.addArea(a);
   });
 }

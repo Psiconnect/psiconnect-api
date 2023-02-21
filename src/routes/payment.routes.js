@@ -48,8 +48,10 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
       },
       async (err, response) => {
         try {
+          console.log(response)
           const newConsult = await createConsult({
             id: response.body.id,
+            linkpay: response.body.links[1].href,
             status: response.body.status,
             ...req.body,
           });
@@ -59,6 +61,7 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
             ...req.body,
           })
         } catch (error) {
+          console.log(error)
           return res.status(500).json({ data: error.message });
         }
         res.json({ data: response.body });
@@ -117,6 +120,16 @@ paymentRoutes.get("/user/:userId", async (req, res) => {
   try {
     const consult = await getAllPaymentByUser(req.params.userId);
     return res.json(consult);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
+paymentRoutes.get("/userPayment/:userId", async (req, res) => {
+  const {userId} = req.params
+  try {
+    const consult = await getResultAllPaymentByUser(userId);
+    return res.status(200).json(consult);
   } catch (error) {
     return res.status(500).json({ data: error.message });
   }

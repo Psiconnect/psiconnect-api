@@ -3,6 +3,8 @@ import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import { Op } from "sequelize";
 import SKILLS from "../models/SKILLS.js";
+import REVIEW from "../models/REVIEW.js";
+import { literal } from 'sequelize';
 
 const opIlikeProfessional = (text) => {
   return {
@@ -16,58 +18,25 @@ const opIlikeProfessional = (text) => {
 };
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
-  let data;
-  if (area && name && lastName) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.and]: {
-          [Op.or]: opIlikeProfessional(name),
-          [Op.or]: opIlikeProfessional(lastName),
-        },
-      },
-      include: {
-        model: AREA,
-        where: {
-          area,
-        },
-      },
-    });
-  } else if (area && name) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.or]: opIlikeProfessional(name),
-      },
-      include: {
-        model: AREA,
-        where: {
-          area,
-        },
-      },
-    });
-  } else if (name && lastName && !area) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.and]: {
-          [Op.or]: opIlikeProfessional(name),
-          [Op.or]: opIlikeProfessional(lastName),
-        },
-      },
-      include: {
-        model: AREA,
-      },
-    });
-  } else if (name) {
-    data = await PROFESSIONAL.findAll({
-      where: {
-        [Op.or]: opIlikeProfessional(name),
-      },
-      include: {
-        model: AREA,
-      },
-    });
+  const where = {};
+  const include = {};
+  if (area) {
+    include.where = { area };
+    include.model = AREA;
   }
-  data = await data.filter(prof => prof.state === 'avalible' );
-  return data
+
+  if (name && lastName) {
+    where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
+  } else if (name) {
+    where[Op.or] = opIlikeProfessional(name);
+  } else if (lastName) {
+    where[Op.or] = opIlikeProfessional(lastName);
+  }
+  const data = await PROFESSIONAL.findAll({
+    where,
+    include,
+  });  
+  return data.filter((prof) => prof.state === "avalible");
 }
 export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({
@@ -98,7 +67,7 @@ export async function findAllProfessional() {
 }
 
 export async function getProfessionalByEmail(email) {
-  const data = await PROFESSIONAL.findOne({ where: { email } });
+  const data = await PROFESSIONAL.findOne({ where: { email:email } });
   return data;
 }
 
@@ -179,4 +148,20 @@ export async function editProfesional(professional, body) {
     },
     include: [{ model: AREA }, { model: SKILLS }],
   });
+}
+
+export async function findAllBestProfessionalDESC() {
+  const professionals = await PROFESSIONAL.findAll({
+    order: [
+      [literal('score'), 'DESC']
+    ],
+    include:[{
+      model:REVIEW
+    },{
+      model:SKILLS
+    },{
+      model:AREA
+    }]
+  });
+  return professionals.filter(el => el.score !== null ).slice(0,6);
 }
