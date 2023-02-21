@@ -242,30 +242,27 @@ professionalRoutes.get(
   }
 );
 
-professionalRoutes.get(
-  "/confirmationChangeEmail",
-  async (req, res) => {
-    try {
-      const token = req.query.confirm;
-      const email = req.query.email;
+professionalRoutes.get("/confirmationChangeEmail", async (req, res) => {
+  try {
+    const token = req.query.confirm;
+    const email = req.query.email;
 
-      const professional = await getProfessionalByTokenAny(
-        token,
-        "confirmEmailToken"
-      );
+    const professional = await getProfessionalByTokenAny(
+      token,
+      "confirmEmailToken"
+    );
 
-      if (!professional) return res.status(404).json({ data: "No encontrado" });
+    if (!professional) return res.status(404).json({ data: "No encontrado" });
 
-      professional.confirmEmailToken = null;
-      professional.email = email;
-      await professional.save();
-      res.redirect(`${process.env.URL_FRONT}`);
-      return res.end;
-    } catch (error) {
-      return res.status(500).json({ data: error.message });
-    }
+    professional.confirmEmailToken = null;
+    professional.email = email;
+    await professional.save();
+    res.redirect(`${process.env.URL_FRONT}`);
+    return res.end;
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
   }
-);
+});
 
 professionalRoutes.get("/details/:professionalId", async (req, res) => {
   const { professionalId } = req.params;
@@ -356,11 +353,9 @@ professionalRoutes.put(
 
       await profesionalUpdate.save();
 
-      res
+      return res
         .status(202)
         .json({ message: "Informacion Añadida", token: tokenLogin });
-      res.redirect(`${process.env.URL_FRONT}`);
-      return res.end;
     } catch (error) {
       return res.status(500).json({ data: error.message });
     }
@@ -391,7 +386,12 @@ professionalRoutes.get("/", async (req, res) => {
   try {
     let data;
     if (!name && !lastName) data = await findAllProfessional();
-    else data = await findAllProfessionalByAreaAndNames('Ansiedad', name, lastName);
+    else
+      data = await findAllProfessionalByAreaAndNames(
+        "Ansiedad",
+        name,
+        lastName
+      );
     if (!data.length) return res.status(404).json("Base de datos vacia");
     return res.status(200).json(data);
   } catch (error) {
@@ -509,21 +509,20 @@ professionalRoutes.get(
       if (!professional)
         return res.status(404).json({ data: "Profesional No registrado" });
 
-    return res.status(204).json(professional);
+      return res.status(204).json(professional);
+    } catch (err) {
+      return res.status(500).json({ data: err.message });
+    }
+  }
+);
+
+professionalRoutes.post("/score", async (req, res) => {
+  try {
+    const professionals = await findAllBestProfessionalDESC();
+    res.status(200).json(professionals);
   } catch (err) {
     return res.status(500).json({ data: err.message });
   }
 });
-
-professionalRoutes.post("/score", async(req, res) => {
-  try{
-    const professionals = await findAllBestProfessionalDESC();
-    res.status(200).json(professionals);
-    
-  }catch(err){
-    return res.status(500).json({ data: err.message });
-  }
-})
-
 
 export default professionalRoutes;
