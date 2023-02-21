@@ -272,7 +272,6 @@ userRoutes.put('/id',userJWTDTO, async (req, res) => {
     console.log(req.body)  
     try{
       const user = await getUserById(id);
-condole-log(user)
     if (!user) return res.status(404).json("no se encontro datos");
       const updateUser = await updateUserData(user, name, lastName, phone, avatar)
       if(!updateUser) res.status(500).json("No se modifico correctamente");
