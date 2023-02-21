@@ -5,7 +5,7 @@ export async function findAllArea() {
     const data = await AREA.findAll({
       include:[PROFESSIONAL]
     });
-    return data;
+    return data.filter(e => !!e.state);
   }
   
 export async function findAllProfessionalWithArea(area) {
