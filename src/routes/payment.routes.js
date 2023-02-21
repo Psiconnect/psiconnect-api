@@ -4,35 +4,22 @@ import request from "request";
 import { completeConsult, createConsult } from "../query/queryToConsult.js";
 import { getProfessionalById } from "../query/queryToPsico.js";
 import { getUserById } from "../query/queryToUser.js";
-import {
-  createPayment,
-  getAllPayment,
-  getAllPaymentByProfessional,
-  getAllPaymentByUser,
-  getPaymentById,
-  getResultAllPaymentByProfessional,
-} from "../query/queryToPayment.js";
+import { createPayment, getAllPayment, getAllPaymentByProfessional, getAllPaymentByUser, getPaymentById, getResultAllPaymentByProfessional } from "../query/queryToPayment.js";
 config();
 
 const auth = { user: process.env.CLIENT, pass: process.env.SECRET };
 const paymentRoutes = Router();
-
 paymentRoutes.post(`/create-payment`, async (req, res) => {
-  const { price, userId, professionalId } = req.body;
+  const { price ,userId ,professionalId} = req.body;
   try {
-    const validatorUser = await getUserById(userId);
-    const validatorProfesional = await getProfessionalById(professionalId);
-
-
-    if (!userId && !professionalId)
-      return res
-        .status(401)
-        .json("Falta de usuario o profesional para asociar pago");
-    if (!validatorProfesional) {
-      return res.status(402).json("Profesional inexistente");
+    const validatorUser=await getUserById(userId)
+    const validatorProfesional=await getProfessionalById(professionalId)
+    if(!userId&& !professionalId) return res.status(401).json('Falta de usuario o profesional para asociar pago')
+    if(!validatorProfesional){
+      return res.status(401).json('Profesional inexistente')
     }
-    if (!validatorUser) {
-      return res.status(403).json("Usuario inexistente");
+    if(!validatorUser){
+      return res.status(401).json('Usuario inexistente')
     }
     const body = {
       intent: "CAPTURE",
@@ -61,23 +48,21 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
       },
       async (err, response) => {
         try {
-         
           const newConsult = await createConsult({
             id: response.body.id,
             linkpay: response.body.links[1].href,
             status: response.body.status,
             ...req.body,
           });
-          const newPay = await createPayment({
+          const newPay= await createPayment({
             id: response.body.id,
             status: response.body.status,
             ...req.body,
-          });
+          })
         } catch (error) {
-          console.log(error);
           return res.status(500).json({ data: error.message });
         }
-        res.status(200).json({ data: response.body });
+        res.json({ data: response.body });
       }
     );
   } catch (error) {
@@ -104,8 +89,8 @@ paymentRoutes.get(`/execute-payment`, async (req, res) => {
       } catch (error) {
         return res.status(500).json({ data: error.message });
       }
-      res.redirect(`${process.env.URL_FRONT}/userProfile/appointments`);
-      return res.end;
+      res.redirect(`${process.env.URL_FRONT}/userProfile/appointments`)
+      return res.end
     }
   );
 });
@@ -120,6 +105,7 @@ paymentRoutes.get("/", async (req, res) => {
 });
 
 paymentRoutes.get("/id/:id", async (req, res) => {
+
   try {
     const consult = await getPaymentById(req.params.id);
     return res.json(consult);
@@ -138,7 +124,7 @@ paymentRoutes.get("/user/:userId", async (req, res) => {
 });
 
 paymentRoutes.get("/userPayment/:userId", async (req, res) => {
-  const { userId } = req.params;
+  const {userId} = req.params
   try {
     const consult = await getResultAllPaymentByUser(userId);
     return res.status(200).json(consult);
@@ -158,7 +144,7 @@ paymentRoutes.get("/professional/:professionalId", async (req, res) => {
   }
 });
 paymentRoutes.get("/professionalPayment/:professionalId", async (req, res) => {
-  const { professionalId } = req.params;
+  const {professionalId} = req.params
   try {
     const consult = await getResultAllPaymentByProfessional(professionalId);
     return res.status(200).json(consult);
