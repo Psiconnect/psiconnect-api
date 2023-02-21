@@ -49,6 +49,8 @@ reviewRoutes.get("/", async (req, res) => {
             general: el.general,
             username: el.user?.name,
             lastusername: el.user?.lastName
+            professionalName : el.professional?.name,
+            lastprofessionalName : el.professional?.lastName
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");
