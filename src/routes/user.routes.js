@@ -103,6 +103,7 @@ userRoutes.put("/forget-password", async (req, res) => {
   try {
     const user = await getUserByEmail(email);
     if(!user) return res.status(404).json({data:'No encontrado'})
+    if(user.status !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
     const token = await generadorResetPasswordTKN({ id: user?.id });
     const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?reset=${token}`;
     try {
@@ -256,8 +257,8 @@ userRoutes.get(
 userRoutes.post("/google",userRegisterDTO, async (req, res) => {
   try {
     const newUser = await getOrCreate(req.body);
-    if(!newUser[0].state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
-    const token = await generatorTKN({ id: newUser[0].id });
+    if(!newUser.state) return res.status(401).json("lo sentimos pero su cuenta esta deshabilitada")
+    const token = await generatorTKN({ id: newUser.id });
     return res.status(201).json(token);
   } catch (error) {
     return res.status(500).json({ data: error.message });
