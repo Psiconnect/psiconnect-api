@@ -99,6 +99,7 @@ export async function getProfessionalByTokenAny(token, nameToken) {
 
 export async function setModificationProfesional(professional, body) {
   professional.description = body.description;
+  professional.price = body.price;
   professional.linkedin = body.linkedin;
   professional.avatar = body.avatar
     ? body.avatar
@@ -117,7 +118,12 @@ export async function editProfesional(professional, body) {
   professional.description = body.description
     ? body.description
     : professional.description;
-  professional.linkedin = body.linkedin ? body.linkedin : professional.linkedin;
+  professional.linkedin = body.linkedin 
+  ? body.linkedin 
+  : professional.linkedin;
+  professional.price = body.price
+  ? body.price
+  : professional.price;
   professional.avatar = body.avatar
     ? body.avatar
     : "https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png";

@@ -30,23 +30,21 @@ export const surnameDTOSchema = Type.String({
 
 
 export const skillDTOSchema =Type.Array({
-    // minLength: 5,
-    // maxLength: 100,
-    // errorMessage: {
-    //   minLength: "Skill debe tener al menos 5 caracteres de longitud",
-    //   maxLength: "Skill debe tener como máximo 100 caracteres de longitud",
-    //   format: "Value no apropiado"
-    // },
+    minLength: 1,
+    maxLength: 12,
+    errorMessage: {
+      minLength: "Skill debe tener al menos 1 elemento de longitud",
+      maxLength: "Skill debe tener como máximo 12 elementos de longitud"
+    },
 }
 )
 export const areasDTOSchema =Type.Array({
-    // minLength: 5,
-    // maxLength: 100,
-    // errorMessage: {
-    //   minLength: "Area debe tener al menos 5 caracteres de longitud",
-    //   maxLength: "Area debe tener como máximo 100 caracteres de longitud",
-    //   format: "Value no apropiado"
-    // },
+    minLength: 1,
+    maxLength: 12,
+    errorMessage: {
+      minLength: "Area debe tener al menos 1 elemento de longitud",
+      maxLength: "Area debe tener como máximo 12 elementos de longitud",
+    },
 }
 )
 
@@ -134,5 +132,15 @@ export const generalDTOSchema = Type.Number({
     type: "El tipo de general no es válido, debe ser un número",
     minimum: "El valor general debe ser mayor o igual a 0",
     maximum: "El valor general debe ser menor o igual a 5",
+  },
+});
+
+export const priceDTOSchema = Type.String({
+  minimum: 1,
+  maximum: 3,
+  errorMessage: {
+    type: "El tipo de precio no es válido, debe ser un número",
+    minimum: "El precio debe tener al menos 1 caracteres de longitud",
+    maximum: "El precio debe tener al menos 3 caracteres de longitud",
   },
 });
