@@ -265,12 +265,17 @@ userRoutes.post("/google",userRegisterDTO, async (req, res) => {
 });
 
 
-userRoutes.put('/:id', async (req, res) => {
-    const { id } = req.params
-    const { name, lastName, phone, image } = req.body   
+userRoutes.put('/id',userJWTDTO, async (req, res) => {
+    const { id } = req.tkn
+    const { name, lastName, phone, avatar } = req.body 
+    console.log(req.body)  
     try{
-      const updateUser = await updateUserData(id, name, lastName, phone, image)
-       return res.status(200).json(updateUser)
+      const user = await getUserById(id);
+condole-log(user)
+    if (!user) return res.status(404).json("no se encontro datos");
+      const updateUser = await updateUserData(user, name, lastName, phone, avatar)
+      if(!updateUser) res.status(500).json("No se modifico correctamente");
+      return res.status(200).json(updateUser)
     } catch(error){
         return res.status(500).json({ data: error.message });
     }
