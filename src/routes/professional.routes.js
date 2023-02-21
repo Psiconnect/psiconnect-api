@@ -16,6 +16,7 @@ import {
   generatorTKN,
   generadorPostRegisterTKN,
 } from "../helpers/generatorTKN.js";
+import USER from "../models/USERS.js";
 import {
   createProfessionalUser,
   findAllProfessional,
@@ -67,7 +68,7 @@ professionalRoutes.post("/login", adminLogin, async (req, res) => {
     );
 
     if (!professionalLogin || !checkPassword)
-      return res.status(400).json("credenciales incorrectas");
+      return res.status(400).json("Credenciales incorrectas");
     if (professionalLogin.state !== "avalible")
       return res
         .status(401)
@@ -219,7 +220,7 @@ professionalRoutes.get(
           to: professional.email,
           subject: "Bienvenido al equipo de psicologos de Psiconnect",
           html: `
-        <h2>Felicidades ${professional.name} ${professional.lastName}</h2>  
+        <h2>🎉🎊 Felicidades ${professional.name} ${professional.lastName} 🎊🎉</h2>  
         <p>Recibimos y verificamos tus datos correctamente, a partir de ahora ya formas parte de nuestro equipo de psicologos.</p>
         <p>Ahora como siguiente paso deberas entrar al link y rellenar todos los datos pedidos en el formulario.</p>
         <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
@@ -337,18 +338,17 @@ professionalRoutes.put(
         to: profesionalUpdate?.email,
         subject: `Hay novedades en tu cuenta de Psiconnect`,
         html: `
-          <h2>Hola ${profesionalUpdate?.name} ${profesionalUpdate?.lastName}, tienes nuevas notificaciones.</h2>
+          <h2>Hola ${profesionalUpdate?.name || 'desconocido' } ${profesionalUpdate?.lastName || 'desconocido' }, tienes nuevas notificaciones.</h2>
           <p>Completaste con exito todos los filtros y formularios, ahora puedes acceder a tu cuenta tranquilamente, 
           <p>Ya puedes empezar a trabajar y generar conexiones con tu pacientes.</p></p>
-          <p>Si tienes dudas, preguntas o quieres un consejo, puede acceder al siguente link :</p>
-          <a>Link</a><p>FALTA INCORPORAR EL LINK</p>
-          <span>AGREGAR MAS DATOS E INFORMACION</span>
+          <p>Si tienes dudas, preguntas o informacion, puedes mandarnos un email a ${process.env.USER_EMAILER} o acceder al siguente link :</p>
+          <a href="${process.env.URL_FRONT}/Asistencia">Link🔮</a>
             `,
       });
 
       const tokenLogin = await generatorTKN({ id: profesionalUpdate?.id });
 
-      profesionalUpdate.status = "avalible";
+      profesionalUpdate.state = "avalible";
       profesionalUpdate.postRegisterToken = null;
 
       await profesionalUpdate.save();
@@ -424,6 +424,8 @@ professionalRoutes.put("/forget-password", async (req, res) => {
     const professional = await getProfessionalByEmail(email);
     if (!professional)
       res.status(404).json({ message: "Verificacion enviada al email" });
+
+    if(professional.state !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
 
     const token = await generadorResetPasswordTKN({ id: professional.id });
 
@@ -519,8 +521,33 @@ professionalRoutes.get(
 professionalRoutes.post("/score", async (req, res) => {
   try {
     const professionals = await findAllBestProfessionalDESC();
-    res.status(200).json(professionals);
-  } catch (err) {
+    const mapProfessionals = await Promise.all(professionals.map(async (el) =>{
+      
+    const mapReview = el.reviews.reduce((acc, current) => acc.score > current.score ? acc : current ,0);
+    const user = await USER.findByPk(mapReview.userId);
+
+      return  {
+        id : el.id,
+        professionalName: el.name,
+        professionalLastName: el.lastName,
+        score : el.score,
+        skills: el.skills.map(skill => skill.skill),
+        areas: el.areas.map(area => area.area),
+        reviews: {
+          score: mapReview.score,
+          puntualidad: mapReview.puntualidad,
+          trato: mapReview.trato,
+          general: mapReview.general,
+          comments: mapReview.comments,
+          userName: user?.name,
+          userLastname: user?.lastName,
+        },
+      };
+    })) 
+
+    res.status(200).json(mapProfessionals);
+    
+  }catch(err){
     return res.status(500).json({ data: err.message });
   }
 });

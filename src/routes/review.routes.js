@@ -52,7 +52,7 @@ reviewRoutes.get("/", async (req, res) => {
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");
-    return res.status(200).json(reviews)
+    return res.status(200).json(mapReviews)
 
     }catch(error) {
         return res.status(404).json({data: error.message})
