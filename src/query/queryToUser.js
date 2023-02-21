@@ -32,14 +32,21 @@ export async function getOrCreate(body) {
   return data;
 }
 
-export async function updateUserData(id, name, lastName, phone, image) {
-  const userData = await USER.update(
-    {name ,
-     lastName,
-     phone,
-     image
-    
-    } , { where: { id } });
+export async function updateUserData(user, name, lastName, phone, avatar) {
+ user.name= name|| user.name
+ user.lastName= lastName || user.lastName
+ user.phone= phone || user.phone
+ if(user.avatar !== avatar){
+  const uploadResponse = await cloudinary.uploader.upload(avatar)
+  user.avatar = uploadResponse.url;
+}
+await user.save();
+
+return await USER.findOne({
+  where: {id: user.id}
+})
+  
+  
 }
 
 
