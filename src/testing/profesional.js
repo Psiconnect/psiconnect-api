@@ -1,6 +1,7 @@
 import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
+import SKILLS from "../models/SKILLS.js";
 
 const user = [
   {
@@ -1314,11 +1315,22 @@ const user = [
       "https://s36496.pcdn.co/wp-content/uploads/2017/11/9-si-foto-cv.png",
   },
 ];
+
+const skills = ['AMABLE','EMPATICO','SIMPATICO','MOTIVADOR','ENERGICO','CONSERVADOR',
+                'LOGICO','PERSUASIVO','ORGANIZADO','ADAPTABLE','ANALITICO','PROGRESISTA'];
+
 export async function mapProfesionalTesting() {
   user.map(async (u) => {
+    const randomIndexSkill = Math.round(Math.random()*(skills.length-1))
+    const randomIndexSkillTwo =  Math.round(Math.random()*(skills.length-1))
+
     const hashedPassword = await hash(u.password, 10);
     const pro = await PROFESSIONAL.create({ ...u, password: hashedPassword });
     const a = await AREA.findOne({ where: { area: u.area } });
+    const s = await SKILLS.findOne({where:{skill:skills[randomIndexSkill]}});
+    const sk = await SKILLS.findOne({where:{skill:skills[randomIndexSkillTwo]}});
+    await pro.addSkills(sk);
+    await pro.addSkills(s);
     await pro.addArea(a);
   });
 }
