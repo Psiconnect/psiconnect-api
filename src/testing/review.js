@@ -90,9 +90,6 @@ export async function mapTestingReviews() {
     }
 
     const reviewsCreated = await REVIEW.findAll()
-    console.log(reviewsCreated, 'reviews')
-    
-    
 
 }
 
