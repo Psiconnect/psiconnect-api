@@ -386,11 +386,16 @@ professionalRoutes.get("/", async (req, res) => {
   try {
     let data;
     if (!name && !lastName) data = await findAllProfessional();
-    else data = await findAllProfessionalByAreaAndNames(false, name, lastName);
-    
+    else
+      data = await findAllProfessionalByAreaAndNames(
+        '',
+        name,
+        lastName
+      );
     if (!data.length) return res.status(404).json("Base de datos vacia");
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });

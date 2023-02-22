@@ -107,7 +107,7 @@ adminRoutes.post("/create-area", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
-adminRoutes.put("/edit-area/:id", async (req, res) => {
+adminRoutes.put("/edit-area/:id",async (req, res) => {
   const { id } = req.params;
   const { area, description, image } = req.body;
   if ((!area || !description, !image))

@@ -19,9 +19,13 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
-  const include = {model: AREA};
+  const include = [{model:SKILLS}];
+  console.log(!!area);
   if (area) {
-    include.where = { area };
+    include.push({ 
+      model: AREA,
+      where: { area }
+    });
   }
  
   if (name && lastName) {
