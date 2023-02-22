@@ -1,5 +1,6 @@
 import USER from "../models/USERS.js";
 import { hash } from "bcrypt";
+import { cloudinary } from '../routes/cloudinary.routes.js';
 
 export async function findAllUser() {
   const data = await USER.findAll();
@@ -13,7 +14,7 @@ export async function getUserByEmail(email) {
 
 export async function createUser(body) {
   const hashedPassword = await hash(body.password, 10);
-  const date = await USER.create({ ...body, password: hashedPassword });
+  const date = await USER.create({ ...body, password: hashedPassword});
   return date;
 }
 
@@ -33,11 +34,21 @@ export async function getOrCreate(body) {
   return newUser;
 }
 
-export async function updateUserData(id, name, lastName, phone, image) {
-  const userData = await USER.update(
-    { name, lastName, phone, image },
-    { where: { id } }
-  );
+export async function updateUserData(user, name, lastName, phone, avatar) {
+ user.name= name || user.name
+ user.lastName= lastName || user.lastName
+ user.phone= phone || user.phone
+ user.avatar= avatar || user.avatar
+//  if(user.avatar !== avatar){
+//   const uploadResponse = await cloudinary.uploader.upload(image = avatar)
+//   console.log(uploadResponse.url, uploadResponse.imageUrl)
+//   user.avatar = uploadResponse.imageUrl;
+// }
+await user.save();
+
+return await USER.findOne({
+  where: {id: user.id}
+})
 }
 
 export async function getUserByTokenAny(token, nameToken) {

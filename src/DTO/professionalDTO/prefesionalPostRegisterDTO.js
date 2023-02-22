@@ -1,4 +1,4 @@
-import { areasDTOSchema, descriptionDTOSchema, linkedinDTOSchema, skillDTOSchema } from "../typeDTO.js";
+import { areasDTOSchema, descriptionDTOSchema, linkedinDTOSchema, skillDTOSchema, priceDTOSchema } from "../typeDTO.js";
 import addErrors from "ajv-errors";
 import { Type } from "@sinclair/typebox";
 import Ajv from "ajv";
@@ -9,6 +9,7 @@ const PostRegisterProfessionalDTOSchema = Type.Object(
     areas: areasDTOSchema,
     skills: skillDTOSchema,
     linkedin: linkedinDTOSchema,
+    price:priceDTOSchema
   },
   {
     additionalProperties: true,

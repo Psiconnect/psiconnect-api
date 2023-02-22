@@ -626,7 +626,7 @@ export async function mapTestingReviews() {
 
         const professional = await PROFESSIONAL.findOne({
             where:{
-                id:mapProfessionals[indexOfProfessional]
+                id:mapProfessionals[indexOfProfessional===-1? indexOfProfessional+1 : indexOfProfessional]
             },
             include:[{
                 model: REVIEW
