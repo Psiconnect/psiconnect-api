@@ -38,11 +38,12 @@ export async function updateUserData(user, name, lastName, phone, avatar) {
  user.name= name || user.name
  user.lastName= lastName || user.lastName
  user.phone= phone || user.phone
- if(user.avatar !== avatar){
-  const uploadResponse = await cloudinary.uploader.upload(image = avatar)
-  console.log(uploadResponse.url, uploadResponse.imageUrl)
-  user.avatar = uploadResponse.imageUrl;
-}
+ user.avatar= avatar || user.avatar
+//  if(user.avatar !== avatar){
+//   const uploadResponse = await cloudinary.uploader.upload(image = avatar)
+//   console.log(uploadResponse.url, uploadResponse.imageUrl)
+//   user.avatar = uploadResponse.imageUrl;
+// }
 await user.save();
 
 return await USER.findOne({
