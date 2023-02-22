@@ -23,6 +23,20 @@ consultsRoutes.get("/id/:id", async (req, res) => {
 consultsRoutes.get("/", async (req, res) => {
   try {
     const consult = await getAllConsult();
+    if (!consult) return res.json(consult);
+    const mapConsults = consult.map((el) => {
+      return {
+        id: el.id,
+        userId: el.userId,
+        professionalId: el.professionalId,
+        user: el.user.name,
+        professional: el.professional.name,
+        status: el.status,
+        date: el.date,
+        price: el.date,
+      };
+    });
+    return res.json(mapConsults);
     return res.json(consult);
   } catch (error) {
     return res.status(500).json({ data: error.message });
