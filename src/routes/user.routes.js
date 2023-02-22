@@ -204,7 +204,7 @@ userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
     const token = await generadorConfirmEmailTKN({ id: user.id });
     const linkConfirmEmail = `${
       process.env.URL_BACK || "http://localhost:5000"
-    }user/email/confirmationChangeEmail?confirm=${token}&email=${email}`;
+    }/user/email/confirmationChangeEmail?confirm=${token}&email=${email}`;
 
     try {
       await transporter.sendMail({

@@ -92,7 +92,7 @@ professionalRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
     const token = await generadorConfirmEmailTKN({ id: professional.id });
     const linkConfirmEmail = `${
       process.env.URL_BACK || "http://localhost:5000"
-    }professional/confirmationChangeEmail?confirm=${token}&email=${email}`;
+    }/professional/confirmationChangeEmail?confirm=${token}&email=${email}`;
 
     try {
       await transporter.sendMail({

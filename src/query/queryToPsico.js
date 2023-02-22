@@ -87,6 +87,7 @@ export async function getProfessionalById(id) {
     where: { id },
     include: [{ model: AREA }, { model: SKILLS }],
   });
+
   return data;
 }
 
