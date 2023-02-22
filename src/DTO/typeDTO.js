@@ -116,8 +116,8 @@ export const treatmentDTOSchema = Type.Number({
 });
 
 export const scoreDTOSchema = Type.Number({
-  minimum: 0,
-  maximum: 5,
+  minimum: 1,
+  maximum: 10,
   errorMessage: {
     type: "El tipo del score no es válido, debe ser un número",
     minimum: "El score debe ser mayor o igual a 0",

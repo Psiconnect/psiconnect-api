@@ -38,20 +38,21 @@ reviewRoutes.get("/", async (req, res) => {
     try {
       const reviews = await findAllReviews();
       const mapReviews = reviews.map((el) => {
-        return {
+        return {            
             id : el.id,
             score : el.score,
-            comments: el.comments,
-            userId: el.userId,
-            user: el.user.name,
-            professional : el.professional.name,
-            professionalId : el.professionalId,
             puntualidad: el.puntualidad,
             trato: el.trato,
             state: el.state,
             general: el.general,
-            username: el.user?.name,
-            lastusername: el.user?.lastName
+            comments: el.comments,
+            userId: el.userId,
+            professionalId : el.professionalId,
+            avatar: el.professional.avatar,
+            userName: el.user?.name,
+            lastusername: el.user?.lastName,
+            professionalName : el.professional?.name,
+            professionalLastName: el.professional?.lastName, 
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");

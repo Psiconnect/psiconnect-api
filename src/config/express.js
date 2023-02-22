@@ -11,6 +11,8 @@ import skillsRoutes from '../routes/skilss.routes.js';
 import paymentRoutes from "../routes/payment.routes.js";
 import consultsRoutes from "../routes/consults.routes.js";
 import adminRoutes from "../routes/admin.routes.js";
+import { config } from "dotenv";
+config();
 
 
 const expressApp = express();
@@ -18,17 +20,18 @@ const expressApp = express();
 // Middlewares
 expressApp.use(express.json());
 expressApp.use(morgan("dev"));
-expressApp.use(cors());
-expressApp.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-expressApp.use(bodyParser.json({ limit: "50mb" }));
+expressApp.use(cors({ 
+  origin: '*', // permitir acceso desde cualquier origen
+
+ }));
+expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true, parameterLimit:500000}));
+expressApp.use(bodyParser.json({ limit: "500mb"}));
 expressApp.use(cookieParser());
 expressApp.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header('Access-Control-Allow-Credentials', '*');
+  res.header('Access-Control-Allow-Origin','*');
+  res.header('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+  res.header('Access-Control-Allow-Methods','Content-Type','Authorization');
   next();
 });
 
