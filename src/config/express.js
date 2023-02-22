@@ -20,15 +20,19 @@ const expressApp = express();
 // Middlewares
 expressApp.use(express.json());
 expressApp.use(morgan("dev"));
-expressApp.use(cors({ origin: process.env.URL_FRONT }));;
-expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true}));
+expressApp.use(cors({ 
+  origin: '*', // permitir acceso desde cualquier origen
+  methods: 'GET, POST, PUT, DELETE, OPTIONS', // permitir métodos HTTP
+  allowedHeaders: 'Content-Type', // permitir encabezados personalizados
+ }));
+expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true, parameterLimit:500000}));
 expressApp.use(bodyParser.json({ limit: "500mb" }));
 expressApp.use(cookieParser());
 expressApp.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', '*');
-  res.setHeader('Access-Control-Allow-Origin','*');
-  res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-  res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
+  res.header('Access-Control-Allow-Origin','*');
+  res.header('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+  res.header('Access-Control-Allow-Methods','Content-Type','Authorization');
   next();
 });
 
