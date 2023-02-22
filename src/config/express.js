@@ -11,6 +11,8 @@ import skillsRoutes from '../routes/skilss.routes.js';
 import paymentRoutes from "../routes/payment.routes.js";
 import consultsRoutes from "../routes/consults.routes.js";
 import adminRoutes from "../routes/admin.routes.js";
+import { config } from "dotenv";
+config();
 
 
 const expressApp = express();
@@ -18,7 +20,7 @@ const expressApp = express();
 // Middlewares
 expressApp.use(express.json());
 expressApp.use(morgan("dev"));
-expressApp.use(cors());
+expressApp.use(cors({ origin: process.env.URL_FRONT }));;
 expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true, parameterLimit:500000}));
 expressApp.use(bodyParser.json({ limit: "500mb" }));
 expressApp.use(cookieParser());
