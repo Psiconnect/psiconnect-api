@@ -23,7 +23,8 @@ expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true, parameterL
 expressApp.use(bodyParser.json({ limit: "500mb" }));
 expressApp.use(cookieParser());
 expressApp.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
+  res.header('Access-Control-Allow-Credentials', '*');
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
