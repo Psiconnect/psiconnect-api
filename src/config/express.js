@@ -21,7 +21,11 @@ const expressApp = express();
 expressApp.use(express.json());
 expressApp.use(morgan("dev"));
 expressApp.use(cors({ 
-  origin: '*', // permitir acceso desde cualquier origen
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: 'Content-Type, authorization, Access-Control-Allow-Methods, pos',
 
  }));
 expressApp.use(bodyParser.urlencoded({limit: "500mb", extended: true, parameterLimit:500000}));
@@ -30,8 +34,9 @@ expressApp.use(cookieParser());
 expressApp.use((req, res, next) => {
   res.header('Access-Control-Allow-Credentials', '*');
   res.header('Access-Control-Allow-Origin','*');
-  res.header('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-  res.header('Access-Control-Allow-Methods','Content-Type','Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  res.header('Access-Control-Allow-Headers', 'authorization');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, authorization, Access-Control-Allow-Methods','pos');
   next();
 });
 
