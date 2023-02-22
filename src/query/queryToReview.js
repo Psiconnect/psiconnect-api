@@ -14,7 +14,7 @@ export async function findAllReviews() {
   return reviews;
 }
 export async function createReview(body) {
-  const reviews = await REVIEW.create({body
-  });
+  const reviews = await REVIEW.create(body
+  );
   return reviews;
 }

@@ -609,6 +609,7 @@ export async function mapTestingReviews() {
             userId: null, 
             professionalId: null,
             state:true
+
         }
     ];
 

@@ -9,7 +9,7 @@ reviewRoutes.get("/:professionalId", async (req, res) => {
   const {professionalId} = req.params
   try {
     const reviews = await findAllReviews();
-    const filterReviews = reviews?.filter((el) => el.professionalId === professionalId );
+    const filterReviews = reviews?.filter((el) => el.professionalId === professionalId && el.state );
     const mapReviews = filterReviews?.map(el => {
         return {
           id : el.id,
@@ -43,9 +43,12 @@ reviewRoutes.get("/", async (req, res) => {
             score : el.score,
             comments: el.comments,
             userId: el.userId,
+            user: el.user.name,
+            professional : el.professional.name,
             professionalId : el.professionalId,
             puntualidad: el.puntualidad,
             trato: el.trato,
+            state: el.state,
             general: el.general,
             username: el.user?.name,
             lastusername: el.user?.lastName,
@@ -54,7 +57,7 @@ reviewRoutes.get("/", async (req, res) => {
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");
-    return res.status(200).json(reviews)
+    return res.status(200).json(mapReviews)
 
     }catch(error) {
         return res.status(404).json({data: error.message})
@@ -63,19 +66,20 @@ reviewRoutes.get("/", async (req, res) => {
 
 
 reviewRoutes.post('/:professionalId', async (req, res ) => {
-    const  {review}  = req.body  
+    const  review = req.body  
     const { professionalId } = req.params
+    console.log(review);
     try{
         const professional = await getProfessionalById(professionalId)
         const users = await getUserById(review.userId)
         if(!professional || !users) {
             return res.status(404).json({data: 'datos no encontrados'})
         }
-        if(review)return res.status(401).json({data:'Revisar'})
         const newReview=  await createReview(review)
         return res.status(200).json(newReview)
     } 
     catch (error) {
+      console.log(error);
         return res.status(500).json({ data: error.message })
     }
 
