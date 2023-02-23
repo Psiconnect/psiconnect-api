@@ -47,12 +47,14 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
 }
 export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({
-    include: {
+    include: [{
+      model:SKILLS
+    },{
       model: AREA,
       where: {
         area,
-      },
-    },
+      }},
+    ],
   });
   const response = await data.filter(prof => prof.state === 'avalible' );
   return response;
