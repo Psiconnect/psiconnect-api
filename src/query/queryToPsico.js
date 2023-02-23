@@ -30,10 +30,13 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
 
   if (name && lastName) {
     where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
+    include.push({model: AREA})
   } else if (name) {
     where[Op.or] = opIlikeProfessional(name);
+    include.push({model: AREA})
   } else if (lastName) {
     where[Op.or] = opIlikeProfessional(lastName);
+    include.push({model: AREA})
   }
   const data = await PROFESSIONAL.findAll({
     where,
