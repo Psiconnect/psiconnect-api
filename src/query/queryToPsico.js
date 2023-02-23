@@ -20,7 +20,6 @@ const opIlikeProfessional = (text) => {
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
   const include = [];
-  console.log(!!area);
   if (area) {
     include.push({ 
       model: AREA,
