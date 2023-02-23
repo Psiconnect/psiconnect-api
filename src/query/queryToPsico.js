@@ -19,18 +19,24 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
-  const include = {};
+  const include = [];
+  console.log(!!area);
   if (area) {
-    include.where = { area };
-    include.model = AREA;
+    include.push({ 
+      model: AREA,
+      where: { area }
+    });
   }
 
   if (name && lastName) {
     where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
+    include.push({model: AREA})
   } else if (name) {
     where[Op.or] = opIlikeProfessional(name);
+    include.push({model: AREA})
   } else if (lastName) {
     where[Op.or] = opIlikeProfessional(lastName);
+    include.push({model: AREA})
   }
   const data = await PROFESSIONAL.findAll({
     where,
@@ -87,6 +93,7 @@ export async function getProfessionalById(id) {
     where: { id },
     include: [{ model: AREA }, { model: SKILLS }],
   });
+
   return data;
 }
 
@@ -99,6 +106,7 @@ export async function getProfessionalByTokenAny(token, nameToken) {
 
 export async function setModificationProfesional(professional, body) {
   professional.description = body.description;
+  professional.price = body.price;
   professional.linkedin = body.linkedin;
   professional.avatar = body.avatar
     ? body.avatar
@@ -117,7 +125,12 @@ export async function editProfesional(professional, body) {
   professional.description = body.description
     ? body.description
     : professional.description;
-  professional.linkedin = body.linkedin ? body.linkedin : professional.linkedin;
+  professional.linkedin = body.linkedin 
+  ? body.linkedin 
+  : professional.linkedin;
+  professional.price = body.price
+  ? body.price
+  : professional.price;
   professional.avatar = body.avatar
     ? body.avatar
     : "https://res.cloudinary.com/dhkfa798t/image/upload/v1675414590/Smonkey/heroimg_qv9zgi.png";

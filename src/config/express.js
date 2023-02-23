@@ -11,24 +11,28 @@ import skillsRoutes from '../routes/skilss.routes.js';
 import paymentRoutes from "../routes/payment.routes.js";
 import consultsRoutes from "../routes/consults.routes.js";
 import adminRoutes from "../routes/admin.routes.js";
+import { config } from "dotenv";
+
+config();
 
 
 const expressApp = express();
 
 // Middlewares
-expressApp.use(express.json());
-expressApp.use(morgan("dev"));
-expressApp.use(cors());
+// Middlewares
+expressApp.use(cors({
+  origin: ['http://localhost:5173', process.env.URL_FRONT],
+  allowedHeaders: ['Content-Type', 'Authorization','reset','pos'],
+  methods: ['GET', 'PUT', 'POST', 'DELETE'], // agregamos los métodos permitidos
+}));
+
 expressApp.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
-expressApp.use(bodyParser.json({ limit: "50mb" }));
+expressApp.use(bodyParser.json({ limit: "50mb"} ));
 expressApp.use(cookieParser());
+expressApp.use(morgan("dev"));
+
 expressApp.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header('Access-Control-Allow-Credentials', '*');
   next();
 });
 

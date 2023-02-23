@@ -92,7 +92,7 @@ professionalRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
     const token = await generadorConfirmEmailTKN({ id: professional.id });
     const linkConfirmEmail = `${
       process.env.URL_BACK || "http://localhost:5000"
-    }professional/confirmationChangeEmail?confirm=${token}&email=${email}`;
+    }/professional/confirmationChangeEmail?confirm=${token}&email=${email}`;
 
     try {
       await transporter.sendMail({
@@ -388,13 +388,14 @@ professionalRoutes.get("/", async (req, res) => {
     if (!name && !lastName) data = await findAllProfessional();
     else
       data = await findAllProfessionalByAreaAndNames(
-        "Ansiedad",
+        '',
         name,
         lastName
       );
     if (!data.length) return res.status(404).json("Base de datos vacia");
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ data: error.message });
   }
 });

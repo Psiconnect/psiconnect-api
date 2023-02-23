@@ -28,5 +28,5 @@ async function bootstrap() {
 bootstrap();
 setTimeout(() => {
   mapTestingReviews()
-} ,5000)
+} ,8000)
 

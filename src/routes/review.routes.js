@@ -9,7 +9,7 @@ reviewRoutes.get("/:professionalId", async (req, res) => {
   const {professionalId} = req.params
   try {
     const reviews = await findAllReviews();
-    const filterReviews = reviews?.filter((el) => el.professionalId === professionalId );
+    const filterReviews = reviews?.filter((el) => el.professionalId === professionalId && el.state );
     const mapReviews = filterReviews?.map(el => {
         return {
           id : el.id,
@@ -38,17 +38,21 @@ reviewRoutes.get("/", async (req, res) => {
     try {
       const reviews = await findAllReviews();
       const mapReviews = reviews.map((el) => {
-        return {
+        return {            
             id : el.id,
             score : el.score,
+            puntualidad: el.puntualidad,
+            trato: el.trato,
+            state: el.state,
+            general: el.general,
             comments: el.comments,
             userId: el.userId,
             professionalId : el.professionalId,
-            puntualidad: el.puntualidad,
-            trato: el.trato,
-            general: el.general,
-            username: el.user?.name,
-            lastusername: el.user?.lastName
+            avatar: el.professional.avatar,
+            userName: el.user?.name,
+            lastusername: el.user?.lastName,
+            professionalName : el.professional?.name,
+            professionalLastName: el.professional?.lastName, 
         }
     })
     if(!reviews) return  res.status(400).json("Base de datos vacia");

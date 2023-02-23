@@ -146,6 +146,6 @@ const user = [
 export async function mapUserTesting() {
   user.map(async (u) => {
     const hashedPassword = await hash(u.password, 10);
-    await USER.create({ ...u, password: hashedPassword });
+    await USER.create({ ...u, password: hashedPassword , avatar:'https://th.bing.com/th/id/OIP.audMX4ZGbvT2_GJTx2c4GgHaHw?pid=ImgDet&rs=1'});
   });
 }
