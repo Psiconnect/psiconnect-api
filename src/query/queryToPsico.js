@@ -19,21 +19,25 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
-  const include = [];
+  const include = [{model:SKILLS}];
   if (area) {
     include.push({ 
       model: AREA,
       where: { area }
     });
   }
-
+ 
   if (name && lastName) {
     where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
+    include.push({model: AREA})
   } else if (name) {
     where[Op.or] = opIlikeProfessional(name);
+    include.push({model: AREA})
   } else if (lastName) {
     where[Op.or] = opIlikeProfessional(lastName);
+    include.push({model: AREA})
   }
+
   const data = await PROFESSIONAL.findAll({
     where,
     include,
