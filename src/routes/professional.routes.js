@@ -424,7 +424,7 @@ professionalRoutes.put("/forget-password", async (req, res) => {
   try {
     const professional = await getProfessionalByEmail(email);
     if (!professional)
-      res.status(404).json({ message: "Verificacion enviada al email" });
+      return res.status(404).json({ message: "Verificacion enviada al email" });
 
     if(professional.state !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
 

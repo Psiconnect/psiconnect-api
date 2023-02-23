@@ -103,7 +103,7 @@ userRoutes.put("/forget-password", async (req, res) => {
   try {
     const user = await getUserByEmail(email);
     if(!user) return res.status(404).json({data:'No encontrado'})
-    if(user.status !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
+    if(!user.state ) return res.status(401).json({data:'Cuenta desactivada'})
     const token = await generadorResetPasswordTKN({ id: user?.id });
     const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?reset=${token}`;
     try {
