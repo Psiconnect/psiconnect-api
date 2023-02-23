@@ -420,11 +420,11 @@ professionalRoutes.put("/update/id", userJWTDTO, async (req, res) => {
 
 professionalRoutes.put("/forget-password", async (req, res) => {
   const { email } = req.body;
+
   if (!email) res.status(400).json({ message: "Email is required" });
   try {
     const professional = await getProfessionalByEmail(email);
-    if (!professional)
-      res.status(404).json({ message: "Verificacion enviada al email" });
+    if (!professional) return res.status(404).json({ message: "Verificacion enviada al email" });
 
     if(professional.state !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
 
