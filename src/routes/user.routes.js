@@ -103,9 +103,9 @@ userRoutes.put("/forget-password", async (req, res) => {
   try {
     const user = await getUserByEmail(email);
     if(!user) return res.status(404).json({data:'No encontrado'})
-    if(user.status !== "avalible") return res.status(401).json({data:'Cuenta desactivada'})
+    if(user.state !== true) return res.status(401).json({data:'Cuenta desactivada'})
     const token = await generadorResetPasswordTKN({ id: user?.id });
-    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForget?reset=${token}`;
+    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForgetEmail?reset=${token}`;
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
@@ -113,14 +113,13 @@ userRoutes.put("/forget-password", async (req, res) => {
         subject: "OLVIDE MI CLAVE 📧✔",
         html: `
         <h2>He olvidado mi clave 📩</h2>
-        <p> Hola, como te encuentras?... esperamos que bien, Necesitamos que confirmes tu email para poder seguir con el siguiente proceso de seleccion de los profesionales ✔.
-        <p>Ten en cuenta que tienes 24 horas para poder confirmar el email ⏱📆, en caso de que no lo hagas en el tiempo limite establecido deberas registrarte nuevamente ♻.</p> 
-        </p></p>
+        <p>Hola de nuevo ${user?.name} ${user?.lastName}, alparecer te has olvidado de tu contraseña y has solicitado un cambio de contraseña.
+        <p>Porfavor lee el siguiente parrafo.</p>
+        <p>Recuerda que tienes solo 15 min. para poder realizar el proceso ⏱, si no llegas a completarlo, deberas volver a solicitar el cambio de contraseña♻.</p> 
         <p>Desde ya muchas gracias por su atencion y te enviamos un gran saludo ❤🤝.
         <p>atte: El equipo de Psiconnect 💪✌.</p>
         <b> Porfavor haga clic en el siguiente enlace o péguelo en su navegador para completar el proceso 👉:</b>
-        <a href="${linkConfirmEmail}"> VERIFICAR AHORA 👍 </a>`
-        ,
+        <a href="${linkConfirmEmail}"> CAMBIAR CONTRASEÑA 👍 </a>`,
       });
     } catch (error) {
       return res.status(500).json({ data: error.message });
@@ -134,8 +133,8 @@ userRoutes.put("/forget-password", async (req, res) => {
   }
 });
 
-userRoutes.put("/newPasswordForgetEmail", async (req, res) => {
-
+userRoutes.get("/newPasswordForgetEmail", async (req, res) => {
+  console.log('hola')
   const resetToken = req.query.reset;
   try {
     const user = await getUserByResetToken(resetToken);
@@ -190,6 +189,25 @@ userRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+
+userRoutes.get(
+  "/token/forgetPassword",
+  userResetPasswordJWTDTO,
+  async (req, res) => {
+    const token = req.tkn;
+    console.log(token)
+    try {
+      const user = await getUserByResetToken(token);
+      if(!user)
+        return res.status(404).json({ data: "Usuario No registrado" });
+
+      return res.status(204).json({status:'OK', message:'Good'});
+    } catch (err) {
+      return res.status(500).json({ data: err.message });
+    }
+  }
+);
+
 
 userRoutes.put("/changeEmail", userJWTDTO, async (req, res) => {
   try {
