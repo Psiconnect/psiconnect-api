@@ -2,6 +2,8 @@ import { hash } from "bcrypt";
 import AREA from "../models/AREAS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import SKILLS from "../models/SKILLS.js";
+import dataAreas from "./areas.js"; 
+import dataSkills from "./skills.js";
 
 const user = [
   {
@@ -1316,21 +1318,28 @@ const user = [
   },
 ];
 
-const skills = ['AMABLE','EMPATICO','SIMPATICO','MOTIVADOR','ENERGICO','CONSERVADOR',
-                'LOGICO','PERSUASIVO','ORGANIZADO','ADAPTABLE','ANALITICO','PROGRESISTA'];
+const skills = dataSkills.map(el=> el.skill)
+
+const areas = dataAreas.map(el=> el.area);
 
 export async function mapProfesionalTesting() {
   user.map(async (u) => {
     const randomIndexSkill = Math.round(Math.random()*(skills.length-1))
     const randomIndexSkillTwo =  Math.round(Math.random()*(skills.length-1))
+    const randomIndexArea = Math.round(Math.random()*(areas.length-1))
 
     const hashedPassword = await hash(u.password, 10);
     const pro = await PROFESSIONAL.create({ ...u, password: hashedPassword });
+    
     const a = await AREA.findOne({ where: { area: u.area } });
+    const aTwo = await AREA.findOne({ where: { area: areas[randomIndexArea] } });
     const s = await SKILLS.findOne({where:{skill:skills[randomIndexSkill]}});
-    const sk = await SKILLS.findOne({where:{skill:skills[randomIndexSkillTwo]}});
-    await pro.addSkills(sk);
+    const sTwo = await SKILLS.findOne({where:{skill:skills[randomIndexSkillTwo]}});
+    
+    
+    await pro.addSkills(sTwo);
     await pro.addSkills(s);
     await pro.addArea(a);
+    await pro.addArea(aTwo);
   });
 }
