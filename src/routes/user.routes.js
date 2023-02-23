@@ -21,6 +21,8 @@ import { adminLogin } from "../helpers/adminLogin.js";
 const userRoutes = Router();
 
 //ruta post
+
+
 userRoutes.post("/register", userRegisterDTO, async (req, res) => {
   try {
     const { email } = req.body;
@@ -88,8 +90,8 @@ userRoutes.put("/newPassword", userJWTDTO, async (req, res) => {
     const user = await getUserById(req.tkn.id);
     const checkPassword = await compare(oldPassword, user?.password);
     if (!checkPassword) return res.status(400).json("contraseña incorrecta");
-    user.password = newPassword;
-    user.save();
+    user.password = await hash(newPassword, 10);
+    await user.save();
     return res.status(202).json("nice");
   } catch (error) {
     return res.status(500).json({ data: error.message });
@@ -105,7 +107,7 @@ userRoutes.put("/forget-password", async (req, res) => {
     if(!user) return res.status(404).json({data:'No encontrado'})
     if(user.state !== true) return res.status(401).json({data:'Cuenta desactivada'})
     const token = await generadorResetPasswordTKN({ id: user?.id });
-    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForgetEmail?reset=${token}`;
+    const linkConfirmEmail = `${process.env.URL_BACK || 'http://localhost:5000'}/user/newPasswordForgetEmail/tkn?reset=${token}`;
     try {
       await transporter.sendMail({
         from: `<${process.env.USER_EMAILER}>`,
@@ -133,17 +135,16 @@ userRoutes.put("/forget-password", async (req, res) => {
   }
 });
 
-userRoutes.get("/newPasswordForgetEmail", async (req, res) => {
-  console.log('hola')
+userRoutes.get("/newPasswordForgetEmail/tkn", async (req, res) => {
   const resetToken = req.query.reset;
   try {
-    const user = await getUserByResetToken(resetToken);
+    const user = await getUserREALByTokenAny(resetToken, 'resetToken');
     if (!user) {
       return res.status(404).json({ data: 'Credenciales incorrectas'});
     }
     res.redirect(`${process.env.URL_FRONT}/ChangeForgetPassword?tkn=${resetToken}`)
   } catch (error) {
-    return res.status(500).json({ data: error.message });
+    return res.status(500).json({ data: error });
   }
 });
 
@@ -156,7 +157,7 @@ userRoutes.put("/ChangePasswordForget",userResetPasswordJWTDTO , async (req, res
     if (!user) {
       return res.status(401).json({ data: 'Credenciales incorrectas'});
     }
-    user.password= newPassword;
+    user.password = await hash(newPassword, 10);
     user.resetToken= null;
     user.save()
     return res.status(200).send('La contraseña se modifico correctamente')
@@ -164,8 +165,6 @@ userRoutes.put("/ChangePasswordForget",userResetPasswordJWTDTO , async (req, res
     return res.status(500).json({ data: error.message });
   }
 });
-
-
 
 userRoutes.put("/changePassword", userJWTDTO, async (req, res) => {
   const { newPassword, oldPassword } = req.body;
