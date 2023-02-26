@@ -2,40 +2,40 @@ import SKILLS from "../models/SKILLS.js";
 
 const skills = [
   {
-    skill: "AMABLE",
+    skill: "Amable",
   },
   {
-    skill: "EMPATICO",
+    skill: "Empatico",
   },
   {
-    skill: "SIMPATICO",
+    skill: "Simpatico",
   },
   {
-    skill: "MOTIVADOR",
+    skill: "Motivador",
   },
   {
-    skill: "ENERGICO",
+    skill: "Energico",
   },
   {
-    skill: "CONSERVADOR",
+    skill: "Conservador",
   },
   {
-    skill: "LOGICO",
+    skill: "Logico",
   },
   {
-    skill: "PERSUASIVO",
+    skill: "Persuasivo",
   },
   {
-    skill: "ORGANIZADO",
+    skill: "Organizado",
   },
   {
-    skill: "ADAPTABLE",
+    skill: "Adaptable",
   },
   {
-    skill: "ANALITICO",
+    skill: "Analitico",
   },
   {
-    skill: "PROGRESISTA",
+    skill: "Progresista",
   },
 ];
 
@@ -48,3 +48,4 @@ export async function mapSkillsTesting() {
     });
   }
   
+  export default skills;
