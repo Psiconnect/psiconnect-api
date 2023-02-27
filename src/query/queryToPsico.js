@@ -19,7 +19,7 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
-  const include = [{model:SKILLS}];
+  const include = [{model:SKILLS},{model:REVIEW}];
   console.log(!!area);
   if (area) {
     include.push({ 
@@ -49,6 +49,8 @@ export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({
     include: [{
       model:SKILLS
+    },{
+      model:REVIEW
     },{
       model: AREA,
       where: {
@@ -94,7 +96,7 @@ export async function createProfessionalUser(body) {
 export async function getProfessionalById(id) {
   const data = await PROFESSIONAL.findOne({
     where: { id },
-    include: [{ model: AREA }, { model: SKILLS }],
+    include: [{ model: AREA }, { model: SKILLS }, {model: REVIEW}],
   });
 
   return data;
@@ -162,7 +164,7 @@ export async function editProfesional(professional, body) {
     where: {
       id: professional.id,
     },
-    include: [{ model: AREA }, { model: SKILLS }],
+    include: [{ model: AREA }, { model: SKILLS }, {model: REVIEW}],
   });
 }
 

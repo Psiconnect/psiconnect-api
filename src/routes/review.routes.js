@@ -67,7 +67,7 @@ reviewRoutes.get("/", async (req, res) => {
 reviewRoutes.post('/:professionalId', async (req, res ) => {
     const  review = req.body  
     const { professionalId } = req.params
-    console.log(review);
+    console.log(review)
     try{
         const professional = await getProfessionalById(professionalId)
         const users = await getUserById(review.userId)
