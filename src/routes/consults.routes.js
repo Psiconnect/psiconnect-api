@@ -20,6 +20,19 @@ consultsRoutes.get("/id/:id", async (req, res) => {
     return res.status(500).json({ data: error.message });
   }
 });
+consultsRoutes.delete("/deleted/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const consult = await getConsultById(id);
+    if(!consult) res.status(404).json({ data: error.message })
+    consult.status = "CANCELADO";
+    await consult.save();
+    return res.status(200).json(consult);
+  } catch (error) {
+    return res.status(500).json({ data: error.message });
+  }
+});
+
 consultsRoutes.get("/", async (req, res) => {
   try {
     const consult = await getAllConsult();
