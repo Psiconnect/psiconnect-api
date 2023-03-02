@@ -21,7 +21,6 @@ async function bootstrap() {
   await mapProfesionalTesting()
   await mapSkillsTesting()
   await mapAdminTesting()
-  setInterval(cancelPendingPayments, 24 * 60 * 60 * 1000);
   socket(httpServer)
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);
@@ -32,3 +31,4 @@ setTimeout(() => {
   mapTestingReviews()
 } ,8000)
 
+setInterval(cancelPendingPayments, 24 * 60 * 60 * 1000);
