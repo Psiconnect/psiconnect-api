@@ -392,7 +392,7 @@ professionalRoutes.get("/", async (req, res) => {
         name,
         lastName
       );
-    if (!data.length) return res.status(404).json("Base de datos vacia");
+    if (!data.length) return res.status(404).json("Base de datos vacia");    
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
