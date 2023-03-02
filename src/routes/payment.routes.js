@@ -67,6 +67,7 @@ paymentRoutes.post(`/create-payment`, async (req, res) => {
           const newPay = await createPayment({
             id: response.body.id,
             status: response.body.status,
+            created_at:new Date(),
             ...req.body,
           });
         } catch (error) {

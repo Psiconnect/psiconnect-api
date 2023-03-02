@@ -19,6 +19,9 @@ const PAYMENT = sequelize.define(
     date: {
       type: DataTypes.STRING,
     },
+    created_at:{
+      type: DataTypes.DATE,
+    }
   },
   {
     timestamps: false,
