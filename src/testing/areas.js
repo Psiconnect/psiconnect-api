@@ -35,3 +35,4 @@ export async function mapAreaTesting() {
     await AREA.create(u);
   });
 }
+export default Data;

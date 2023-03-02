@@ -22,7 +22,7 @@ const expressApp = express();
 // Middlewares
 expressApp.use(cors({
   origin: ['http://localhost:5173', process.env.URL_FRONT],
-  allowedHeaders: ['Content-Type', 'Authorization','reset','pos'],
+  allowedHeaders: ['Content-Type', 'Authorization','reset','pos','confirm'],
   methods: ['GET', 'PUT', 'POST', 'DELETE'], // agregamos los métodos permitidos
 }));
 

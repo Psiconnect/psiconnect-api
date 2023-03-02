@@ -1,4 +1,5 @@
 import CONSULT from "../models/CONSULT.js";
+import PAYMENT from "../models/PAYMENTS.js";
 import PROFESSIONAL from "../models/PROFESSIONAL.js";
 import USERS from "../models/USERS.js";
 
@@ -12,6 +13,10 @@ export async function completeConsult(body){
     const confirmConsult = await CONSULT.findOne({where:{id:body.id}});
     confirmConsult.status = body.status;
     await confirmConsult.save()
+    const confirmPayment = await PAYMENT.findOne({where:{id:body.id}});
+    confirmPayment.status = body.status;
+    await confirmPayment.save()
+
     return confirmConsult;
 }
 export async function getAllConsultByProfessional(professionalId){

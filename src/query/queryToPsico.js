@@ -19,15 +19,14 @@ const opIlikeProfessional = (text) => {
 
 export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
   const where = {};
-  const include = [];
-  console.log(!!area);
+  const include = [{model:SKILLS}];
   if (area) {
     include.push({ 
       model: AREA,
       where: { area }
     });
   }
-
+ 
   if (name && lastName) {
     where[Op.and] = [{ [Op.or]: opIlikeProfessional(name) }, { [Op.or]: opIlikeProfessional(lastName) }];
     include.push({model: AREA})
@@ -38,6 +37,7 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
     where[Op.or] = opIlikeProfessional(lastName);
     include.push({model: AREA})
   }
+
   const data = await PROFESSIONAL.findAll({
     where,
     include,
@@ -46,12 +46,14 @@ export async function findAllProfessionalByAreaAndNames(area, name, lastName) {
 }
 export async function findAllProfessionalWithArea(area) {
   const data = await PROFESSIONAL.findAll({
-    include: {
+    include: [{
+      model:SKILLS
+    },{
       model: AREA,
       where: {
         area,
-      },
-    },
+      }},
+    ],
   });
   const response = await data.filter(prof => prof.state === 'avalible' );
   return response;
