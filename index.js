@@ -9,7 +9,6 @@ import { mapAreaTesting } from "./src/testing/areas.js";
 import { mapSkillsTesting } from "./src/testing/skills.js";
 import { mapAdminTesting } from "./src/testing/admin.js";
 import { mapTestingReviews } from './src/testing/review.js'
-import cancelPendingPayments from "./src/helpers/cancelPendingPayments.js";
 
 dotenv.config();
 //hola como andan
@@ -30,5 +29,3 @@ bootstrap();
 setTimeout(() => {
   mapTestingReviews()
 } ,8000)
-
-setInterval(cancelPendingPayments, 24 * 60 * 60 * 1000);
